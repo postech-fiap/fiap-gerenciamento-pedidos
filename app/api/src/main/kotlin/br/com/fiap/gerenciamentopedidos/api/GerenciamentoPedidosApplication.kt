@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos
+package br.com.fiap.gerenciamentopedidos.api
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
