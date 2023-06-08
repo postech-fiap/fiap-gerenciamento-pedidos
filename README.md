@@ -12,8 +12,13 @@ docker build -t gerenciamento-pedidos-db -f Dockerfile.db .
 ```sh
 docker build -t gerenciamento-pedidos-app -f Dockerfile.app .
 ```
+**Criar uma rede para os containers**
+```sh
+docker network create gerenciamento-pedidos-mysql
+```
 
-**Criar o container usando a imagem do MYSQL dentro de uma rede (network) **
+
+**Criar o container usando a imagem do MYSQL dentro de uma rede (network)**
 ```sh
 docker container run 
 --name mysqldb-container
@@ -22,7 +27,7 @@ docker container run
 -p 3306:3306 -d gerenciamento-pedidos-db
 ```
 
-**Criar o container usando a imagem da aplicação Java dentro da mesma rede do MYSQL **
+**Criar o container usando a imagem da aplicação Java dentro da mesma rede do MYSQL**
 ```sh
 docker container run 
 --name gerenciamento-pedidos-app-container
