@@ -2,7 +2,7 @@ rootProject.name = "gerenciamento-pedidos"
 
 include(
     "app:api",
-    "app:aplicacao",
-    "app:dominio",
-    "app:infraestrutura"
+    "app:application",
+    "app:domain",
+    "app:infrastructure",
 )
