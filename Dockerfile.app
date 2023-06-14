@@ -1,6 +1,13 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM gradle:jdk17
+
 VOLUME /tmp
 WORKDIR /app
-ARG JAR_FILE=/build/libs/gerenciamento-pedidos-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} /app/gerenciamento-pedidos.jar
-ENTRYPOINT ["java", "-jar", "gerenciamento-pedidos.jar"]
+
+COPY . .
+
+RUN gradle app:api:clean app:api:build
+
+ARG JAR_FILE=/app/api/build/libs/api-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} /app/api.jar
+
+ENTRYPOINT ["java", "-jar", "api.jar"]

@@ -12,6 +12,6 @@ class PedidoController(val casoDeUso: CadastrarPedidoUseCase) {
     @GetMapping
     fun cadastrarPedido(): String {
         casoDeUso.executar()
-        return "Sucesso!"
+        return "Success!"
     }
 }
