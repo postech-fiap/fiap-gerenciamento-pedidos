@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.controller
+package br.com.fiap.gerenciamentopedidos.api.controllers
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
