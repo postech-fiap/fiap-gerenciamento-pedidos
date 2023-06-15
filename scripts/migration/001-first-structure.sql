@@ -30,7 +30,7 @@ create table if not exists item_imagem (
 create table if not exists pedido (
     id bigint,
     data_hora timestamp not null,
-    status tinyint not null,
+    status varchar(20) not null,
     cliente_id bigint,
     tempo_preparo smallint not null,
     numero varchar(10) not null,
