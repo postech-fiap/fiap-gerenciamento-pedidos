@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases
 
 import br.com.fiap.gerenciamentopedidos.application.interfaces.UseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.services.PedidoService
-import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.pedido.interfaces.services.PedidoService
+import br.com.fiap.gerenciamentopedidos.domain.pedido.models.Pedido
 
 class CadastrarPedidoUseCase(val pedidoService: PedidoService) : UseCase {
     fun executar(): Pedido {
