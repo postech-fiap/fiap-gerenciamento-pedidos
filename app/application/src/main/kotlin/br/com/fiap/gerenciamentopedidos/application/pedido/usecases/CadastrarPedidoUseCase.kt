@@ -1,6 +1,6 @@
-package br.com.fiap.gerenciamentopedidos.application.usecases
+package br.com.fiap.gerenciamentopedidos.application.pedido.usecases
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.UseCase
+import br.com.fiap.gerenciamentopedidos.application.pedido.interfaces.UseCase
 import br.com.fiap.gerenciamentopedidos.domain.pedido.interfaces.services.PedidoService
 import br.com.fiap.gerenciamentopedidos.domain.pedido.models.Pedido
 

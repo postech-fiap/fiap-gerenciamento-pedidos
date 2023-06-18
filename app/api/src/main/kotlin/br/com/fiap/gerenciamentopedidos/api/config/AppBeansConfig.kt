@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.application.usecases.CadastrarPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.pedido.usecases.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.pedido.interfaces.services.PedidoService
 import br.com.fiap.gerenciamentopedidos.domain.pedido.services.PedidoServiceImpl
 import org.springframework.context.annotation.Bean
