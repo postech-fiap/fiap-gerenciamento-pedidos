@@ -57,5 +57,3 @@ create table if not exists pagamento (
     constraint pk_pagamento primary key (pedido_id),
     constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
 );
-
-# 9.999.999,99
