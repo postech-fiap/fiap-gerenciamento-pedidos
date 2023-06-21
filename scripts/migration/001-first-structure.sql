@@ -17,7 +17,7 @@ create table if not exists produto (
     disponivel bit(1) not null,
     excluido bit(1) not null,
     descricao varchar(1000),
-    tempo_preparo int not null,
+    tempo_preparo_minutos int not null,
     constraint pk_produto primary key (id)
 );
 
@@ -33,7 +33,7 @@ create table if not exists pedido (
     data_hora timestamp not null default now(),
     status enum('pendente', 'em_preparacao', 'finalizado') not null,
     cliente_id bigint,
-    tempo_espera int not null,
+    tempo_espera_minutos int not null,
     numero char(4) not null,
     constraint pk_pedido primary key (id),
     constraint fk_pedido_cliente foreign key (cliente_id) references cliente (id) on delete restrict on update restrict
