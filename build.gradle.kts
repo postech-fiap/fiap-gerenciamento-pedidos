@@ -25,9 +25,6 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
 
     dependencies {
-        //	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-        //	runtimeOnly("com.mysql:mysql-connector-j")
-        //  developmentOnly("org.springframework.boot:spring-boot-devtools")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("io.springfox:springfox-boot-starter:3.0.0")
