@@ -6,15 +6,11 @@ import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Cpf
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteJpaRepository
-import org.springframework.context.annotation.Primary
-import org.springframework.stereotype.Component
 import java.util.*
 
 private const val ERROR_MESSAGE_TO_SAVE = "Erro ao salvar o cliente na base de dados. Detalhes: %s"
 private const val ERROR_MESSAGE_TO_FIND = "Erro ao buscar o cliente na base de dados. Detalhes: %s"
 
-@Component
-@Primary
 class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClienteRepository {
 
     override fun salvar(clienteDomain: ClienteDomain): ClienteDomain {
