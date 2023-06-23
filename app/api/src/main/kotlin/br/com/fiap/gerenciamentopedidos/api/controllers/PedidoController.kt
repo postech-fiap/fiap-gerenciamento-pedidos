@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.usecases.CadastrarPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.pedido.usecases.CadastrarPedidoUseCase
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
