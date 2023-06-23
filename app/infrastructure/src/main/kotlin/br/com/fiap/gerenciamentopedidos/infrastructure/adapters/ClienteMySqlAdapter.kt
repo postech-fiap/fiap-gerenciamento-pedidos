@@ -10,9 +10,24 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 import java.util.*
 
+private const val ERROR_MESSAGE_TO_SAVE = "Erro ao salvar o cliente na base de dados. Detalhes: %s"
+private const val ERROR_MESSAGE_TO_FIND = "Erro ao buscar o cliente na base de dados. Detalhes: %s"
+
 @Component
 @Primary
 class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClienteRepository {
+
+    override fun salvar(clienteDomain: ClienteDomain): ClienteDomain {
+        var clienteEntity: ClienteEntity? = null
+
+        try {
+            clienteEntity = clienteJpaRepository.save(ClienteEntity.fromDomain(clienteDomain))
+        } catch (ex: Exception) {
+            lancaDataBaseException(ex, ERROR_MESSAGE_TO_SAVE)
+        }
+        return clienteEntity!!
+            .toDomain(clienteDomain.cpf.numero)
+    }
 
     override fun buscarPorCpf(cpf: String): Optional<ClienteDomain> {
         var clienteEntity: Optional<ClienteEntity> = Optional.empty()
@@ -20,19 +35,16 @@ class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : Clie
         try {
             clienteEntity = clienteJpaRepository.findByCpf(Cpf.removeMascara(cpf))
         } catch (ex: Exception) {
-            lancaDataBaseException(ex)
+            lancaDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
         }
 
         return clienteEntity
             .map { it.toDomain(Cpf.adicionaMascara(cpf)) }
     }
 
-    private fun lancaDataBaseException(ex: Exception) {
+    private fun lancaDataBaseException(ex: Exception, errorMessage: String) {
         throw BaseDeDadosException(
-            String.format(
-                "Erro ao salvar o cliente na base de dados. Detalhes: %s",
-                ex.message
-            )
+            String.format(errorMessage, ex.message)
         )
     }
 

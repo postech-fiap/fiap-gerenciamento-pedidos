@@ -1,7 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
 import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.BuscarClientePorCpfUseCase
+import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.CadastrarClienteUseCase
 import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.pedido.usecases.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.interfaces.repositories.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.pedido.interfaces.services.PedidoService
@@ -31,6 +33,11 @@ class AppBeansConfig {
     @Bean
     fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClienteRepository {
         return ClienteMySqlAdapter(clienteJpaRepository)
+    }
+
+    @Bean
+    fun cadastrarClienteUseCase(clienteRepository: ClienteRepository): CadastrarClienteUseCase {
+        return CadastrarClienteUseCaseImpl(clienteRepository)
     }
 
     @Bean

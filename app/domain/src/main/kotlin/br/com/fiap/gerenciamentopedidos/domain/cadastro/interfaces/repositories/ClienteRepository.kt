@@ -5,5 +5,6 @@ import java.util.*
 
 interface ClienteRepository {
 
+    fun salvar(clienteDomain: ClienteDomain): ClienteDomain
     fun buscarPorCpf(cpf: String): Optional<ClienteDomain>
 }
