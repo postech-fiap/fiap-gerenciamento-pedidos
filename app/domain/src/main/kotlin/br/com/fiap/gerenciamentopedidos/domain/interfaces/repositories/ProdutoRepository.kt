@@ -8,5 +8,4 @@ interface ProdutoRepository {
     fun get(categoria: Categoria): List<Produto>
     fun save(produto: Produto): Produto
     fun update(produto: Produto): Produto
-    fun delete(id: Long)
 }

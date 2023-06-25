@@ -1,10 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases
 
 import br.com.fiap.gerenciamentopedidos.application.pedido.interfaces.UseCase
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.services.ProdutoService
 
-class CadastrarProdutoUseCase(val service: ProdutoService) : UseCase {
-    fun executar(request: CadastrarProdutoRequest) = ProdutoResponse(service.add(request.toDomain()))
+class ObterProdutoPorIdUseCase(val service: ProdutoService) : UseCase {
+    fun executar(id: Long) = ProdutoResponse(service.get(id))
 }

@@ -39,6 +39,7 @@ data class ProdutoEntity(
     companion object {
         fun fromDomain(produto: Produto): ProdutoEntity {
             return ProdutoEntity(
+                id = produto.id,
                 nome = produto.nome,
                 descricao = produto.descricao,
                 categoria = produto.categoria,
@@ -46,13 +47,14 @@ data class ProdutoEntity(
                 tempoPreparo = produto.tempoPreparo,
                 disponivel = produto.disponivel,
                 excluido = produto.excluido,
-                imagemEntity = ImagemEntity(caminho = produto.imagem)
+                imagemEntity = if (!produto.imagem.isNullOrEmpty()) ImagemEntity(caminho = produto.imagem) else null
             )
         }
     }
 
     fun toDomain() =
         Produto(
+            id,
             nome,
             descricao,
             categoria,
@@ -60,6 +62,6 @@ data class ProdutoEntity(
             tempoPreparo!!,
             disponivel!!,
             excluido!!,
-            imagemEntity?.caminho
+            imagemEntity?.caminho,
         )
 }

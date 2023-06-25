@@ -7,9 +7,8 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
 
 class ProdutoMySqlAdapter(private val repository: ProdutoJpaRepository) : ProdutoRepository {
-    override fun get(id: Long): Produto = repository.getReferenceById(id).toDomain()
-    override fun get(categoria: Categoria): List<Produto> = repository.findByCategoria(categoria).map { it.toDomain() }
-    override fun save(produto: Produto): Produto = repository.save(ProdutoEntity.fromDomain(produto)).toDomain()
-    override fun update(produto: Produto): Produto = repository.save(ProdutoEntity.fromDomain(produto)).toDomain()
-    override fun delete(id: Long) = repository.deleteById(id)
+    override fun get(id: Long) = repository.getReferenceById(id).toDomain()
+    override fun get(categoria: Categoria) = repository.findByCategoria(categoria).map { it.toDomain() }
+    override fun save(produto: Produto) = repository.save(ProdutoEntity.fromDomain(produto)).toDomain()
+    override fun update(produto: Produto) = repository.save(ProdutoEntity.fromDomain(produto)).toDomain()
 }

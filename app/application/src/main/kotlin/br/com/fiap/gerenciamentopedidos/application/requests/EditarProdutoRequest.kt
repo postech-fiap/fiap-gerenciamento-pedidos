@@ -3,7 +3,8 @@ package br.com.fiap.gerenciamentopedidos.application.requests
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
-data class CadastrarProdutoRequest(
+data class EditarProdutoRequest(
+    val id: Long,
     val nome: String,
     val descricao: String,
     val categoria: Categoria,
@@ -13,5 +14,5 @@ data class CadastrarProdutoRequest(
     val excluido: Boolean,
     val imagem: String?,
 ) {
-    fun toDomain() = Produto(null, nome, descricao, categoria, valor, tempoPreparo, disponivel, excluido, imagem)
+    fun toDomain() = Produto(id, nome, descricao, categoria, valor, tempoPreparo, disponivel, excluido, imagem)
 }
