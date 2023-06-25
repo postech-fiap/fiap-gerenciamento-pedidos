@@ -7,9 +7,10 @@ tasks.getByName("jar") {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation(project(":app:domain"))
     implementation(project(":app:application"))
     implementation(project(":app:infrastructure"))
+
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }

@@ -4,15 +4,16 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 
 class Produto(
-    var nome: String?,
-    var descricao: String?,
-    var categoria: Categoria?,
-    var valor: Double,
-    var tempoPreparo: Int,
-    var disponivel: Boolean,
-    var excluido: Boolean
+    val nome: String?,
+    val descricao: String?,
+    val categoria: Categoria?,
+    val valor: Double,
+    val tempoPreparo: Long,
+    val disponivel: Boolean,
+    val excluido: Boolean,
+    val imagem: String?,
 ) : Model {
-    var id: Int? = null
+    val id: Int? = null
 
     init {
         validate()

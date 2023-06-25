@@ -2,13 +2,16 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
 import jakarta.persistence.*
 
+@Entity
+@Table(name = "imagem")
 class ImagemEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
-    @Column(name = "caminho", nullable = true)
-    val caminho: String,
+    val id: Long? = null,
+
+    @Column(name = "caminho", nullable = false)
+    val caminho: String? = null,
+
     @OneToOne(fetch = FetchType.LAZY)
-    val produto: ProdutoEntity
-) {
-}
+    val produto: ProdutoEntity? = null
+)

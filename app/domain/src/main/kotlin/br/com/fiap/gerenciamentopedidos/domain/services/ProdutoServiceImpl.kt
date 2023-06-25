@@ -6,23 +6,9 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.services.ProdutoServic
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
 class ProdutoServiceImpl(var repository: ProdutoRepository) : ProdutoService {
-    override fun get(id: Int): Produto {
-        return repository.get(id)
-    }
-
-    override fun get(categoria: Categoria): List<Produto> {
-        return repository.get(categoria)
-    }
-
-    override fun add(produto: Produto): Produto {
-        return repository.add(produto)
-    }
-
-    override fun update(produto: Produto): Produto {
-        return repository.update(produto)
-    }
-
-    override fun delete(id: Int) {
-        repository.delete(id)
-    }
+    override fun get(id: Long): Produto = repository.get(id)
+    override fun get(categoria: Categoria): List<Produto> = repository.get(categoria)
+    override fun add(produto: Produto): Produto = repository.save(produto)
+    override fun update(produto: Produto): Produto = repository.update(produto)
+    override fun delete(id: Long) = repository.delete(id)
 }
