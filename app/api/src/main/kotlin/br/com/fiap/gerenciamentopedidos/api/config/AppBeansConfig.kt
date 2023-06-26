@@ -5,13 +5,11 @@ import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.Cadastra
 import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.pedido.usecases.CadastrarPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.application.usecases.*
+import br.com.fiap.gerenciamentopedidos.application.produto.usecases.*
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.interfaces.repositories.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.repositories.ProdutoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.services.ProdutoService
 import br.com.fiap.gerenciamentopedidos.domain.pedido.interfaces.services.PedidoService
 import br.com.fiap.gerenciamentopedidos.domain.pedido.services.PedidoServiceImpl
-import br.com.fiap.gerenciamentopedidos.domain.services.ProdutoServiceImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ClienteMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ProdutoMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteJpaRepository
@@ -31,25 +29,24 @@ class AppBeansConfig {
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoMySqlAdapter(repository)
 
     @Bean
-    fun produtoService(repository: ProdutoRepository) = ProdutoServiceImpl(repository)
+    fun cadastrarProdutoCasoDeUso(repository: ProdutoRepository) = CadastrarProdutoUseCaseImpl(repository)
 
     @Bean
-    fun cadastrarProdutoCasoDeUso(service: ProdutoService) = CadastrarProdutoUseCase(service)
+    fun listarProdutosPorCategoriaUseCase(repository: ProdutoRepository) =
+        ListarProdutosPorCategoriaUseCaseImpl(repository)
 
     @Bean
-    fun listarProdutosPorCategoriaUseCase(service: ProdutoService) = ListarProdutosPorCategoriaUseCase(service)
+    fun removerProdutoPorIdUseCase(repository: ProdutoRepository) = RemoverProdutoPorIdUseCaseImpl(repository)
 
     @Bean
-    fun removerProdutoPorIdUseCase(service: ProdutoService) = RemoverProdutoPorIdUseCase(service)
+    fun editarProdutoUseCase(repository: ProdutoRepository) = EditarProdutoUseCaseImpl(repository)
 
     @Bean
-    fun editarProdutoUseCase(service: ProdutoService) = EditarProdutoUseCase(service)
+    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoRepository) =
+        AlterarDisponibilidadeProdutoUseCaseImpl(repository)
 
     @Bean
-    fun alterarDisponibilidadeProdutoUseCase(service: ProdutoService) = AlterarDisponibilidadeProdutoUseCase(service)
-
-    @Bean
-    fun obterProdutoPorIdUseCase(service: ProdutoService) = ObterProdutoPorIdUseCase(service)
+    fun obterProdutoPorIdUseCase(repository: ProdutoRepository) = ObterProdutoPorIdUseCaseImpl(repository)
 
     @Bean
     fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClienteRepository {

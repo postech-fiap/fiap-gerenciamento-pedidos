@@ -1,5 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
+import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BusinessException
+import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.ValidationException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 
@@ -19,9 +21,8 @@ data class Produto(
     }
 
     override fun validate() {
-        if (nome == null || nome.isEmpty()) throw Exception("Nome do produto não informado")
-        if (descricao == null || descricao.isEmpty()) throw Exception("Descrição do produto não informada")
-        if (categoria == null) throw Exception("Categoria do produto não informada")
+        if (nome == null || nome.isEmpty()) throw ValidationException("Nome do produto não informado")
+        if (categoria == null) throw ValidationException("Categoria do produto não informada")
     }
 
     fun alterarDisponibilidade(disponivel: Boolean) {
@@ -33,17 +34,17 @@ data class Produto(
     }
 
     fun disponibilizar() {
-        if (disponivel) throw Exception("Produto já está disponível")
+        if (disponivel) throw BusinessException("Produto já está disponível")
         this.disponivel = true
     }
 
     fun indisponibilizar() {
-        if (!disponivel) throw Exception("Produto já está indisponível")
+        if (!disponivel) throw BusinessException("Produto já está indisponível")
         this.disponivel = false
     }
 
     fun excluir() {
-        if (excluido) throw Exception("Produto já está excluído")
+        if (excluido) throw BusinessException("Produto já está excluído")
         this.excluido = true
     }
 }

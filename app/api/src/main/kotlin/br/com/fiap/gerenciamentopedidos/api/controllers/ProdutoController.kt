@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
+import br.com.fiap.gerenciamentopedidos.application.produto.interfaces.*
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
-import br.com.fiap.gerenciamentopedidos.application.usecases.*
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
