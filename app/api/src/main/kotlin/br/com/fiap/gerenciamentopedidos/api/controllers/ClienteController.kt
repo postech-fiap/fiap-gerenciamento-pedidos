@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RestController
 class ClienteController(
     val cadastrarClienteUseCase: CadastrarClienteUseCase,
     val buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
-    ) {
+) {
 
-    @PostMapping
+    companion object {
+        const val CPF_URI = "/cpf"
+    }
+
+    @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody clienteRequest: ClienteRequest): ResponseEntity<ClienteResponse> {
         val cliente = cadastrarClienteUseCase.executar(clienteRequest.toDomain())
 
@@ -28,7 +32,7 @@ class ClienteController(
             .body(ClienteResponse.fromDomain(cliente))
     }
 
-    @GetMapping("/{cpf}")
+    @GetMapping("$CPF_URI/{cpf}")
     fun buscarClientePorCpf(@PathVariable cpf: String): ResponseEntity<ClienteResponse> {
         val cliente = buscarClientePorCpfUseCase.executar(cpf)
 
