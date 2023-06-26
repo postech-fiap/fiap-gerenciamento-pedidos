@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.api.controllers
 
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.application.usecases.*
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import org.springframework.http.ResponseEntity
@@ -20,8 +21,10 @@ class ProdutoController(
     private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
 ) {
     @PostMapping
-    fun post(@RequestBody @Validated request: CadastrarProdutoRequest) =
-        ResponseEntity.created(URI.create("")).body(cadastrarProdutoUseCase.executar(request))
+    fun post(@RequestBody @Validated request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
+        val produto = cadastrarProdutoUseCase.executar(request)
+        return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(produto)
+    }
 
     @PutMapping
     fun put(@RequestBody @Validated request: EditarProdutoRequest) =
