@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.spring") version "1.8.21" apply false
     id("org.springframework.boot") version "3.1.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.8.21"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
@@ -25,9 +26,8 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
 
     dependencies {
-        //	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-        //	runtimeOnly("com.mysql:mysql-connector-j")
-        //  developmentOnly("org.springframework.boot:spring-boot-devtools")
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+        runtimeOnly("com.mysql:mysql-connector-j")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("io.springfox:springfox-boot-starter:3.0.0")
