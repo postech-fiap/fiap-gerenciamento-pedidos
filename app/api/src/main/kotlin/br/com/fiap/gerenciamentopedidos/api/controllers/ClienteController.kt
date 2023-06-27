@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.request.ClienteRequest
-import br.com.fiap.gerenciamentopedidos.api.response.ClienteResponse
+import br.com.fiap.gerenciamentopedidos.application.requests.ClienteRequest
+import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.BuscarClientePorCpfUseCase
 import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.CadastrarClienteUseCase
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException

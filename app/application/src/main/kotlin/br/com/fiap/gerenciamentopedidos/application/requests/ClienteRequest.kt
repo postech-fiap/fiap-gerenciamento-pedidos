@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.api.request
+package br.com.fiap.gerenciamentopedidos.application.requests
 
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Cpf
