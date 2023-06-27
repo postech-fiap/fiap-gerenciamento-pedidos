@@ -21,7 +21,7 @@ data class Produto(
     }
 
     override fun validate() {
-        if (nome == null || nome.isEmpty()) throw ValidationException("Nome do produto não informado")
+        if (nome.isNullOrEmpty()) throw ValidationException("Nome do produto não informado")
         if (categoria == null) throw ValidationException("Categoria do produto não informada")
     }
 
