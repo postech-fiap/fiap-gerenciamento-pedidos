@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 data class EditarProdutoRequest(
     val id: Long,
     val nome: String,
-    val descricao: String,
+    val descricao: String?,
     val categoria: Categoria,
     val valor: Double,
     val tempoPreparo: Long,
