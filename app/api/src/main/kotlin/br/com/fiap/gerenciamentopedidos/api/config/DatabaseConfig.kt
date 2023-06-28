@@ -13,8 +13,6 @@ import javax.sql.DataSource
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 class DatabaseConfig(
-    @Value("\${spring.datasource.driver-class-name}")
-    private val driverClassName: String,
     @Value("\${spring.datasource.url}")
     private val jdbcUrl: String,
     @Value("\${spring.datasource.username}")
@@ -25,8 +23,7 @@ class DatabaseConfig(
     @Bean
     fun dataSource(): DataSource {
         val config = HikariConfig()
-
-        config.driverClassName = driverClassName
+        
         config.jdbcUrl = jdbcUrl
         config.username = username
         config.password = password
