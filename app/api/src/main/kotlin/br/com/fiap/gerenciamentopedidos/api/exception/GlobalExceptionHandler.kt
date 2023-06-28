@@ -1,8 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.exception
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.RecursoJaExisteException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.RecursoNaoEncontradoException
+import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
@@ -32,6 +30,20 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.message)
         problemDetail.title = HttpStatus.CONFLICT.reasonPhrase
         return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail)
+    }
+
+    @ExceptionHandler(BusinessException::class)
+    private fun handleBusinessException(ex: BusinessException): ResponseEntity<ProblemDetail> {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.message)
+        problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
+    }
+
+    @ExceptionHandler(ValidationException::class)
+    private fun handleValidationException(ex: ValidationException): ResponseEntity<ProblemDetail> {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.message)
+        problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
