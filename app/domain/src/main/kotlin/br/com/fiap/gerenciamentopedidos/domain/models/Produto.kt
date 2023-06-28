@@ -14,7 +14,7 @@ data class Produto(
     val tempoPreparo: Long,
     var disponivel: Boolean,
     var excluido: Boolean,
-    val imagem: String?,
+    val imagem: Imagem?,
 ) : Model {
     init {
         validate()

@@ -4,6 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosEx
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.repositories.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ImagemEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
 import java.util.*
@@ -46,7 +47,23 @@ class ProdutoMySqlAdapter(private val repository: ProdutoJpaRepository) : Produt
 
     override fun update(produto: Produto): Produto {
         try {
-            return repository.save(ProdutoEntity.fromDomain(produto)).toDomain()
+            val entity = repository.findById(produto.id!!).orElseThrow().copy(
+                nome = produto.nome,
+                descricao = produto.descricao,
+                categoria = produto.categoria,
+                valor = produto.valor,
+                tempoPreparo = produto.tempoPreparo,
+                disponivel = produto.disponivel,
+                excluido = produto.excluido
+            )
+            if (entity.imagem == null && produto.imagem != null) {
+                entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
+            } else if (entity.imagem != null && produto.imagem == null) {
+                entity.imagem = null
+            } else if (entity.imagem?.caminho != produto.imagem?.caminho) {
+                entity.imagem?.caminho = produto.imagem?.caminho
+            }
+            return repository.save(entity).toDomain()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_UPDATE, ex.message)

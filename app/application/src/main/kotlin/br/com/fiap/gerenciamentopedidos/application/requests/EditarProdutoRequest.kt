@@ -12,7 +12,17 @@ data class EditarProdutoRequest(
     val tempoPreparo: Long,
     val disponivel: Boolean,
     val excluido: Boolean,
-    val imagem: String?,
+    val imagem: EditarImagemRequest?,
 ) {
-    fun toDomain() = Produto(id, nome, descricao, categoria, valor, tempoPreparo, disponivel, excluido, imagem)
+    fun toDomain() = Produto(
+        id,
+        nome,
+        descricao,
+        categoria,
+        valor,
+        tempoPreparo,
+        disponivel,
+        excluido,
+        imagem = imagem?.toDomain()
+    )
 }

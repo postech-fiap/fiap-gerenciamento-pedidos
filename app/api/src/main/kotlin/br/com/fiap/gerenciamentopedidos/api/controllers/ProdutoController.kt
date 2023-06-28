@@ -27,7 +27,7 @@ class ProdutoController(
     }
 
     @PutMapping
-    fun put(@RequestBody @Validated request: EditarProdutoRequest) =
+    fun put(@RequestBody request: EditarProdutoRequest) =
         ResponseEntity.ok(editarProdutoUseCase.executar(request))
 
     @PatchMapping("/{id}/disponivel/{disponivel}")

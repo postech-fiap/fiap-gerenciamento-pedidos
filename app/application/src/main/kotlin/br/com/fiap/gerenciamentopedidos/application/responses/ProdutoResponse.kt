@@ -12,7 +12,7 @@ class ProdutoResponse(produto: Produto) {
     var tempoPreparo: Long? = null
     var disponivel: Boolean? = null
     var excluido: Boolean? = null
-    var imagem: String? = null
+    var imagem: ImagemResponse? = null
 
     init {
         id = produto.id
@@ -23,6 +23,8 @@ class ProdutoResponse(produto: Produto) {
         tempoPreparo = produto.tempoPreparo
         disponivel = produto.disponivel
         excluido = produto.excluido
-        imagem = produto.imagem
+        if (produto.imagem != null) {
+            imagem = ImagemResponse(produto.imagem!!)
+        }
     }
 }

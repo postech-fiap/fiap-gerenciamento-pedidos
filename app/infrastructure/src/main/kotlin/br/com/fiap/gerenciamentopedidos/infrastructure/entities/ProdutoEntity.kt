@@ -33,12 +33,12 @@ data class ProdutoEntity(
     @Column(name = "excluido", nullable = false)
     val excluido: Boolean? = null,
 
-    @OneToOne(mappedBy = "produto", cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY)
-    val imagemEntity: ImagemEntity? = null
+    @OneToOne(mappedBy = "produto", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    var imagem: ImagemEntity? = null
 ) {
     companion object {
         fun fromDomain(produto: Produto): ProdutoEntity {
-            return ProdutoEntity(
+            val entity = ProdutoEntity(
                 id = produto.id,
                 nome = produto.nome,
                 descricao = produto.descricao,
@@ -46,22 +46,21 @@ data class ProdutoEntity(
                 valor = produto.valor,
                 tempoPreparo = produto.tempoPreparo,
                 disponivel = produto.disponivel,
-                excluido = produto.excluido,
-                imagemEntity = if (!produto.imagem.isNullOrEmpty()) ImagemEntity(caminho = produto.imagem) else null
+                excluido = produto.excluido
             )
+
+            entity.imagem = produto.imagem?.let {
+                ImagemEntity(
+                    id = produto.imagem?.id,
+                    caminho = produto.imagem?.caminho,
+                    produto = entity
+                )
+            }
+
+            return entity
         }
     }
 
     fun toDomain() =
-        Produto(
-            id,
-            nome,
-            descricao,
-            categoria,
-            valor!!,
-            tempoPreparo!!,
-            disponivel!!,
-            excluido!!,
-            imagemEntity?.caminho,
-        )
+        Produto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDomain())
 }
