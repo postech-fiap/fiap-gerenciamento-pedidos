@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.repositories.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ImagemEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
@@ -14,7 +14,7 @@ private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar produtos por 
 private const val ERROR_MESSAGE_CREATE = "Erro ao salvar produtos. Detalhes: %s"
 private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produtos. Detalhes: %s"
 
-class ProdutoMySqlAdapter(private val repository: ProdutoJpaRepository) : ProdutoRepository {
+class ProdutoMySqlAdapter(private val repository: ProdutoJpaRepository) : ProdutoAdapter {
     override fun get(id: Long): Optional<Produto> {
         try {
             return repository.findById(id).map(ProdutoEntity::toDomain)

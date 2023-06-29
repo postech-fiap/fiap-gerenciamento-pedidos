@@ -5,23 +5,18 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
 data class CadastrarProdutoRequest(
-    val nome: String,
-    val descricao: String?,
-    val categoria: Categoria,
-    val valor: Double,
-    val tempoPreparo: Long,
-    val disponivel: Boolean,
-    val excluido: Boolean,
-    val imagem: String?,
+    val nome: String? = null,
+    val descricao: String? = null,
+    val categoria: Categoria? = null,
+    val valor: Double? = null,
+    val tempoPreparo: Long? = null,
+    val imagem: String? = null
 ) {
     fun toDomain() = Produto(
-        null,
-        nome,
-        descricao,
-        categoria,
-        valor,
-        tempoPreparo,
-        disponivel,
-        excluido,
-        imagem.let { Imagem(caminho = it) })
+        nome = nome,
+        descricao = descricao,
+        categoria = categoria,
+        valor = valor!!,
+        tempoPreparo = tempoPreparo!!,
+        imagem = imagem.let { Imagem(caminho = it) })
 }

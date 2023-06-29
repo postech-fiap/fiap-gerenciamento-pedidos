@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.pedido.models.*

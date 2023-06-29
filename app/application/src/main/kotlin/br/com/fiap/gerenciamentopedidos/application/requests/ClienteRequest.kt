@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.requests
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Cpf
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Email
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 
 data class ClienteRequest(
     val cpf: String,
@@ -11,7 +11,7 @@ data class ClienteRequest(
 ) {
 
     fun toDomain() =
-        ClienteDomain(
+        Cliente(
             cpf = Cpf(cpf),
             nome = nome,
             email = Email(email)
