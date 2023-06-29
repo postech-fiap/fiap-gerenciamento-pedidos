@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,14 +20,14 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
     lateinit var useCase: ListarProdutosPorCategoriaUseCaseImpl
 
     @MockK
-    lateinit var adapter: ProdutoAdapter
+    lateinit var produtoPort: ProdutoPort
 
     @Test
     fun `deve lançar exceção por não encontrar produtos`() {
         //given
         val categoria = Categoria.BEBIDA
 
-        every { adapter.get(categoria) } returns emptyList()
+        every { produtoPort.get(categoria) } returns emptyList()
 
         //when
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
@@ -37,7 +37,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
         //then
         Assertions.assertEquals("Nenhum produto encontrado", exception.message)
 
-        verify(exactly = 1) { adapter.get(categoria) }
+        verify(exactly = 1) { produtoPort.get(categoria) }
     }
 
     @Test
@@ -56,7 +56,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
             imagem = null
         )
 
-        every { adapter.get(categoria) } returns listOf(produto)
+        every { produtoPort.get(categoria) } returns listOf(produto)
 
         //when
         val result = useCase.executar(categoria)
@@ -66,6 +66,6 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
         Assertions.assertTrue(result.isNotEmpty())
         Assertions.assertEquals(categoria, result.first().categoria)
 
-        verify(exactly = 1) { adapter.get(categoria) }
+        verify(exactly = 1) { produtoPort.get(categoria) }
     }
 }

@@ -3,7 +3,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,7 +21,7 @@ class RemoverProdutoPorIdUseCaseImplTest {
     lateinit var useCase: RemoverProdutoPorIdUseCaseImpl
 
     @MockK
-    lateinit var adapter: ProdutoAdapter
+    lateinit var produtoPort: ProdutoPort
 
     @Test
     fun `deve obter produto por id com sucesso`() {
@@ -39,15 +39,15 @@ class RemoverProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { adapter.get(id) } returns Optional.of(produto)
-        every { adapter.update(produto) } returns produto
+        every { produtoPort.get(id) } returns Optional.of(produto)
+        every { produtoPort.update(produto) } returns produto
 
         //when
         Assertions.assertDoesNotThrow { useCase.executar(id) }
 
         //then
-        verify(exactly = 1) { adapter.get(id) }
-        verify(exactly = 1) { adapter.update(produto) }
+        verify(exactly = 1) { produtoPort.get(id) }
+        verify(exactly = 1) { produtoPort.update(produto) }
     }
 
     @Test
@@ -66,7 +66,7 @@ class RemoverProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { adapter.get(id) } returns Optional.of(produto)
+        every { produtoPort.get(id) } returns Optional.of(produto)
 
         //when
         val exception = Assertions.assertThrows(BusinessException::class.java) {
@@ -75,8 +75,8 @@ class RemoverProdutoPorIdUseCaseImplTest {
 
         //then
         Assertions.assertEquals("Produto já está excluído", exception.message)
-        verify(exactly = 1) { adapter.get(id) }
-        verify(exactly = 0) { adapter.update(produto) }
+        verify(exactly = 1) { produtoPort.get(id) }
+        verify(exactly = 0) { produtoPort.update(produto) }
     }
 
     @Test
@@ -84,7 +84,7 @@ class RemoverProdutoPorIdUseCaseImplTest {
         //given
         val id = 1L
 
-        every { adapter.get(id) } returns Optional.empty()
+        every { produtoPort.get(id) } returns Optional.empty()
 
         //when
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
@@ -94,6 +94,6 @@ class RemoverProdutoPorIdUseCaseImplTest {
         //then
         Assertions.assertEquals("Produto não encontrado", exception.message)
 
-        verify(exactly = 1) { adapter.get(id) }
+        verify(exactly = 1) { produtoPort.get(id) }
     }
 }

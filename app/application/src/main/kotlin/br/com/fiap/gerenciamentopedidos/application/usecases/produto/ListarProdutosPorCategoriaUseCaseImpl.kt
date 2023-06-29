@@ -4,12 +4,12 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.ListarPro
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
 
-class ListarProdutosPorCategoriaUseCaseImpl(private val adapter: ProdutoAdapter) :
+class ListarProdutosPorCategoriaUseCaseImpl(private val produtoPort: ProdutoPort) :
     ListarProdutosPorCategoriaUseCase {
     override fun executar(categoria: Categoria) =
-        adapter.get(categoria)
+        produtoPort.get(categoria)
             .map { ProdutoResponse(it) }.toList()
             .ifEmpty { throw RecursoNaoEncontradoException("Nenhum produto encontrado") }
 }

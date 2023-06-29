@@ -6,9 +6,9 @@ import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClien
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ClienteAdapter
-import br.com.fiap.gerenciamentopedidos.domain.adapters.PedidoAdapter
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
+import br.com.fiap.gerenciamentopedidos.domain.ports.PedidoPort
+import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ClienteMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.PedidoMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ProdutoMySqlAdapter
@@ -45,48 +45,48 @@ class AppBeansConfig {
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoMySqlAdapter(repository)
 
     @Bean
-    fun cadastrarProdutoCasoDeUso(adapter: ProdutoAdapter) = CadastrarProdutoUseCaseImpl(adapter)
+    fun cadastrarProdutoCasoDeUso(produtoPort: ProdutoPort) = CadastrarProdutoUseCaseImpl(produtoPort)
 
     @Bean
-    fun listarProdutosPorCategoriaUseCase(adapter: ProdutoAdapter) =
-        ListarProdutosPorCategoriaUseCaseImpl(adapter)
+    fun listarProdutosPorCategoriaUseCase(produtoPort: ProdutoPort) =
+        ListarProdutosPorCategoriaUseCaseImpl(produtoPort)
 
     @Bean
-    fun removerProdutoPorIdUseCase(adapter: ProdutoAdapter) = RemoverProdutoPorIdUseCaseImpl(adapter)
+    fun removerProdutoPorIdUseCase(produtoPort: ProdutoPort) = RemoverProdutoPorIdUseCaseImpl(produtoPort)
 
     @Bean
-    fun editarProdutoUseCase(adapter: ProdutoAdapter) = EditarProdutoUseCaseImpl(adapter)
+    fun editarProdutoUseCase(produtoPort: ProdutoPort) = EditarProdutoUseCaseImpl(produtoPort)
 
     @Bean
-    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoAdapter) =
+    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoPort) =
         AlterarDisponibilidadeProdutoUseCaseImpl(repository)
 
     @Bean
-    fun obterProdutoPorIdUseCase(adapter: ProdutoAdapter) = ObterProdutoPorIdUseCaseImpl(adapter)
+    fun obterProdutoPorIdUseCase(produtoPort: ProdutoPort) = ObterProdutoPorIdUseCaseImpl(produtoPort)
 
     @Bean
-    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClienteAdapter {
+    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClientePort {
         return ClienteMySqlAdapter(clienteJpaRepository)
     }
 
     @Bean
-    fun cadastrarClienteUseCase(clienteAdapter: ClienteAdapter): CadastrarClienteUseCase {
-        return CadastrarClienteUseCaseImpl(clienteAdapter)
+    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarClienteUseCase {
+        return CadastrarClienteUseCaseImpl(clientePort)
     }
 
     @Bean
-    fun buscarClientePorCpfUseCase(clienteAdapter: ClienteAdapter): BuscarClientePorCpfUseCase {
-        return BuscarClientePorCpfUseCaseImpl(clienteAdapter)
+    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpfUseCase {
+        return BuscarClientePorCpfUseCaseImpl(clientePort)
     }
 
     @Bean
-    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository): PedidoAdapter {
+    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository): PedidoPort {
         return PedidoMySqlAdapter(pedidoJpaRepository)
     }
 
     @Bean
-    fun buscarPedidosUseCase(pedidoAdapter: PedidoAdapter): BuscarUseCaseImpl {
-        return BuscarUseCaseImpl(pedidoAdapter)
+    fun buscarPedidosUseCase(pedidoPort: PedidoPort): BuscarUseCaseImpl {
+        return BuscarUseCaseImpl(pedidoPort)
     }
 
 }
