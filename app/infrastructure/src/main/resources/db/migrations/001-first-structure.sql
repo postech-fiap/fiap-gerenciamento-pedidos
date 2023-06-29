@@ -21,11 +21,12 @@ create table if not exists produto (
     constraint pk_produto primary key (id)
 );
 
-create table if not exists produto_imagem (
+create table if not exists imagem (
+    id bigint auto_increment,
     produto_id bigint not null,
     caminho varchar(100) not null,
-    constraint pk_produto_imagem primary key (produto_id),
-    constraint fk_produto_imagem_produto foreign key (produto_id) references produto (id) on delete restrict on update restrict
+    constraint pk_imagem primary key (id),
+    constraint fk_imagem_produto foreign key (produto_id) references produto (id) on delete restrict on update restrict
 );
 
 create table if not exists pedido (
