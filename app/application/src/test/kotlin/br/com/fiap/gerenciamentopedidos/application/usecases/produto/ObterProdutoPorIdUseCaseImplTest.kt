@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,7 +20,7 @@ class ObterProdutoPorIdUseCaseImplTest {
     lateinit var useCase: ObterProdutoPorIdUseCaseImpl
 
     @MockK
-    lateinit var adapter: ProdutoAdapter
+    lateinit var produtoPort: ProdutoPort
 
     @Test
     fun `deve obter produto por id com sucesso`() {
@@ -38,7 +38,7 @@ class ObterProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { adapter.get(id) } returns Optional.of(produto)
+        every { produtoPort.get(id) } returns Optional.of(produto)
 
         //when
         val result = useCase.executar(id)
@@ -47,7 +47,7 @@ class ObterProdutoPorIdUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { adapter.get(id) }
+        verify(exactly = 1) { produtoPort.get(id) }
     }
 
     @Test
@@ -55,7 +55,7 @@ class ObterProdutoPorIdUseCaseImplTest {
         //given
         val id = 1L
 
-        every { adapter.get(id) } returns Optional.empty()
+        every { produtoPort.get(id) } returns Optional.empty()
 
         //when
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
@@ -65,6 +65,6 @@ class ObterProdutoPorIdUseCaseImplTest {
         //then
         Assertions.assertEquals("Produto não encontrado", exception.message)
 
-        verify(exactly = 1) { adapter.get(id) }
+        verify(exactly = 1) { produtoPort.get(id) }
     }
 }

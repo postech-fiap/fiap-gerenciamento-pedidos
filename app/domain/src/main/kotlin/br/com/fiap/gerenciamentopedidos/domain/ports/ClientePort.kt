@@ -1,9 +1,9 @@
-package br.com.fiap.gerenciamentopedidos.domain.adapters
+package br.com.fiap.gerenciamentopedidos.domain.ports
 
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import java.util.*
 
-interface ClienteAdapter {
+interface ClientePort {
 
     fun salvar(clienteDomain: Cliente): Cliente
     fun buscarPorCpf(cpf: String): Optional<Cliente>

@@ -3,7 +3,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.cadastro
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ClienteAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -28,7 +28,7 @@ class BuscarClienteUseCaseImplTest {
     lateinit var buscarClientePorCpfUseCaseImpl: BuscarClientePorCpfUseCaseImpl
 
     @MockK
-    lateinit var clienteAdapter: ClienteAdapter
+    lateinit var clientePort: ClientePort
 
     @Test
     fun `deve retornar um cliente por cpf quando existir`() {
@@ -38,7 +38,7 @@ class BuscarClienteUseCaseImplTest {
         val email = Email(EMAIL)
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
 
-        every { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) } returns Optional.of(clienteDomain)
+        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } returns Optional.of(clienteDomain)
 
         //when
         val result = buscarClientePorCpfUseCaseImpl.executar(clienteDomain.cpf.numero)
@@ -46,7 +46,7 @@ class BuscarClienteUseCaseImplTest {
         //then
         Assertions.assertEquals(clienteDomain, result)
 
-        verify(exactly = 1) { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(clienteDomain.cpf.numero) }
     }
 
     @Test
@@ -57,7 +57,7 @@ class BuscarClienteUseCaseImplTest {
         val email = Email(EMAIL)
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
 
-        every { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) } returns Optional.empty()
+        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } returns Optional.empty()
 
         //when-then
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
@@ -66,7 +66,7 @@ class BuscarClienteUseCaseImplTest {
 
         Assertions.assertEquals("CPF ${cpf.numero} não encontrado", exception.message)
 
-        verify(exactly = 1) { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(clienteDomain.cpf.numero) }
     }
 
     @Test
@@ -78,7 +78,7 @@ class BuscarClienteUseCaseImplTest {
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
         val errorMessage = "Erro na base de dados"
 
-        every { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } throws BaseDeDadosException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
@@ -87,7 +87,7 @@ class BuscarClienteUseCaseImplTest {
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clienteAdapter.buscarPorCpf(clienteDomain.cpf.numero) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(clienteDomain.cpf.numero) }
     }
 
 }

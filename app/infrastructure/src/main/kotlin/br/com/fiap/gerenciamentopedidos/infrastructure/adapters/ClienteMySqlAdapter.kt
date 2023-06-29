@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.adapters.ClienteAdapter
+import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
@@ -11,7 +11,7 @@ import java.util.*
 private const val ERROR_MESSAGE_TO_SAVE = "Erro ao salvar o cliente na base de dados. Detalhes: %s"
 private const val ERROR_MESSAGE_TO_FIND = "Erro ao buscar o cliente na base de dados. Detalhes: %s"
 
-class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClienteAdapter {
+class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClientePort {
 
     override fun salvar(clienteDomain: Cliente): Cliente {
         var clienteEntity: ClienteEntity? = null
