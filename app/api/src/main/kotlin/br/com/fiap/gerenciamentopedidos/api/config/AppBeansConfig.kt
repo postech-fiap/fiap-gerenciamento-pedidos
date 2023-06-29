@@ -1,14 +1,14 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.CadastrarClienteUseCase
-import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.BuscarClientePorCpfUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.cadastro.usecases.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.pedido.usecases.BuscarUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.produto.usecases.*
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.interfaces.repositories.ClienteRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.repositories.ProdutoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.repositories.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.domain.adapters.ClienteAdapter
+import br.com.fiap.gerenciamentopedidos.domain.adapters.PedidoAdapter
+import br.com.fiap.gerenciamentopedidos.domain.adapters.ProdutoAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ClienteMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.PedidoMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ProdutoMySqlAdapter
@@ -20,14 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import java.text.SimpleDateFormat
 
 
 @Configuration
+@EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
+@EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 class AppBeansConfig {
-
     @Bean
     fun objectMapper(): ObjectMapper {
         return JsonMapper.builder()
@@ -42,48 +45,48 @@ class AppBeansConfig {
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoMySqlAdapter(repository)
 
     @Bean
-    fun cadastrarProdutoCasoDeUso(repository: ProdutoRepository) = CadastrarProdutoUseCaseImpl(repository)
+    fun cadastrarProdutoCasoDeUso(adapter: ProdutoAdapter) = CadastrarProdutoUseCaseImpl(adapter)
 
     @Bean
-    fun listarProdutosPorCategoriaUseCase(repository: ProdutoRepository) =
-        ListarProdutosPorCategoriaUseCaseImpl(repository)
+    fun listarProdutosPorCategoriaUseCase(adapter: ProdutoAdapter) =
+        ListarProdutosPorCategoriaUseCaseImpl(adapter)
 
     @Bean
-    fun removerProdutoPorIdUseCase(repository: ProdutoRepository) = RemoverProdutoPorIdUseCaseImpl(repository)
+    fun removerProdutoPorIdUseCase(adapter: ProdutoAdapter) = RemoverProdutoPorIdUseCaseImpl(adapter)
 
     @Bean
-    fun editarProdutoUseCase(repository: ProdutoRepository) = EditarProdutoUseCaseImpl(repository)
+    fun editarProdutoUseCase(adapter: ProdutoAdapter) = EditarProdutoUseCaseImpl(adapter)
 
     @Bean
-    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoRepository) =
+    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoAdapter) =
         AlterarDisponibilidadeProdutoUseCaseImpl(repository)
 
     @Bean
-    fun obterProdutoPorIdUseCase(repository: ProdutoRepository) = ObterProdutoPorIdUseCaseImpl(repository)
+    fun obterProdutoPorIdUseCase(adapter: ProdutoAdapter) = ObterProdutoPorIdUseCaseImpl(adapter)
 
     @Bean
-    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClienteRepository {
+    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClienteAdapter {
         return ClienteMySqlAdapter(clienteJpaRepository)
     }
 
     @Bean
-    fun cadastrarClienteUseCase(clienteRepository: ClienteRepository): CadastrarClienteUseCase {
-        return CadastrarClienteUseCaseImpl(clienteRepository)
+    fun cadastrarClienteUseCase(clienteAdapter: ClienteAdapter): CadastrarClienteUseCase {
+        return CadastrarClienteUseCaseImpl(clienteAdapter)
     }
 
     @Bean
-    fun buscarClientePorCpfUseCase(clienteRepository: ClienteRepository): BuscarClientePorCpfUseCase {
-        return BuscarClientePorCpfUseCaseImpl(clienteRepository)
+    fun buscarClientePorCpfUseCase(clienteAdapter: ClienteAdapter): BuscarClientePorCpfUseCase {
+        return BuscarClientePorCpfUseCaseImpl(clienteAdapter)
     }
 
     @Bean
-    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository): PedidoRepository {
+    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository): PedidoAdapter {
         return PedidoMySqlAdapter(pedidoJpaRepository)
     }
 
     @Bean
-    fun buscarPedidosUseCase(pedidoRepository: PedidoRepository): BuscarUseCaseImpl {
-        return BuscarUseCaseImpl(pedidoRepository)
+    fun buscarPedidosUseCase(pedidoAdapter: PedidoAdapter): BuscarUseCaseImpl {
+        return BuscarUseCaseImpl(pedidoAdapter)
     }
 
 }

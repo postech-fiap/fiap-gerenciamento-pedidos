@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.interfaces.repositories.ClienteRepository
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Cpf
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
+import br.com.fiap.gerenciamentopedidos.domain.adapters.ClienteAdapter
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteJpaRepository
 import java.util.*
@@ -11,9 +11,9 @@ import java.util.*
 private const val ERROR_MESSAGE_TO_SAVE = "Erro ao salvar o cliente na base de dados. Detalhes: %s"
 private const val ERROR_MESSAGE_TO_FIND = "Erro ao buscar o cliente na base de dados. Detalhes: %s"
 
-class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClienteRepository {
+class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : ClienteAdapter {
 
-    override fun salvar(clienteDomain: ClienteDomain): ClienteDomain {
+    override fun salvar(clienteDomain: Cliente): Cliente {
         var clienteEntity: ClienteEntity? = null
 
         try {
@@ -25,7 +25,7 @@ class ClienteMySqlAdapter(val clienteJpaRepository: ClienteJpaRepository) : Clie
             .toDomain(clienteDomain.cpf.numero)
     }
 
-    override fun buscarPorCpf(cpf: String): Optional<ClienteDomain> {
+    override fun buscarPorCpf(cpf: String): Optional<Cliente> {
         var clienteEntity: Optional<ClienteEntity> = Optional.empty()
 
         try {

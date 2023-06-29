@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import java.time.OffsetDateTime
 
@@ -10,7 +9,7 @@ data class Pedido(
     val status: PedidoStatus,
     val tempoEsperaMinutos: Int,
     val numero: String,
-    val cliente: ClienteDomain? = null,
+    val cliente: Cliente? = null,
     val produtos: List<PedidoProduto>? = null,
     val pagamento: Pagamento? = null
 )

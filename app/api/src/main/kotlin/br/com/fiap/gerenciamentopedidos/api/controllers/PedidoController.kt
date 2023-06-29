@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.pedido.interfaces.BuscarPedidosUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import org.springframework.web.bind.annotation.GetMapping

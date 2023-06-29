@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 
 data class ClienteResponse(
     val id: Long? = null,
@@ -10,7 +10,7 @@ data class ClienteResponse(
 ) {
 
     companion object {
-        fun fromDomain(clienteDomain: ClienteDomain) =
+        fun fromDomain(clienteDomain: Cliente) =
             ClienteResponse(
                 clienteDomain.id,
                 clienteDomain.cpf.numero,
