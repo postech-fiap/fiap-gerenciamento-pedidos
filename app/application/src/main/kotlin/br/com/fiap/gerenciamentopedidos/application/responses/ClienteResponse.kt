@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.api.response
+package br.com.fiap.gerenciamentopedidos.application.responses
 
 import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
 

@@ -13,7 +13,7 @@ create table if not exists produto (
     id bigint auto_increment,
     valor decimal(10,2) not null,
     nome varchar(100) not null,
-    categoria enum('lanche', 'acompanhamento', 'bebida', 'sobremesa') not null,
+    categoria enum('LANCHE', 'ACOMPANHAMENTO', 'BEBIDA', 'SOBREMESA') not null,
     disponivel bit(1) not null,
     excluido bit(1) not null,
     descricao varchar(1000),
@@ -32,7 +32,7 @@ create table if not exists imagem (
 create table if not exists pedido (
     id bigint auto_increment,
     data_hora timestamp not null default now(),
-    status enum('pendente', 'em_preparacao', 'finalizado') not null,
+    status enum('PENDENTE', 'EM_PREPARACAO', 'FINALIZADO') not null,
     cliente_id bigint,
     tempo_espera_minutos int not null,
     numero char(4) not null,
@@ -41,12 +41,13 @@ create table if not exists pedido (
 );
 
 create table if not exists pedido_produto (
+    id bigint auto_increment,
     pedido_id bigint,
     produto_id bigint,
     valor_pago decimal(10,2) not null,
     quantidade int not null,
     comentario varchar(1000),
-    constraint pk_pedido_produto primary key (pedido_id, produto_id),
+    constraint pk_pedido_produto primary key (id),
     constraint fk_pedido_produto_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict,
     constraint fk_pedido_produto_produto foreign key (produto_id) references produto (id) on delete restrict on update restrict
 );
@@ -54,7 +55,7 @@ create table if not exists pedido_produto (
 create table if not exists pagamento (
     pedido_id bigint not null,
     data_hora timestamp not null default now(),
-    status enum('pendente', 'aprovado', 'rejeitado') not null,
+    status enum('PENDENTE', 'APROVADO', 'REJEITADO') not null,
     constraint pk_pagamento primary key (pedido_id),
     constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
 );

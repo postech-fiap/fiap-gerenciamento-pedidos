@@ -4,7 +4,7 @@ data class Cpf(val numero: String) {
 
     init {
         require(numero.isNotBlank()) { "CPF não pode ser vazio" }
-        require(numero.matches(Regex("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"))) { "Formato do CPF é inválido!" }
+        require(numero.matches(Regex("(\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2})|\\d{11}"))) { "Formato do CPF é inválido!" }
     }
 
     companion object {
