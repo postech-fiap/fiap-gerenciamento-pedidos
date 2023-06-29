@@ -10,7 +10,6 @@ data class EditarProdutoRequest(
     val descricao: String? = null,
     val categoria: Categoria? = null,
     val valor: Double? = null,
-    @JsonProperty("tempo_preparo")
     val tempoPreparo: Long? = null,
     val imagem: EditarImagemRequest? = null,
 ) {

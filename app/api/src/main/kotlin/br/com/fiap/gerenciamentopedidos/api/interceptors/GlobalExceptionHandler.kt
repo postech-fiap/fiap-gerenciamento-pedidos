@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.api.interceptors
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.*
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
