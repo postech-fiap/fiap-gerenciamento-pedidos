@@ -46,13 +46,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
     }
 
-    @ExceptionHandler(ValidationException::class)
-    private fun handleValidationException(ex: ValidationException): ResponseEntity<ProblemDetail> {
-        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.message)
-        problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
-    }
-
     @ExceptionHandler(IllegalArgumentException::class)
     private fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ProblemDetail> {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.message ?: "")
