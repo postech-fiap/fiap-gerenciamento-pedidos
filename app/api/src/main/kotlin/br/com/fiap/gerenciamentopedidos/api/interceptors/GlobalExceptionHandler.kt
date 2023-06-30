@@ -11,6 +11,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
+    @ExceptionHandler(Exception::class)
+    private fun handleException(ex: Exception): ResponseEntity<ProblemDetail> {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.message?: "")
+        problemDetail.title = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail)
+    }
+
     @ExceptionHandler(BaseDeDadosException::class)
     private fun handleBaseDeDadosException(ex: BaseDeDadosException): ResponseEntity<ProblemDetail> {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.message)
