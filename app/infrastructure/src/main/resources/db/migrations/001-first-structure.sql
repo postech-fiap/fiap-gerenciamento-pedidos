@@ -1,3 +1,4 @@
+create database if not exists gerenciamento_pedidos_db;
 use gerenciamento_pedidos_db;
 
 create table if not exists cliente (
