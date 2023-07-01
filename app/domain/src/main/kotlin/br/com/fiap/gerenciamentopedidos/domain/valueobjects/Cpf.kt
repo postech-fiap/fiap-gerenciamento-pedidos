@@ -12,8 +12,13 @@ data class Cpf(val numero: String) {
             numero.replace(".", "").replace("-", "")
 
         fun adicionaMascara(cpf: String): String {
-            val removeMascara = removeMascara(cpf)
-            return removeMascara.substring(0, 3) + "." + cpf.substring(4, 7) + "." + cpf.substring(8, 11) + "-" + cpf.substring(12, 14);
+            val cpfSemMascara = removeMascara(cpf)
+            require(cpfSemMascara.length == 11) { "CPF com tamanho inválido!" }
+
+            return cpfSemMascara.substring(0, 3) +
+                    "." + cpfSemMascara.substring(3, 6) +
+                    "." + cpfSemMascara.substring(6, 9) +
+                    "-" + cpfSemMascara.substring(9, 11)
         }
     }
 
