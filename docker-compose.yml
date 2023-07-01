@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: gerenciamento-pedidos-app
+    container_name: gerenciamento-pedidos-app-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql-db:
+        condition: service_started
+    restart: always
+    networks:
+      - gerenciamento-pedidos-network
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysqldb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: gerenciamento_pedidos_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./app/infrastructure/src/main/resources/db/migrations:/docker-entrypoint-initdb.d/
+    networks:
+      - gerenciamento-pedidos-network
+
+networks:
+  gerenciamento-pedidos-network:
+    driver: bridge
