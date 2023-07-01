@@ -1,9 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BusinessException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.ValidationException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 
 data class Produto(
     val id: Long? = null,
@@ -12,17 +10,13 @@ data class Produto(
     val categoria: Categoria?,
     val valor: Double,
     val tempoPreparo: Long,
-    var disponivel: Boolean,
-    var excluido: Boolean,
+    var disponivel: Boolean = true,
+    var excluido: Boolean = false,
     val imagem: Imagem?,
-) : Model {
+) {
     init {
-        validate()
-    }
-
-    override fun validate() {
-        if (nome.isNullOrEmpty()) throw ValidationException("Nome do produto não informado")
-        if (categoria == null) throw ValidationException("Categoria do produto não informada")
+        require(nome.isNullOrEmpty().not()) { "Nome do produto não informado" }
+        require(categoria != null) { "Categoria do produto não informada" }
     }
 
     fun alterarDisponibilidade(disponivel: Boolean) {

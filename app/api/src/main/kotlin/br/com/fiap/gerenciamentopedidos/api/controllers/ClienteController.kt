@@ -1,12 +1,12 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.request.ClienteRequest
-import br.com.fiap.gerenciamentopedidos.api.response.ClienteResponse
-import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.cadastro.interfaces.CadastrarClienteUseCase
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.RecursoJaExisteException
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.exceptions.RecursoNaoEncontradoException
+import br.com.fiap.gerenciamentopedidos.application.requests.ClienteRequest
+import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses

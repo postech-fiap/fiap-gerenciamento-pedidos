@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.ClienteDomain
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Cpf
-import br.com.fiap.gerenciamentopedidos.domain.cadastro.models.Email
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -29,7 +29,7 @@ data class ClienteEntity(
 ) {
 
     companion object {
-        fun fromDomain(clienteDomain: ClienteDomain): ClienteEntity {
+        fun fromDomain(clienteDomain: Cliente): ClienteEntity {
             return ClienteEntity(
                 cpf = Cpf.removeMascara(clienteDomain.cpf.numero),
                 nome = clienteDomain.nome,
@@ -39,7 +39,7 @@ data class ClienteEntity(
     }
 
     fun toDomain(cpf: String) =
-        ClienteDomain(
+        Cliente(
             id = id,
             Cpf(cpf),
             nome!!,
