@@ -1,15 +1,20 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.requests.ClienteRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.application.requests.ClienteRequest
+import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.ArraySchema
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springdoc.core.annotations.RouterOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,14 +35,23 @@ class ClienteController(
         const val CPF_URI = "/cpf"
     }
 
-    @ApiOperation("Responsável por cadastrar um cliente")
-    @ApiResponses(
-        ApiResponse(code = 201, message = "Created", response = ClienteResponse::class),
-        ApiResponse(code = 409, message = "Conflict", response = RecursoJaExisteException::class),
-        ApiResponse(code = 400, message = "Bad Request", response = IllegalArgumentException::class),
-        ApiResponse(code = 500, message = "Internal Server Error", response = BaseDeDadosException::class),
-        ApiResponse(code = 500, message = "Internal Server Error", response = Exception::class)
-    )
+    @Operation(summary = "Responsável por cadastrar um cliente")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Created",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = ClienteResponse::class)))]),
+        ApiResponse(responseCode = "409", description = "Conflict",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = RecursoJaExisteException::class)))]),
+        ApiResponse(responseCode = "400", description = "Bad Request",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = Exception::class))])])
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody clienteRequest: ClienteRequest): ResponseEntity<ClienteResponse> {
         val cliente = cadastrarClienteUseCase.executar(clienteRequest.toDomain())
@@ -46,15 +60,26 @@ class ClienteController(
             .body(ClienteResponse.fromDomain(cliente))
     }
 
-    @ApiOperation("Responsável por buscar um cliente")
-    @ApiResponses(
-        ApiResponse(code = 200, message = "Ok", response = ClienteResponse::class),
-        ApiResponse(code = 404, message = "Not Found", response = RecursoNaoEncontradoException::class),
-        ApiResponse(code = 500, message = "Internal Server Error", response = BaseDeDadosException::class),
-        ApiResponse(code = 500, message = "Internal Server Error", response = Exception::class)
-    )
+    @Operation(summary = "Responsável por buscar um cliente")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Ok",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = ClienteResponse::class)))]),
+        ApiResponse(responseCode = "404", description = "Not Found",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = RecursoNaoEncontradoException::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = Exception::class))])])
     @GetMapping("$CPF_URI/{cpf}")
-    fun buscarClientePorCpf(@PathVariable cpf: String): ResponseEntity<ClienteResponse> {
+    fun buscarClientePorCpf(@PathVariable("cpf")
+                            @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
+                            cpf: String): ResponseEntity<ClienteResponse> {
+
+
         val cliente = buscarClientePorCpfUseCase.executar(cpf)
 
         return ResponseEntity.status(HttpStatus.OK)
