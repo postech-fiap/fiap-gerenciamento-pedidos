@@ -40,3 +40,7 @@ docker container run
 ```sh
 curl --location 'http://localhost:8080/ping'
 ```
+## Executar swagger
+```sh
+curl --location 'http://localhost:8080/swagger-ui/index.html'
+```

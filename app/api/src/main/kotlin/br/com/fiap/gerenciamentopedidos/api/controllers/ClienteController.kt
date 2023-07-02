@@ -9,12 +9,10 @@ import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteExcepti
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springdoc.core.annotations.RouterOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -78,7 +76,6 @@ class ClienteController(
     fun buscarClientePorCpf(@PathVariable("cpf")
                             @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
                             cpf: String): ResponseEntity<ClienteResponse> {
-
 
         val cliente = buscarClientePorCpfUseCase.executar(cpf)
 

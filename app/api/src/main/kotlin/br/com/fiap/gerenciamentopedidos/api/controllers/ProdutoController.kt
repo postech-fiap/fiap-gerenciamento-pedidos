@@ -4,9 +4,9 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.*
 import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.*
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -55,7 +55,10 @@ class ProdutoController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = ProdutoResponse::class)))])])
+                schema = Schema(implementation = ProdutoResponse::class)))]),
+    ApiResponse(responseCode = "404", description = "Produto não encontrado",
+        content = [ (Content(mediaType = "application/json",
+            schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @PatchMapping("/{id}/disponivel/{disponivel}")
     fun patch(@PathVariable id: Long, @PathVariable disponivel: Boolean) =
         ResponseEntity.ok(alterarDisponibilidadeProdutoUseCase.executar(id, disponivel))
@@ -64,7 +67,10 @@ class ProdutoController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
-                array = ArraySchema( schema = Schema(implementation = ProdutoResponse::class))))])])
+                array = ArraySchema( schema = Schema(implementation = ProdutoResponse::class))))]),
+        ApiResponse(responseCode = "404", description = "Nenhum produto encontrado",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @GetMapping("/categoria/{categoria}")
     fun get(@PathVariable categoria: Categoria) =
         ResponseEntity.ok(listarProdutosPorCategoriaUseCase.executar(categoria))
@@ -73,7 +79,10 @@ class ProdutoController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = ProdutoResponse::class)))])])
+                schema = Schema(implementation = ProdutoResponse::class)))]),
+    ApiResponse(responseCode = "404", description = "Produto não encontrado",
+        content = [ (Content(mediaType = "application/json",
+            schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long) =
         ResponseEntity.ok(obterProdutoPorIdUseCase.executar(id))
@@ -81,7 +90,10 @@ class ProdutoController(
     @Operation(summary = "Remover um produto por Id")
     @ApiResponses(value = [
         ApiResponse(responseCode = "204", description = "No Content",
-            content = [ (Content(mediaType = "application/json"))])])
+            content = [ (Content(mediaType = "application/json"))]),
+        ApiResponse(responseCode = "404", description = "Produto não encontrado",
+        content = [ (Content(mediaType = "application/json",
+            schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
         removerProdutoPorIdUseCase.executar(id)
