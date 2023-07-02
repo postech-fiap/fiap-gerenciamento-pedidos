@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import jakarta.persistence.*
@@ -40,38 +41,21 @@ data class PedidoEntity(
 
     @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, optional = true)
     val pagamento: PagamentoEntity? = null
-
 ) {
-
-    fun toDomain(): Pedido {
-        val clienteDomain = cliente?.toDomain(cliente.cpf!!)
-
-        val produtosDomain = produtos?.stream()
-            ?.map { it.toDomain() }
-            ?.collect(Collectors.toList())
-
-        return Pedido(
-            id = id,
-            dataHora = dataHora!!,
-            status = status!!,
-            tempoEsperaMinutos = tempoEsperaMinutos!!,
-            numero = numero!!,
-            cliente = clienteDomain,
-            produtos = produtosDomain,
-            pagamento = pagamento?.toDomain()
-        )
-    }
+    fun toDto() = PedidoDto(
+        id,
+        dataHora!!,
+        status!!,
+        tempoEsperaMinutos!!,
+        numero!!,
+        cliente?.toDto(cliente.cpf!!),
+        produtos?.stream()?.map { it.toDto() }?.collect(Collectors.toList()),
+        pagamento?.toDto()
+    )
 
     companion object {
-        fun fromDomain(pedido: Pedido): PedidoEntity {
-            return PedidoEntity(
-                id = pedido.id,
-                dataHora = pedido.dataHora,
-                status = pedido.status,
-                tempoEsperaMinutos = pedido.tempoEsperaMinutos,
-                numero = pedido.numero
-            )
-        }
+        fun fromDto(pedido: PedidoDto) =
+            PedidoEntity(pedido.id, pedido.dataHora, pedido.status, pedido.tempoEsperaMinutos, pedido.numero)
     }
 }
 

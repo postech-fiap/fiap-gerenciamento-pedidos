@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
 import io.mockk.every
@@ -27,32 +27,22 @@ class ProdutoMySqlAdapterTest {
     fun `deve buscar um produto por id com sucesso`() {
         //given
         val id = 1L
-        val produto = Produto(
-            id = id,
-            nome = "Nome",
-            descricao = null,
-            categoria = Categoria.BEBIDA,
-            valor = 1.0,
-            tempoPreparo = 1,
-            disponivel = true,
-            excluido = false,
-            imagem = null
-        )
-        every { repository.getReferenceById(any()) } returns ProdutoEntity.fromDomain(produto)
+        val produto = ProdutoDto(id, "Nome", null, Categoria.BEBIDA, 1.0, 1, disponivel = true, false)
+        every { repository.findById(id) } returns Optional.of(ProdutoEntity.fromDto(produto))
 
         //when
         val result = adapter.get(id)
 
         //then
-        Assertions.assertEquals(produto, result)
-        verify(exactly = 1) { repository.getReferenceById(id) }
+        Assertions.assertEquals(produto, result.get())
+        verify(exactly = 1) { repository.findById(id) }
     }
 
     @Test
     fun `deve buscar um produtos por categoria com sucesso`() {
         //given
         val categoria = Categoria.BEBIDA
-        val produto = Produto(
+        val produto = ProdutoDto(
             id = 1L,
             nome = "Nome",
             descricao = null,
@@ -63,7 +53,7 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDomain(produto))
+        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(produto))
 
         //when
         val result = adapter.get(categoria)
@@ -76,7 +66,7 @@ class ProdutoMySqlAdapterTest {
     @Test
     fun `deve salvar um produto com sucesso`() {
         //given
-        val produto = Produto(
+        val produto = ProdutoDto(
             id = 1L,
             nome = "Nome",
             descricao = null,
@@ -87,7 +77,7 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val entity = ProdutoEntity.fromDto(produto)
 
         every { repository.save(any()) } returns entity
 
@@ -102,7 +92,7 @@ class ProdutoMySqlAdapterTest {
     @Test
     fun `deve atualizar um produto com sucesso`() {
         //given
-        val produto = Produto(
+        val produto = ProdutoDto(
             id = 1L,
             nome = "Nome",
             descricao = null,
@@ -113,8 +103,9 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val entity = ProdutoEntity.fromDto(produto)
 
+        every { repository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(produto))
         every { repository.save(any()) } returns entity
 
         //when

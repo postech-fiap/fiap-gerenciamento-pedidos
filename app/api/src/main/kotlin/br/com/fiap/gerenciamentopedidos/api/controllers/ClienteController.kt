@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.requests.ClienteRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.api.requests.ClienteRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.ClienteResponse
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.BuscarClientePorCpfPort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarClientePort
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
@@ -22,10 +22,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/clientes")
 class ClienteController(
-    val cadastrarClienteUseCase: CadastrarClienteUseCase,
-    val buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
+    private val cadastrarClienteUseCase: CadastrarClientePort,
+    private val buscarClientePorCpfUseCase: BuscarClientePorCpfPort
 ) {
-
     companion object {
         const val CPF_URI = "/cpf"
     }
@@ -40,10 +39,10 @@ class ClienteController(
     )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody clienteRequest: ClienteRequest): ResponseEntity<ClienteResponse> {
-        val cliente = cadastrarClienteUseCase.executar(clienteRequest.toDomain())
+        val cliente = cadastrarClienteUseCase.executar(clienteRequest.toDto())
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ClienteResponse.fromDomain(cliente))
+            .body(ClienteResponse.fromDto(cliente))
     }
 
     @ApiOperation("Responsável por buscar um cliente")
@@ -58,6 +57,6 @@ class ClienteController(
         val cliente = buscarClientePorCpfUseCase.executar(cpf)
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ClienteResponse.fromDomain(cliente))
+            .body(ClienteResponse.fromDto(cliente))
     }
 }

@@ -1,14 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "cliente")
@@ -25,25 +20,13 @@ data class ClienteEntity(
     val email: String? = null,
 
     @Column(name = "nome", nullable = false, length = 100)
-    val nome: String? = null,
+    val nome: String? = null
 ) {
-
     companion object {
-        fun fromDomain(clienteDomain: Cliente): ClienteEntity {
-            return ClienteEntity(
-                cpf = Cpf.removeMascara(clienteDomain.cpf.numero),
-                nome = clienteDomain.nome,
-                email = clienteDomain.email.endereco
-            )
-        }
+        fun fromDto(cliente: ClienteDto) =
+            ClienteEntity(cliente.id, cliente.cpf?.numero, cliente.email?.endereco, cliente.nome)
     }
 
-    fun toDomain(cpf: String) =
-        Cliente(
-            id = id,
-            Cpf(cpf),
-            nome!!,
-            Email(email!!)
-        )
+    fun toDto(cpf: String) =
+        ClienteDto(id, Cpf(cpf), nome!!, Email(email!!))
 }
-

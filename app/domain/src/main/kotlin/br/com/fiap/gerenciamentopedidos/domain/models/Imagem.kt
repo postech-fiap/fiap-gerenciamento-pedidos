@@ -2,9 +2,9 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 data class Imagem(
     val id: Long? = null,
-    val caminho: String? = null
+    val caminho: String
 ) {
     init {
-        require(caminho.isNullOrEmpty().not()) { "Caminho da imagem não informado" }
+        require(caminho.isEmpty().not()) { "Caminho da imagem não informado" }
     }
 }

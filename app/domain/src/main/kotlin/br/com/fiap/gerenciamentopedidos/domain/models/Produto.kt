@@ -19,26 +19,23 @@ data class Produto(
         require(categoria != null) { "Categoria do produto não informada" }
     }
 
-    fun alterarDisponibilidade(disponivel: Boolean) {
-        if (disponivel) {
-            this.disponibilizar()
-        } else {
-            this.indisponibilizar()
-        }
-    }
+    fun alterarDisponibilidade(disponivel: Boolean) = if (disponivel) disponibilizar() else indisponibilizar()
 
-    fun disponibilizar() {
+    fun disponibilizar(): Produto {
         if (disponivel) throw BusinessException("Produto já está disponível")
-        this.disponivel = true
+        disponivel = true
+        return this
     }
 
-    fun indisponibilizar() {
+    fun indisponibilizar(): Produto {
         if (!disponivel) throw BusinessException("Produto já está indisponível")
-        this.disponivel = false
+        disponivel = false
+        return this
     }
 
-    fun excluir() {
+    fun excluir(): Produto {
         if (excluido) throw BusinessException("Produto já está excluído")
-        this.excluido = true
+        excluido = true
+        return this
     }
 }

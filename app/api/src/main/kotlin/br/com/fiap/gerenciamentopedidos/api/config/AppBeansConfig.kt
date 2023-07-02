@@ -1,14 +1,14 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
-import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
-import br.com.fiap.gerenciamentopedidos.domain.ports.PedidoPort
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.BuscarClientePorCpfPort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarClientePort
+import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ClientePort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.PedidoPort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ClienteMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.PedidoMySqlAdapter
 import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ProdutoMySqlAdapter
@@ -70,12 +70,12 @@ class AppBeansConfig {
     }
 
     @Bean
-    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarClienteUseCase {
+    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarClientePort {
         return CadastrarClienteUseCaseImpl(clientePort)
     }
 
     @Bean
-    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpfUseCase {
+    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpfPort {
         return BuscarClientePorCpfUseCaseImpl(clientePort)
     }
 

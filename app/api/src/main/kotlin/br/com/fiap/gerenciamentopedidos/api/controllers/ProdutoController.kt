@@ -1,11 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.*
-import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.*
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.api.requests.EditarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.produto.*
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
@@ -14,22 +13,22 @@ import java.net.URI
 @RestController
 @RequestMapping("/produtos")
 class ProdutoController(
-    private val cadastrarProdutoUseCase: CadastrarProdutoUseCase,
+    private val cadastrarProdutoUseCase: CadastrarProdutoPort,
     private val editarProdutoUseCase: EditarProdutoUseCase,
     private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoriaUseCase,
     private val obterProdutoPorIdUseCase: ObterProdutoPorIdUseCase,
     private val removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
-    private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
+    private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoPort
 ) {
     @PostMapping
     fun post(@RequestBody @Validated request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
-        val produto = cadastrarProdutoUseCase.executar(request)
-        return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(produto)
+        val produto = cadastrarProdutoUseCase.executar(request.toDto())
+        return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(ProdutoResponse(produto))
     }
 
     @PutMapping
     fun put(@RequestBody request: EditarProdutoRequest) =
-        ResponseEntity.ok(editarProdutoUseCase.executar(request))
+        ResponseEntity.ok(editarProdutoUseCase.executar(request.toDto()))
 
     @PatchMapping("/{id}/disponivel/{disponivel}")
     fun patch(@PathVariable id: Long, @PathVariable disponivel: Boolean) =

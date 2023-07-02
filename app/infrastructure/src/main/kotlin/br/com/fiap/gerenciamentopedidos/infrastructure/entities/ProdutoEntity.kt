@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import jakarta.persistence.*
 
 @Entity
@@ -37,30 +37,22 @@ data class ProdutoEntity(
     var imagem: ImagemEntity? = null
 ) {
     companion object {
-        fun fromDomain(produto: Produto): ProdutoEntity {
+        fun fromDto(produto: ProdutoDto): ProdutoEntity {
             val entity = ProdutoEntity(
-                id = produto.id,
-                nome = produto.nome,
-                descricao = produto.descricao,
-                categoria = produto.categoria,
-                valor = produto.valor,
-                tempoPreparo = produto.tempoPreparo,
-                disponivel = produto.disponivel,
-                excluido = produto.excluido
+                produto.id,
+                produto.nome,
+                produto.descricao,
+                produto.categoria,
+                produto.valor,
+                produto.tempoPreparo,
+                produto.disponivel,
+                produto.excluido
             )
-
-            entity.imagem = produto.imagem?.let {
-                ImagemEntity(
-                    id = produto.imagem?.id,
-                    caminho = produto.imagem?.caminho,
-                    produto = entity
-                )
-            }
-
+            entity.imagem = produto.imagem?.let { ImagemEntity(produto.imagem?.id, produto.imagem?.caminho, entity) }
             return entity
         }
     }
 
-    fun toDomain() =
-        Produto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDomain())
+    fun toDto() =
+        ProdutoDto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDto())
 }

@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
@@ -36,18 +36,18 @@ class ClienteMySqlAdapterTest {
         val cpf = CPF
         val email = EMAIL
         val nome = Random.nextLong().toString()
-        val clienteDomain = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val clienteEntity = ClienteEntity.fromDomain(clienteDomain)
+        val cliente = ClienteDto(cpf = Cpf(cpf), email = Email(email), nome = nome)
+        val entity = ClienteEntity.fromDto(cliente)
 
-        every { clienteJpaRepository.save(any()) } returns clienteEntity
+        every { clienteJpaRepository.save(any()) } returns entity
 
         //when
-        val result = clienteMySqlAdapter.salvar(clienteDomain)
+        val result = clienteMySqlAdapter.salvar(cliente)
 
         //then
-        assertEquals(clienteDomain, result)
+        assertEquals(cliente, result)
 
-        verify(exactly = 1) { clienteJpaRepository.save(clienteEntity) }
+        verify(exactly = 1) { clienteJpaRepository.save(entity) }
     }
 
     @Test
@@ -56,17 +56,17 @@ class ClienteMySqlAdapterTest {
         val cpf = CPF
         val email = EMAIL
         val nome = Random.nextLong().toString()
-        val clienteDomain = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val clienteEntity = ClienteEntity.fromDomain(clienteDomain)
+        val cliente = ClienteDto(cpf = Cpf(cpf), email = Email(email), nome = nome)
+        val entity = ClienteEntity.fromDto(cliente)
         val cpfSemMascara = Cpf.removeMascara(cpf)
 
-        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(clienteEntity)
+        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(entity)
 
         //when
         val result = clienteMySqlAdapter.buscarPorCpf(cpf)
 
         //then
-        assertEquals(clienteDomain, result.get())
+        assertEquals(cliente, result.get())
 
         verify(exactly = 1) { clienteJpaRepository.findByCpf(cpfSemMascara) }
     }
@@ -99,19 +99,19 @@ class ClienteMySqlAdapterTest {
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val errorMessage = "Erro ao salvar o cliente na base de dados. Detalhes: Error"
-        val clienteDomain = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val clienteEntity = ClienteEntity.fromDomain(clienteDomain)
+        val cliente = ClienteDto(cpf = Cpf(cpf), email = Email(email), nome = nome)
+        val entity = ClienteEntity.fromDto(cliente)
 
         every { clienteJpaRepository.save(any()) } throws Exception("Error")
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            clienteMySqlAdapter.salvar(clienteDomain)
+            clienteMySqlAdapter.salvar(cliente)
         }
 
         //then
         assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clienteJpaRepository.save(clienteEntity) }
+        verify(exactly = 1) { clienteJpaRepository.save(entity) }
     }
 }
