@@ -1,5 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.domain.ports.drivings.produto
 
-interface RemoverProdutoPorIdUseCase {
+interface RemoverProdutoPorId {
     fun executar(id: Long)
 }

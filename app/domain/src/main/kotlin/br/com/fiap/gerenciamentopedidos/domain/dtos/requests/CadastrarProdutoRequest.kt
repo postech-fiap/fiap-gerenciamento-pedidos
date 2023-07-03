@@ -1,8 +1,8 @@
-package br.com.fiap.gerenciamentopedidos.api.requests
+package br.com.fiap.gerenciamentopedidos.domain.dtos.requests
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ImagemDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
 data class CadastrarProdutoRequest(
     val nome: String? = null,
@@ -12,11 +12,12 @@ data class CadastrarProdutoRequest(
     val tempoPreparo: Long? = null,
     val imagem: String? = null
 ) {
-    fun toDto() = ProdutoDto(
+    fun toModel() = Produto(
         nome = nome,
         descricao = descricao,
         categoria = categoria,
         valor = valor!!,
         tempoPreparo = tempoPreparo!!,
-        imagem = imagem.let { ImagemDto(caminho = it) })
+        imagem = if (imagem.isNullOrEmpty()) null else Imagem(caminho = imagem)
+    )
 }

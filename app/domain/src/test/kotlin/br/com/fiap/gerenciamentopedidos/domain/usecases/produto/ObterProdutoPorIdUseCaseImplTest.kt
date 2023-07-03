@@ -17,7 +17,7 @@ import java.util.*
 @ExtendWith(MockKExtension::class)
 class ObterProdutoPorIdUseCaseImplTest {
     @InjectMockKs
-    lateinit var useCase: ObterProdutoPorIdUseCaseImpl
+    lateinit var useCase: ObterProdutoPorIdImpl
 
     @MockK
     lateinit var produtoPort: ProdutoPort

@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.requests.EditarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ProdutoPort
 import io.mockk.every
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class EditarProdutoUseCaseImplTest {
     @InjectMockKs
-    lateinit var useCase: EditarProdutoUseCaseImpl
+    lateinit var useCase: EditarProdutoImpl
 
     @MockK
     lateinit var produtoPort: ProdutoPort
@@ -24,7 +25,7 @@ class EditarProdutoUseCaseImplTest {
     fun `deve editar produto com sucesso`() {
         //given
         val id = 1L
-        val produto = ProdutoDto(
+        val produto = EditarProdutoRequest(
             id = id,
             nome = "Nome",
             descricao = null,
@@ -33,8 +34,9 @@ class EditarProdutoUseCaseImplTest {
             tempoPreparo = 1,
             imagem = null
         )
+        val dto = ProdutoDto.fromModel(produto.toModel())
 
-        every { produtoPort.update(produto) } returns produto
+        every { produtoPort.update(dto) } returns dto
 
         //when
         val result = useCase.executar(produto)
@@ -43,6 +45,6 @@ class EditarProdutoUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoPort.update(produto) }
+        verify(exactly = 1) { produtoPort.update(dto) }
     }
 }

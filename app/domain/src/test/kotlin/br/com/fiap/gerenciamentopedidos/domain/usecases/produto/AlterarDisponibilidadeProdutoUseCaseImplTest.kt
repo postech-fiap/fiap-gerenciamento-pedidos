@@ -19,7 +19,7 @@ import java.util.*
 class AlterarDisponibilidadeProdutoUseCaseImplTest {
 
     @InjectMockKs
-    lateinit var useCase: AlterarDisponibilidadeProdutoUseCaseImpl
+    lateinit var useCase: AlterarDisponibilidadeProdutoImpl
 
     @MockK
     lateinit var produtoPort: ProdutoPort

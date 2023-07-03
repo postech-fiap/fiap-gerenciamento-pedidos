@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.cadastro
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.requests.CadastrarClienteRequest
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ClientePort
@@ -36,19 +37,21 @@ class CadastrarClienteUseCaseImplTest {
         val cpf = Cpf(CPF)
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
-        val cliente = ClienteDto(cpf = cpf, nome = nome, email = email)
+        val request = CadastrarClienteRequest(cpf.numero, nome, email.endereco)
+        val cliente = request.toModel()
+        val dto = ClienteDto.fromModel(cliente)
 
-        every { clientePort.buscarPorCpf(cliente.cpf!!.numero) } returns Optional.empty()
-        every { clientePort.salvar(cliente) } returns cliente
+        every { clientePort.buscarPorCpf(cliente.cpf.numero) } returns Optional.empty()
+        every { clientePort.salvar(dto) } returns dto
 
         //when
-        val result = cadastrarClienteUseCase.executar(cliente)
+        val result = cadastrarClienteUseCase.executar(request)
 
         //then
-        Assertions.assertEquals(cliente, result)
+        Assertions.assertEquals(cliente.cpf.numero, result.cpf)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
-        verify(exactly = 1) { clientePort.salvar(cliente) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf.numero) }
+        verify(exactly = 1) { clientePort.salvar(dto) }
     }
 
     @Test
@@ -57,19 +60,21 @@ class CadastrarClienteUseCaseImplTest {
         val cpf = Cpf(CPF)
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
-        val cliente = ClienteDto(cpf = cpf, nome = nome, email = email)
+        val request = CadastrarClienteRequest(cpf.numero, nome, email.endereco)
+        val cliente = request.toModel()
+        val dto = ClienteDto.fromModel(cliente)
 
-        every { clientePort.buscarPorCpf(cliente.cpf!!.numero) } returns Optional.of(cliente)
+        every { clientePort.buscarPorCpf(cliente.cpf.numero) } returns Optional.of(dto)
 
         //when-then
         val exception = Assertions.assertThrows(RecursoJaExisteException::class.java) {
-            cadastrarClienteUseCase.executar(cliente)
+            cadastrarClienteUseCase.executar(request)
         }
 
         Assertions.assertEquals("CPF ${cpf.numero} já está cadastrado", exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
-        verify(exactly = 0) { clientePort.salvar(cliente) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf.numero) }
+        verify(exactly = 0) { clientePort.salvar(dto) }
     }
 
     @Test
@@ -78,20 +83,22 @@ class CadastrarClienteUseCaseImplTest {
         val cpf = Cpf(CPF)
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
-        val cliente = ClienteDto(cpf = cpf, nome = nome, email = email)
+        val request = CadastrarClienteRequest(cpf.numero, nome, email.endereco)
+        val cliente = request.toModel()
+        val dto = ClienteDto.fromModel(cliente)
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(cliente.cpf!!.numero) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.buscarPorCpf(cliente.cpf.numero) } throws BaseDeDadosException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            cadastrarClienteUseCase.executar(cliente)
+            cadastrarClienteUseCase.executar(request)
         }
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
-        verify(exactly = 0) { clientePort.salvar(cliente) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf.numero) }
+        verify(exactly = 0) { clientePort.salvar(dto) }
     }
 
     @Test
@@ -100,21 +107,22 @@ class CadastrarClienteUseCaseImplTest {
         val cpf = Cpf(CPF)
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
-        val cliente = ClienteDto(cpf = cpf, nome = nome, email = email)
+        val request = CadastrarClienteRequest(cpf.numero, nome, email.endereco)
+        val cliente = request.toModel()
+        val dto = ClienteDto.fromModel(cliente)
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(cliente.cpf!!.numero) } returns Optional.empty()
-        every { clientePort.salvar(cliente) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.buscarPorCpf(cliente.cpf.numero) } returns Optional.empty()
+        every { clientePort.salvar(dto) } throws BaseDeDadosException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            cadastrarClienteUseCase.executar(cliente)
+            cadastrarClienteUseCase.executar(request)
         }
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
-        verify(exactly = 1) { clientePort.salvar(cliente) }
+        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf.numero) }
+        verify(exactly = 1) { clientePort.salvar(dto) }
     }
-
 }

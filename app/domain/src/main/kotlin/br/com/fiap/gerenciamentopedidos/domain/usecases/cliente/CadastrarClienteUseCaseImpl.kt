@@ -1,23 +1,18 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.cliente
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.requests.CadastrarClienteRequest
+import br.com.fiap.gerenciamentopedidos.domain.dtos.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ClientePort
-import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarClientePort
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarCliente
 
-class CadastrarClienteUseCaseImpl(val clientePort: ClientePort) : CadastrarClientePort {
+class CadastrarClienteUseCaseImpl(private val clientePort: ClientePort) : CadastrarCliente {
 
-    override fun executar(cliente: ClienteDto): ClienteDto {
-        clientePort.buscarPorCpf(cliente.cpf!!.numero)
-            .ifPresent {
-                throw RecursoJaExisteException(
-                    String.format(
-                        "CPF %s já está cadastrado",
-                        cliente.cpf.numero
-                    )
-                )
-            }
+    override fun executar(request: CadastrarClienteRequest): ClienteResponse {
+        clientePort.buscarPorCpf(request.cpf)
+            .ifPresent { throw RecursoJaExisteException(String.format("CPF %s já está cadastrado", request.cpf)) }
 
-        return clientePort.salvar(cliente)
+        return ClienteResponse(clientePort.salvar(ClienteDto.fromModel(request.toModel())).toModel())
     }
 }

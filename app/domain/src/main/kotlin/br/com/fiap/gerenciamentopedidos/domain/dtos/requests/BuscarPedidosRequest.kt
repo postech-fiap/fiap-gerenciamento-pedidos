@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.api.requests
+package br.com.fiap.gerenciamentopedidos.domain.dtos.requests
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import java.time.OffsetDateTime

@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.api.requests.EditarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.api.responses.ProdutoResponse
+import br.com.fiap.gerenciamentopedidos.domain.dtos.requests.CadastrarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.domain.dtos.requests.EditarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.domain.dtos.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.produto.*
 import org.springframework.http.ResponseEntity
@@ -13,22 +13,21 @@ import java.net.URI
 @RestController
 @RequestMapping("/produtos")
 class ProdutoController(
-    private val cadastrarProdutoUseCase: CadastrarProdutoPort,
-    private val editarProdutoUseCase: EditarProdutoUseCase,
-    private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoriaUseCase,
-    private val obterProdutoPorIdUseCase: ObterProdutoPorIdUseCase,
-    private val removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
-    private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoPort
+    private val cadastrarProdutoUseCase: CadastrarProduto,
+    private val editarProdutoUseCase: EditarProduto,
+    private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoria,
+    private val obterProdutoPorIdUseCase: ObterProdutoPorId,
+    private val removerProdutoPorIdUseCase: RemoverProdutoPorId,
+    private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProduto
 ) {
     @PostMapping
     fun post(@RequestBody @Validated request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
-        val produto = cadastrarProdutoUseCase.executar(request.toDto())
-        return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(ProdutoResponse(produto))
+        val produto = cadastrarProdutoUseCase.executar(request)
+        return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(produto)
     }
 
     @PutMapping
-    fun put(@RequestBody request: EditarProdutoRequest) =
-        ResponseEntity.ok(editarProdutoUseCase.executar(request.toDto()))
+    fun put(@RequestBody request: EditarProdutoRequest) = ResponseEntity.ok(editarProdutoUseCase.executar(request))
 
     @PatchMapping("/{id}/disponivel/{disponivel}")
     fun patch(@PathVariable id: Long, @PathVariable disponivel: Boolean) =

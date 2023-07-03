@@ -1,10 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.BuscarClientePorCpfPort
-import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarClientePort
-import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.BuscarClientePorCpf
+import br.com.fiap.gerenciamentopedidos.domain.ports.drivings.cliente.CadastrarCliente
+import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosImpl
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ClientePort
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.PedidoPort
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ProdutoPort
@@ -45,24 +45,24 @@ class AppBeansConfig {
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoMySqlAdapter(repository)
 
     @Bean
-    fun cadastrarProdutoCasoDeUso(produtoPort: ProdutoPort) = CadastrarProdutoUseCaseImpl(produtoPort)
+    fun cadastrarProdutoCasoDeUso(produtoPort: ProdutoPort) = CadastrarProdutoImpl(produtoPort)
 
     @Bean
     fun listarProdutosPorCategoriaUseCase(produtoPort: ProdutoPort) =
-        ListarProdutosPorCategoriaUseCaseImpl(produtoPort)
+        ListarProdutosPorCategoriaImpl(produtoPort)
 
     @Bean
-    fun removerProdutoPorIdUseCase(produtoPort: ProdutoPort) = RemoverProdutoPorIdUseCaseImpl(produtoPort)
+    fun removerProdutoPorIdUseCase(produtoPort: ProdutoPort) = RemoverProdutoPorIdImpl(produtoPort)
 
     @Bean
-    fun editarProdutoUseCase(produtoPort: ProdutoPort) = EditarProdutoUseCaseImpl(produtoPort)
+    fun editarProdutoUseCase(produtoPort: ProdutoPort) = EditarProdutoImpl(produtoPort)
 
     @Bean
     fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoPort) =
-        AlterarDisponibilidadeProdutoUseCaseImpl(repository)
+        AlterarDisponibilidadeProdutoImpl(repository)
 
     @Bean
-    fun obterProdutoPorIdUseCase(produtoPort: ProdutoPort) = ObterProdutoPorIdUseCaseImpl(produtoPort)
+    fun obterProdutoPorIdUseCase(produtoPort: ProdutoPort) = ObterProdutoPorIdImpl(produtoPort)
 
     @Bean
     fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClientePort {
@@ -70,13 +70,13 @@ class AppBeansConfig {
     }
 
     @Bean
-    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarClientePort {
+    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarCliente {
         return CadastrarClienteUseCaseImpl(clientePort)
     }
 
     @Bean
-    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpfPort {
-        return BuscarClientePorCpfUseCaseImpl(clientePort)
+    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpf {
+        return BuscarClientePorCpfImpl(clientePort)
     }
 
     @Bean
@@ -85,8 +85,8 @@ class AppBeansConfig {
     }
 
     @Bean
-    fun buscarPedidosUseCase(pedidoPort: PedidoPort): BuscarUseCaseImpl {
-        return BuscarUseCaseImpl(pedidoPort)
+    fun buscarPedidosUseCase(pedidoPort: PedidoPort): BuscarPedidosImpl {
+        return BuscarPedidosImpl(pedidoPort)
     }
 
 }

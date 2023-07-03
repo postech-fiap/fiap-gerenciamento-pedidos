@@ -1,7 +1,7 @@
-package br.com.fiap.gerenciamentopedidos.api.requests
+package br.com.fiap.gerenciamentopedidos.domain.dtos.requests
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
 data class EditarProdutoRequest(
     val id: Long? = null,
@@ -12,13 +12,13 @@ data class EditarProdutoRequest(
     val tempoPreparo: Long? = null,
     val imagem: EditarImagemRequest? = null,
 ) {
-    fun toDto() = ProdutoDto(
+    fun toModel() = Produto(
         id = id,
         nome = nome,
         descricao = descricao,
         categoria = categoria,
         valor = valor!!,
         tempoPreparo = tempoPreparo!!,
-        imagem = imagem?.toDto()
+        imagem = imagem?.toModel()
     )
 }

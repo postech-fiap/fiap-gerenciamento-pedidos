@@ -4,7 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.ports.drivens.ClientePort
-import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfImpl
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
@@ -25,7 +25,7 @@ private const val EMAIL = "test@test.com"
 class BuscarClienteUseCaseImplTest {
 
     @InjectMockKs
-    lateinit var buscarClientePorCpfUseCaseImpl: BuscarClientePorCpfUseCaseImpl
+    lateinit var buscarClientePorCpfUseCaseImpl: BuscarClientePorCpfImpl
 
     @MockK
     lateinit var clientePort: ClientePort
@@ -44,7 +44,8 @@ class BuscarClienteUseCaseImplTest {
         val result = buscarClientePorCpfUseCaseImpl.executar(cliente.cpf!!.numero)
 
         //then
-        Assertions.assertEquals(cliente, result)
+        Assertions.assertEquals(cliente.id, result.id)
+        Assertions.assertEquals(cpf.numero, result.cpf)
 
         verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
     }
