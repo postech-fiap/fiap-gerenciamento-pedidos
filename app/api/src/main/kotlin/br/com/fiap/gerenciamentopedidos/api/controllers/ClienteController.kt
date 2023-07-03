@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/clientes")
@@ -43,7 +44,7 @@ class ClienteController(
                 schema = Schema(implementation = RecursoJaExisteException::class)))]),
         ApiResponse(responseCode = "400", description = "Bad Request",
             content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = BaseDeDadosException::class)))]),
+                schema = Schema(implementation = IllegalArgumentException::class)))]),
         ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = [ Content(mediaType = "application/json",
                 schema = Schema(implementation = BaseDeDadosException::class))]),
