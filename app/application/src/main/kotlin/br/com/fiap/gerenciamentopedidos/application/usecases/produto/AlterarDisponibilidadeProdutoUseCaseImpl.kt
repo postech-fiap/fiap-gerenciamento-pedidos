@@ -4,9 +4,9 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.AlterarDi
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
-class AlterarDisponibilidadeProdutoUseCaseImpl(private val produtoPort: ProdutoPort) :
+class AlterarDisponibilidadeProdutoUseCaseImpl(private val produtoPort: ProdutoRepository) :
     AlterarDisponibilidadeProdutoUseCase {
     override fun executar(id: Long, disponivel: Boolean): ProdutoResponse {
         val produto =

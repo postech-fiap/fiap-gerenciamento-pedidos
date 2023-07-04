@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -23,13 +23,13 @@ private const val CPF = "111.111.111-11"
 private const val EMAIL = "test@test.com"
 
 @ExtendWith(MockKExtension::class)
-class ClienteMySqlAdapterTest {
+class ClienteRepositoryImplTest {
 
     @MockK
     lateinit var clienteJpaRepository: ClienteJpaRepository
 
     @InjectMockKs
-    lateinit var clienteMySqlAdapter: ClienteMySqlAdapter
+    lateinit var clienteRepository: ClienteRepositoryImpl
 
     @Test
     fun `deve salvar um cliente com sucesso`() {
@@ -43,7 +43,7 @@ class ClienteMySqlAdapterTest {
         every { clienteJpaRepository.save(any()) } returns ClienteEntity.fromDto(clienteDto)
 
         //when
-        val result = clienteMySqlAdapter.salvar(ClienteDto.fromModel(cliente))
+        val result = clienteRepository.salvar(ClienteDto.fromModel(cliente))
 
         //then
         assertEquals(clienteDto, result)
@@ -64,7 +64,7 @@ class ClienteMySqlAdapterTest {
         every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(ClienteEntity.fromDto(clienteDto))
 
         //when
-        val result = clienteMySqlAdapter.buscarPorCpf(cpf)
+        val result = clienteRepository.buscarPorCpf(cpf)
 
         //then
         assertEquals(clienteDto, result.get())
@@ -84,7 +84,7 @@ class ClienteMySqlAdapterTest {
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            clienteMySqlAdapter.buscarPorCpf(cpf)
+            clienteRepository.buscarPorCpf(cpf)
         }
 
         //then
@@ -108,7 +108,7 @@ class ClienteMySqlAdapterTest {
 
         //when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            clienteMySqlAdapter.salvar(dto)
+            clienteRepository.salvar(dto)
         }
 
         //then

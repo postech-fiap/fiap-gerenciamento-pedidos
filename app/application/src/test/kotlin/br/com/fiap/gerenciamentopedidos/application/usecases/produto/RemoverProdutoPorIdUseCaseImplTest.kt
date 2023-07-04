@@ -4,7 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -22,7 +22,7 @@ class RemoverProdutoPorIdUseCaseImplTest {
     lateinit var useCase: RemoverProdutoPorIdUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve obter produto por id com sucesso`() {

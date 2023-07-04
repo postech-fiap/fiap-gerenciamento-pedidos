@@ -3,7 +3,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -20,7 +20,7 @@ class CadastrarProdutoUseCaseImplTest {
     lateinit var useCase: CadastrarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve cadastrar produto com sucesso`() {

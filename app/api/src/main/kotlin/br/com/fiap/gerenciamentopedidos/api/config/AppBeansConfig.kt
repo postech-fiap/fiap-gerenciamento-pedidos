@@ -1,92 +1,62 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
-import br.com.fiap.gerenciamentopedidos.domain.ports.PedidoPort
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
-import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ClienteMySqlAdapter
-import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.PedidoMySqlAdapter
-import br.com.fiap.gerenciamentopedidos.infrastructure.adapters.ProdutoMySqlAdapter
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteJpaRepository
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoJpaRepository
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import java.text.SimpleDateFormat
-
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 class AppBeansConfig {
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return JsonMapper.builder()
-            .addModule(JavaTimeModule())
-            .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
-            .propertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-            .build()
-    }
+    fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoRepositoryImpl(repository)
 
     @Bean
-    fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoMySqlAdapter(repository)
+    fun cadastrarProdutoCasoDeUso(repository: ProdutoRepository) = CadastrarProdutoUseCaseImpl(repository)
 
     @Bean
-    fun cadastrarProdutoCasoDeUso(produtoPort: ProdutoPort) = CadastrarProdutoUseCaseImpl(produtoPort)
+    fun listarProdutosPorCategoriaUseCase(repository: ProdutoRepository) =
+        ListarProdutosPorCategoriaUseCaseImpl(repository)
 
     @Bean
-    fun listarProdutosPorCategoriaUseCase(produtoPort: ProdutoPort) =
-        ListarProdutosPorCategoriaUseCaseImpl(produtoPort)
+    fun removerProdutoPorIdUseCase(repository: ProdutoRepository) = RemoverProdutoPorIdUseCaseImpl(repository)
 
     @Bean
-    fun removerProdutoPorIdUseCase(produtoPort: ProdutoPort) = RemoverProdutoPorIdUseCaseImpl(produtoPort)
+    fun editarProdutoUseCase(repository: ProdutoRepository) = EditarProdutoUseCaseImpl(repository)
 
     @Bean
-    fun editarProdutoUseCase(produtoPort: ProdutoPort) = EditarProdutoUseCaseImpl(produtoPort)
-
-    @Bean
-    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoPort) =
+    fun alterarDisponibilidadeProdutoUseCase(repository: ProdutoRepository) =
         AlterarDisponibilidadeProdutoUseCaseImpl(repository)
 
     @Bean
-    fun obterProdutoPorIdUseCase(produtoPort: ProdutoPort) = ObterProdutoPorIdUseCaseImpl(produtoPort)
+    fun obterProdutoPorIdUseCase(repository: ProdutoRepository) = ObterProdutoPorIdUseCaseImpl(repository)
 
     @Bean
-    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository): ClientePort {
-        return ClienteMySqlAdapter(clienteJpaRepository)
-    }
+    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository) = ClienteRepositoryImpl(clienteJpaRepository)
 
     @Bean
-    fun cadastrarClienteUseCase(clientePort: ClientePort): CadastrarClienteUseCase {
-        return CadastrarClienteUseCaseImpl(clientePort)
-    }
+    fun cadastrarClienteUseCase(repository: ClienteRepository) = CadastrarClienteUseCaseImpl(repository)
 
     @Bean
-    fun buscarClientePorCpfUseCase(clientePort: ClientePort): BuscarClientePorCpfUseCase {
-        return BuscarClientePorCpfUseCaseImpl(clientePort)
-    }
+    fun buscarClientePorCpfUseCase(repository: ClienteRepository) = BuscarClientePorCpfUseCaseImpl(repository)
 
     @Bean
-    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository): PedidoPort {
-        return PedidoMySqlAdapter(pedidoJpaRepository)
-    }
+    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
-    fun buscarPedidosUseCase(pedidoPort: PedidoPort): BuscarUseCaseImpl {
-        return BuscarUseCaseImpl(pedidoPort)
-    }
-
+    fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
 }

@@ -1,12 +1,12 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ImagemEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import java.util.*
 
 private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao listar produtos por id. Detalhes: %s"
@@ -14,7 +14,7 @@ private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar produtos por 
 private const val ERROR_MESSAGE_CREATE = "Erro ao salvar produtos. Detalhes: %s"
 private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produtos. Detalhes: %s"
 
-class ProdutoMySqlAdapter(private val repository: ProdutoJpaRepository) : ProdutoPort {
+class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : ProdutoRepository {
     override fun get(id: Long): Optional<ProdutoDto> {
         try {
             return repository.findById(id).map { it.toDto() }

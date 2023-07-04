@@ -3,7 +3,7 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -19,7 +19,7 @@ class EditarProdutoUseCaseImplTest {
     lateinit var useCase: EditarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve editar produto com sucesso`() {

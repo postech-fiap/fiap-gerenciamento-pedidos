@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
-import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
@@ -30,7 +30,7 @@ class BuscarClienteUseCaseImplTest {
     lateinit var buscarClientePorCpfUseCaseImpl: BuscarClientePorCpfUseCaseImpl
 
     @MockK
-    lateinit var clientePort: ClientePort
+    lateinit var clientePort: ClienteRepository
 
     @Test
     fun `deve retornar um cliente por cpf quando existir`() {

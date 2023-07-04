@@ -1,12 +1,11 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
-import br.com.fiap.gerenciamentopedidos.domain.pedido.models.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -19,13 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
-class PedidoMySqlAdapterTest {
+class PedidoRepositoryImplTest {
 
     @MockK
     lateinit var pedidoJpaRepository: PedidoJpaRepository
 
     @InjectMockKs
-    lateinit var pedidoMySqlAdapter: PedidoMySqlAdapter
+    lateinit var pedidoRepository: PedidoRepositoryImpl
 
     @Test
     fun `deve buscar pedidos com sucesso`() {
@@ -50,7 +49,7 @@ class PedidoMySqlAdapterTest {
         } returns pedidoEntityList
 
         // when
-        val result = pedidoMySqlAdapter.buscarPedidos(status, dataInicial, dataFinal)
+        val result = pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
 
         // then
         assertEquals(pedidoList, result)
@@ -82,7 +81,7 @@ class PedidoMySqlAdapterTest {
 
         // when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            pedidoMySqlAdapter.buscarPedidos(status, dataInicial, dataFinal)
+            pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
         }
 
         // then

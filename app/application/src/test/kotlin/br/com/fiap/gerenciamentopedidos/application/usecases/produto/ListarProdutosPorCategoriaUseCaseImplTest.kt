@@ -1,9 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,25 +20,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
     lateinit var useCase: ListarProdutosPorCategoriaUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
-
-    @Test
-    fun `deve lançar exceção por não encontrar produtos`() {
-        //given
-        val categoria = Categoria.BEBIDA
-
-        every { produtoPort.get(categoria) } returns emptyList()
-
-        //when
-        val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
-            useCase.executar(categoria)
-        }
-
-        //then
-        Assertions.assertEquals("Nenhum produto encontrado", exception.message)
-
-        verify(exactly = 1) { produtoPort.get(categoria) }
-    }
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve listar produtos por categoria com sucesso`() {

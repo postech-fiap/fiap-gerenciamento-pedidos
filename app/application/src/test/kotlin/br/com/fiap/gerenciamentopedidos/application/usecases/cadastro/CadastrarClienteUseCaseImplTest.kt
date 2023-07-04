@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarCl
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
-import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
@@ -30,7 +30,7 @@ class CadastrarClienteUseCaseImplTest {
     lateinit var cadastrarClienteUseCase: CadastrarClienteUseCaseImpl
 
     @MockK
-    lateinit var clientePort: ClientePort
+    lateinit var clientePort: ClienteRepository
 
     @Test
     fun `deve cadastrar um cliente com sucesso quando ele não existir`() {

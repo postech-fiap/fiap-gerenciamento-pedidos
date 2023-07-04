@@ -5,7 +5,7 @@ import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
-import br.com.fiap.gerenciamentopedidos.domain.ports.PedidoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,10 +21,10 @@ import java.time.OffsetDateTime
 class BuscarPedidosUseCaseTest {
 
     @InjectMockKs
-    lateinit var buscarUseCaseImpl: BuscarUseCaseImpl
+    lateinit var buscarUseCaseImpl: BuscarPedidosUseCaseImpl
 
     @MockK
-    lateinit var pedidoPort: PedidoPort
+    lateinit var pedidoPort: PedidoRepository
 
     @Test
     fun `deve retornar um pedido`() {

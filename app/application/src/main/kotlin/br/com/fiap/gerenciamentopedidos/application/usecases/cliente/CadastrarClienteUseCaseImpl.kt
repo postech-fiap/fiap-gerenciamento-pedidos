@@ -5,9 +5,9 @@ import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteReq
 import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
-import br.com.fiap.gerenciamentopedidos.domain.ports.ClientePort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 
-class CadastrarClienteUseCaseImpl(val clientePort: ClientePort) : CadastrarClienteUseCase {
+class CadastrarClienteUseCaseImpl(private val clientePort: ClienteRepository) : CadastrarClienteUseCase {
 
     override fun executar(request: CadastrarClienteRequest): ClienteResponse {
         clientePort.buscarPorCpf(request.cpf)

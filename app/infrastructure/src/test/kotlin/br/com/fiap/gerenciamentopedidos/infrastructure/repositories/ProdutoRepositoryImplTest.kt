@@ -1,10 +1,10 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -16,13 +16,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class ProdutoMySqlAdapterTest {
+class ProdutoRepositoryImplTest {
 
     @MockK
-    lateinit var repository: ProdutoJpaRepository
+    lateinit var produtoJpaRepository: ProdutoJpaRepository
 
     @InjectMockKs
-    lateinit var adapter: ProdutoMySqlAdapter
+    lateinit var produtoRepository: ProdutoRepositoryImpl
 
     @Test
     fun `deve buscar um produto por id com sucesso`() {
@@ -41,14 +41,14 @@ class ProdutoMySqlAdapterTest {
         )
         val dto = ProdutoDto.fromModel(produto)
 
-        every { repository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
 
         //when
-        val result = adapter.get(id)
+        val result = produtoRepository.get(id)
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result.get())
-        verify(exactly = 1) { repository.findById(any()) }
+        verify(exactly = 1) { produtoJpaRepository.findById(any()) }
     }
 
     @Test
@@ -67,14 +67,14 @@ class ProdutoMySqlAdapterTest {
             imagem = null
         )
         val dto = ProdutoDto.fromModel(produto)
-        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(dto))
 
         //when
-        val result = adapter.get(categoria)
+        val result = produtoRepository.get(categoria)
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result.first())
-        verify(exactly = 1) { repository.findByCategoria(categoria) }
+        verify(exactly = 1) { produtoJpaRepository.findByCategoria(categoria) }
     }
 
     @Test
@@ -94,14 +94,14 @@ class ProdutoMySqlAdapterTest {
         val dto = ProdutoDto.fromModel(produto)
         val entity = ProdutoEntity.fromDto(dto)
 
-        every { repository.save(any()) } returns entity
+        every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = adapter.create(ProdutoDto.fromModel(produto))
+        val result = produtoRepository.create(ProdutoDto.fromModel(produto))
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
-        verify(exactly = 1) { repository.save(entity) }
+        verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 
     @Test
@@ -121,14 +121,14 @@ class ProdutoMySqlAdapterTest {
         val dto = ProdutoDto.fromModel(produto)
         val entity = ProdutoEntity.fromDto(dto)
 
-        every { repository.findById(any()) } returns Optional.of(entity)
-        every { repository.save(any()) } returns entity
+        every { produtoJpaRepository.findById(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = adapter.update(ProdutoDto.fromModel(produto))
+        val result = produtoRepository.update(ProdutoDto.fromModel(produto))
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
-        verify(exactly = 1) { repository.save(entity) }
+        verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 }
