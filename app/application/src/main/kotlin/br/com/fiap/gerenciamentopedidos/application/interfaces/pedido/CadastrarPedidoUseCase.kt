@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequ
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 
 interface CadastrarPedidoUseCase {
-    fun executar(cadastrarPedidoRequest: CadastrarPedidoRequest): PedidoResponse
+    fun executar(request: CadastrarPedidoRequest): PedidoResponse
 }

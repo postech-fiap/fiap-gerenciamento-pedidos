@@ -7,6 +7,7 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import java.time.OffsetDateTime
+import java.util.Optional
 
 private const val ERROR_MESSAGE_TO_LIST = "Erro ao buscar pedidos na base de dados. Detalhes: %s"
 
@@ -28,9 +29,9 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun buscarUltimoPedidoDiDia(dia: Int): PedidoDto {
+    override fun buscarUltimoPedidoDiDia(data: OffsetDateTime): Optional<PedidoDto> {
         try {
-            return pedidoJpaRepository.findByNumber(dia.toString()).toDto()
+            return Optional.ofNullable(pedidoJpaRepository.findByDataHora(data).last()).map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)

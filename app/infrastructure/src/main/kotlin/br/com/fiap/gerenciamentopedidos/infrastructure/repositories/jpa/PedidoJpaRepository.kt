@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.OffsetDateTime
+import java.util.Optional
 
 @Repository
 interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
@@ -13,8 +14,8 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
         status: PedidoStatus,
         dataInicial: OffsetDateTime,
         dataFinal: OffsetDateTime
-    ) : List<PedidoEntity>
+    ): List<PedidoEntity>
 
-    fun findByNumber(number : String): PedidoEntity
+    fun findByDataHora(dataHora: OffsetDateTime): List<PedidoEntity>
 
 }

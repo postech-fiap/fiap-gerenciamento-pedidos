@@ -7,7 +7,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
@@ -31,7 +31,7 @@ class CadastrarPedidoUseCaseTest {
     lateinit var cadastrarUseCaseImpl: CadastrarPedidoUseCaseImpl
 
     @MockK
-    lateinit var pagamentoRepository: PagamentoRepository
+    lateinit var pagamentoRepository: PagamentoService
 
     @MockK
     lateinit var clienteRepository: ClienteRepository

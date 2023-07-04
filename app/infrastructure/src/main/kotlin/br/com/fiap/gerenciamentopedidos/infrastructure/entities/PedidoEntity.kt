@@ -22,7 +22,7 @@ data class PedidoEntity(
     val status: PedidoStatus? = null,
 
     @Column(name = "tempo_espera_minutos", nullable = false)
-    val tempoEsperaMinutos: Int? = 0,
+    val tempoEsperaMinutos: Long? = 0,
 
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,

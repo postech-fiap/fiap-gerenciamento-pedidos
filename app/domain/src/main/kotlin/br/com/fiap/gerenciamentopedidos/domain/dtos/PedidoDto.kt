@@ -8,7 +8,7 @@ data class PedidoDto(
     val id: Long? = null,
     val dataHora: OffsetDateTime? = null,
     val status: PedidoStatus? = null,
-    val tempoEsperaMinutos: Int? = null,
+    val tempoEsperaMinutos: Long? = null,
     val numero: String? = null,
     val cliente: ClienteDto? = null,
     val produtos: List<PedidoProdutoDto>? = null,
@@ -21,21 +21,9 @@ data class PedidoDto(
             pedido.status,
             pedido.tempoEsperaMinutos,
             pedido.numero,
-            pedido.cliente?.let { ClienteDto.fromModel(it) },
-            pedido.produtos?.map { PedidoProdutoDto.fromModel(it) },
+            pedido.cliente.let { ClienteDto.fromModel(it) },
+            pedido.produtos.map { PedidoProdutoDto.fromModel(it) },
             pedido.pagamento?.let { PagamentoDto.fromModel(it) }
         )
     }
-
-    fun toModel() =
-        Pedido(
-            id,
-            dataHora!!,
-            status!!,
-            tempoEsperaMinutos!!,
-            numero!!,
-            cliente?.toModel(),
-            produtos?.map { it.toModel() },
-            pagamento?.toModel()
-        )
 }
