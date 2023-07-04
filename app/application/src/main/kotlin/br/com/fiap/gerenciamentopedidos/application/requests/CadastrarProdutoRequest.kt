@@ -18,5 +18,5 @@ data class CadastrarProdutoRequest(
         categoria = categoria,
         valor = valor!!,
         tempoPreparo = tempoPreparo!!,
-        imagem = imagem.let { Imagem(caminho = it) })
+        imagem = imagem?.let { Imagem(caminho = it) })
 }

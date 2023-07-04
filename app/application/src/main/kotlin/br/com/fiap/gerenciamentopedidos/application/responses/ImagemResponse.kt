@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
-import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ImagemDto
 
-class ImagemResponse(imagem: Imagem) {
+class ImagemResponse(imagem: ImagemDto) {
     var id: Long? = null
     var caminho: String? = null
 

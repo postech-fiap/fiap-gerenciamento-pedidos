@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -30,32 +31,37 @@ class PedidoMySqlAdapterTest {
     fun `deve buscar pedidos com sucesso`() {
         // given
         val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "1234", null, null, null)
-        val pedidoDomainList = listOf(pedido)
+        val dto = PedidoDto.fromModel(pedido)
+        val pedidoList = listOf(dto)
 
-        val pedidoEntity = PedidoEntity.fromDomain(pedido)
+        val pedidoEntity = PedidoEntity.fromDto(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
         val status = PedidoStatus.PENDENTE
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
 
-        every { pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
-            status,
-            dataInicial,
-            dataFinal)
+        every {
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+                status,
+                dataInicial,
+                dataFinal
+            )
         } returns pedidoEntityList
 
         // when
         val result = pedidoMySqlAdapter.buscarPedidos(status, dataInicial, dataFinal)
 
         // then
-        assertEquals(pedidoDomainList, result)
+        assertEquals(pedidoList, result)
 
-        verify(exactly = 1) { pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
-            status,
-            dataInicial,
-            dataFinal
-        ) }
+        verify(exactly = 1) {
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+                status,
+                dataInicial,
+                dataFinal
+            )
+        }
     }
 
     @Test
@@ -66,11 +72,13 @@ class PedidoMySqlAdapterTest {
         val dataFinal = OffsetDateTime.now()
         val errorMessage = "Erro ao buscar pedidos na base de dados. Detalhes: Error"
 
-        every { pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
-            status,
-            dataInicial,
-            dataFinal
-        ) } throws Exception("Error")
+        every {
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+                status,
+                dataInicial,
+                dataFinal
+            )
+        } throws Exception("Error")
 
         // when-then
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
@@ -80,11 +88,13 @@ class PedidoMySqlAdapterTest {
         // then
         assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
-            status,
-            dataInicial,
-            dataFinal
-        ) }
+        verify(exactly = 1) {
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+                status,
+                dataInicial,
+                dataFinal
+            )
+        }
     }
 
 }

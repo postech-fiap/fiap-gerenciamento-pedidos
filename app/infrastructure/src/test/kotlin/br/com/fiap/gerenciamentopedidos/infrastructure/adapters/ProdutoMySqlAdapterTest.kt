@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
@@ -38,14 +39,16 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        every { repository.getReferenceById(any()) } returns ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+
+        every { repository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
 
         //when
         val result = adapter.get(id)
 
         //then
-        Assertions.assertEquals(produto, result)
-        verify(exactly = 1) { repository.getReferenceById(id) }
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.get())
+        verify(exactly = 1) { repository.findById(any()) }
     }
 
     @Test
@@ -63,13 +66,14 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDomain(produto))
+        val dto = ProdutoDto.fromModel(produto)
+        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(dto))
 
         //when
         val result = adapter.get(categoria)
 
         //then
-        Assertions.assertEquals(produto, result.first())
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.first())
         verify(exactly = 1) { repository.findByCategoria(categoria) }
     }
 
@@ -87,15 +91,16 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+        val entity = ProdutoEntity.fromDto(dto)
 
         every { repository.save(any()) } returns entity
 
         //when
-        val result = adapter.create(produto)
+        val result = adapter.create(ProdutoDto.fromModel(produto))
 
         //then
-        Assertions.assertEquals(produto, result)
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
         verify(exactly = 1) { repository.save(entity) }
     }
 
@@ -113,15 +118,17 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+        val entity = ProdutoEntity.fromDto(dto)
 
+        every { repository.findById(any()) } returns Optional.of(entity)
         every { repository.save(any()) } returns entity
 
         //when
-        val result = adapter.update(produto)
+        val result = adapter.update(ProdutoDto.fromModel(produto))
 
         //then
-        Assertions.assertEquals(produto, result)
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
         verify(exactly = 1) { repository.save(entity) }
     }
 }

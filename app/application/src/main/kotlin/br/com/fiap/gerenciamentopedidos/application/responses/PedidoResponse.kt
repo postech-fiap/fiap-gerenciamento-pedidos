@@ -1,13 +1,12 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.time.OffsetDateTime
 import java.util.stream.Collectors
 
-data class PedidoResponse(
-    private val pedido: Pedido
-) {
+data class PedidoResponse(private val pedido: PedidoDto) {
 
     val id: Long
     val dataHora: OffsetDateTime
@@ -35,10 +34,10 @@ data class PedidoResponse(
         }
 
         id = pedido.id!!
-        dataHora = pedido.dataHora
-        status = pedido.status
-        tempoEsperaMinutos = pedido.tempoEsperaMinutos
-        numero = pedido.numero
+        dataHora = pedido.dataHora!!
+        status = pedido.status!!
+        tempoEsperaMinutos = pedido.tempoEsperaMinutos!!
+        numero = pedido.numero!!
         cliente = clienteResponse
         produtos = produtosResponse
         pagamento = pagamentoResponse

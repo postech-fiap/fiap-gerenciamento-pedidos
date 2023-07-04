@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 
 data class ClienteResponse(
@@ -10,12 +11,12 @@ data class ClienteResponse(
 ) {
 
     companion object {
-        fun fromDomain(clienteDomain: Cliente) =
+        fun fromDomain(clienteDomain: ClienteDto) =
             ClienteResponse(
                 clienteDomain.id,
-                clienteDomain.cpf.numero,
-                clienteDomain.nome,
-                clienteDomain.email.endereco
+                clienteDomain.cpf!!.numero,
+                clienteDomain.nome!!,
+                clienteDomain.email!!.endereco
             )
     }
 }

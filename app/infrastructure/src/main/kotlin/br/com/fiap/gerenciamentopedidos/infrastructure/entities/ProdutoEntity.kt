@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import jakarta.persistence.*
@@ -37,7 +38,7 @@ data class ProdutoEntity(
     var imagem: ImagemEntity? = null
 ) {
     companion object {
-        fun fromDomain(produto: Produto): ProdutoEntity {
+        fun fromDto(produto: ProdutoDto): ProdutoEntity {
             val entity = ProdutoEntity(
                 id = produto.id,
                 nome = produto.nome,
@@ -61,6 +62,6 @@ data class ProdutoEntity(
         }
     }
 
-    fun toDomain() =
-        Produto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDomain())
+    fun toDto() =
+        ProdutoDto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDto())
 }

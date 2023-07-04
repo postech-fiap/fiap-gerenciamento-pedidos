@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
@@ -38,7 +39,7 @@ class ObterProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.get(id) } returns Optional.of(produto)
+        every { produtoPort.get(id) } returns Optional.of(ProdutoDto.fromModel(produto))
 
         //when
         val result = useCase.executar(id)

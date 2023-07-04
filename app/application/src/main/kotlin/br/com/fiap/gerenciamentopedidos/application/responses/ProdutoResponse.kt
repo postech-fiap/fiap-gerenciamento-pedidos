@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
-class ProdutoResponse(produto: Produto) {
+class ProdutoResponse(produto: ProdutoDto) {
     var id: Long? = null
     var nome: String? = null
     var descricao: String? = null
