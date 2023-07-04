@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -16,17 +15,17 @@ class SpringDocConfig {
             .group("http")
             .pathsToMatch("/**")
             .build()
-
     }
 
     @Bean
     fun apiInfo(): OpenAPI {
         return OpenAPI()
             .components(Components())
-            .info(Info()
-                .title("Gerenciamento de Pedidos")
-                .description("Desafio Tech Challange FIAP")
-                .version("1.0.0"))
+            .info(
+                Info()
+                    .title("Gerenciamento de Pedidos")
+                    .description("Desafio Tech Challange FIAP")
+                    .version("1.0.0")
+            )
     }
 }
-

@@ -9,7 +9,6 @@ data class Cliente(
     val nome: String,
     val email: Email
 ) {
-
     init {
         require(nome.isNotBlank()) { "Nome não pode ser vazio" }
     }

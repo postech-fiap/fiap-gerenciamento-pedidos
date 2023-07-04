@@ -4,7 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 
-data class ClienteRequest(
+data class CadastrarClienteRequest(
     val cpf: String,
     val nome: String,
     val email: String

@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import jakarta.persistence.*
 import java.time.OffsetDateTime
@@ -42,28 +42,27 @@ data class PedidoEntity(
     val pagamento: PagamentoEntity? = null
 
 ) {
+    fun toDto(): PedidoDto {
+        val cliente = cliente?.toDto(cliente.cpf!!)
 
-    fun toDomain(): Pedido {
-        val clienteDomain = cliente?.toDomain(cliente.cpf!!)
-
-        val produtosDomain = produtos?.stream()
-            ?.map { it.toDomain() }
+        val produtos = produtos?.stream()
+            ?.map { it.toDto() }
             ?.collect(Collectors.toList())
 
-        return Pedido(
+        return PedidoDto(
             id = id,
             dataHora = dataHora!!,
             status = status!!,
             tempoEsperaMinutos = tempoEsperaMinutos!!,
             numero = numero!!,
-            cliente = clienteDomain,
-            produtos = produtosDomain,
-            pagamento = pagamento?.toDomain()
+            cliente = cliente,
+            produtos = produtos,
+            pagamento = pagamento?.toDto()
         )
     }
 
     companion object {
-        fun fromDomain(pedido: Pedido): PedidoEntity {
+        fun fromDto(pedido: PedidoDto): PedidoEntity {
             return PedidoEntity(
                 id = pedido.id,
                 dataHora = pedido.dataHora,

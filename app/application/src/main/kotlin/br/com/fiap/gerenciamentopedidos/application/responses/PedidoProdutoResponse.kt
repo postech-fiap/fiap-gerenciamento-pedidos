@@ -1,11 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
 import java.math.BigDecimal
 
-data class PedidoProdutoResponse(
-    private val pedidoProduto: PedidoProduto
-) {
+data class PedidoProdutoResponse(private val pedidoProduto: PedidoProdutoDto) {
 
     val nome: String
     val valorPago: BigDecimal

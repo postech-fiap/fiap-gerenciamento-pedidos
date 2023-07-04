@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity

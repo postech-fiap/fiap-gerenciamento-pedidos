@@ -1,8 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -18,7 +19,7 @@ class EditarProdutoUseCaseImplTest {
     lateinit var useCase: EditarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve editar produto com sucesso`() {
@@ -34,7 +35,9 @@ class EditarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.update(produtoRequest.toDomain()) } returns produtoRequest.toDomain()
+        val dto = ProdutoDto.fromModel(produtoRequest.toDomain())
+
+        every { produtoPort.update(dto) } returns dto
 
         //when
         val result = useCase.executar(produtoRequest)
@@ -43,6 +46,6 @@ class EditarProdutoUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoPort.update(produtoRequest.toDomain()) }
+        verify(exactly = 1) { produtoPort.update(dto) }
     }
 }

@@ -1,9 +1,10 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.adapters
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -15,13 +16,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class ProdutoMySqlAdapterTest {
+class ProdutoRepositoryImplTest {
 
     @MockK
-    lateinit var repository: ProdutoJpaRepository
+    lateinit var produtoJpaRepository: ProdutoJpaRepository
 
     @InjectMockKs
-    lateinit var adapter: ProdutoMySqlAdapter
+    lateinit var produtoRepository: ProdutoRepositoryImpl
 
     @Test
     fun `deve buscar um produto por id com sucesso`() {
@@ -38,14 +39,16 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        every { repository.getReferenceById(any()) } returns ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+
+        every { produtoJpaRepository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
 
         //when
-        val result = adapter.get(id)
+        val result = produtoRepository.get(id)
 
         //then
-        Assertions.assertEquals(produto, result)
-        verify(exactly = 1) { repository.getReferenceById(id) }
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.get())
+        verify(exactly = 1) { produtoJpaRepository.findById(any()) }
     }
 
     @Test
@@ -63,14 +66,15 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        every { repository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDomain(produto))
+        val dto = ProdutoDto.fromModel(produto)
+        every { produtoJpaRepository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(dto))
 
         //when
-        val result = adapter.get(categoria)
+        val result = produtoRepository.get(categoria)
 
         //then
-        Assertions.assertEquals(produto, result.first())
-        verify(exactly = 1) { repository.findByCategoria(categoria) }
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.first())
+        verify(exactly = 1) { produtoJpaRepository.findByCategoria(categoria) }
     }
 
     @Test
@@ -87,16 +91,17 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+        val entity = ProdutoEntity.fromDto(dto)
 
-        every { repository.save(any()) } returns entity
+        every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = adapter.create(produto)
+        val result = produtoRepository.create(ProdutoDto.fromModel(produto))
 
         //then
-        Assertions.assertEquals(produto, result)
-        verify(exactly = 1) { repository.save(entity) }
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
+        verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 
     @Test
@@ -113,15 +118,17 @@ class ProdutoMySqlAdapterTest {
             excluido = false,
             imagem = null
         )
-        val entity = ProdutoEntity.fromDomain(produto)
+        val dto = ProdutoDto.fromModel(produto)
+        val entity = ProdutoEntity.fromDto(dto)
 
-        every { repository.save(any()) } returns entity
+        every { produtoJpaRepository.findById(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = adapter.update(produto)
+        val result = produtoRepository.update(ProdutoDto.fromModel(produto))
 
         //then
-        Assertions.assertEquals(produto, result)
-        verify(exactly = 1) { repository.save(entity) }
+        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
+        verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 }

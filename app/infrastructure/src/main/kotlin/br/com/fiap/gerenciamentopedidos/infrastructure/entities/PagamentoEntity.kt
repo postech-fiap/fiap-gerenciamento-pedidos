@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import jakarta.persistence.*
 import java.time.OffsetDateTime
 
@@ -15,7 +16,7 @@ data class PagamentoEntity(
     val dataHora: OffsetDateTime? = null,
 
     @Column(name = "status", nullable = false)
-    val status: String? = null,
+    val status: PagamentoStatus? = null,
 
     @OneToOne
     @JoinColumn(name = "pedido_id")
@@ -23,14 +24,5 @@ data class PagamentoEntity(
     val pedido: PedidoEntity? = null
 
 ) {
-
-    fun toDomain(): Pagamento {
-        return Pagamento(
-            id = id,
-            dataHora = dataHora!!,
-            status = status!!,
-            pedido = null
-        )
-    }
-
+    fun toDto() = PagamentoDto(id, dataHora!!, status!!)
 }

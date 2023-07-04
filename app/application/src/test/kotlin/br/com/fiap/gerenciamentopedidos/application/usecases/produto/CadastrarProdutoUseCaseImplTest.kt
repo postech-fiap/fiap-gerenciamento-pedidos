@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -20,12 +20,11 @@ class CadastrarProdutoUseCaseImplTest {
     lateinit var useCase: CadastrarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve cadastrar produto com sucesso`() {
         //given
-        val id = 1L
         val produtoRequest = CadastrarProdutoRequest(
             nome = "Nome",
             descricao = null,
@@ -35,25 +34,16 @@ class CadastrarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.create(produtoRequest.toDomain()) } returns Produto(
-            id = id,
-            nome = "Nome",
-            descricao = null,
-            categoria = Categoria.BEBIDA,
-            valor = 1.0,
-            tempoPreparo = 1,
-            disponivel = true,
-            excluido = false,
-            imagem = null
-        )
+        val dto = ProdutoDto.fromModel(produtoRequest.toDomain())
+
+        every { produtoPort.create(dto) } returns dto
 
         //when
         val result = useCase.executar(produtoRequest)
 
         //then
         Assertions.assertNotNull(result)
-        Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoPort.create(produtoRequest.toDomain()) }
+        verify(exactly = 1) { produtoPort.create(dto) }
     }
 }

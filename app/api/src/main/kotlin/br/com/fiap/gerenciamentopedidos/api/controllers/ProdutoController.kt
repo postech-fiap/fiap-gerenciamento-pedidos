@@ -7,6 +7,7 @@ import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoReques
 import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
+import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -28,13 +29,14 @@ class ProdutoController(
     private val removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
     private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
 ) {
-
     @Operation(summary = "Cadastrar um produto")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Created",
             content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = ProdutoResponse::class)
-            ))])])
+                schema = Schema(implementation = ProdutoResponse::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))])])
     @PostMapping
     fun post(@RequestBody @Validated request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
         val produto = cadastrarProdutoUseCase.executar(request)
@@ -45,7 +47,10 @@ class ProdutoController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
-                    schema = Schema(implementation = ProdutoResponse::class)))])])
+                    schema = Schema(implementation = ProdutoResponse::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))])])
     @PutMapping
     fun put(@RequestBody request: EditarProdutoRequest) =
         ResponseEntity.ok(editarProdutoUseCase.executar(request))
@@ -56,9 +61,12 @@ class ProdutoController(
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
                 schema = Schema(implementation = ProdutoResponse::class)))]),
-    ApiResponse(responseCode = "404", description = "Produto não encontrado",
-        content = [ (Content(mediaType = "application/json",
-            schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))]),
+        ApiResponse(responseCode = "404", description = "Produto não encontrado",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @PatchMapping("/{id}/disponivel/{disponivel}")
     fun patch(@PathVariable id: Long, @PathVariable disponivel: Boolean) =
         ResponseEntity.ok(alterarDisponibilidadeProdutoUseCase.executar(id, disponivel))
@@ -68,9 +76,10 @@ class ProdutoController(
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
                 array = ArraySchema( schema = Schema(implementation = ProdutoResponse::class))))]),
-        ApiResponse(responseCode = "404", description = "Nenhum produto encontrado",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))])
+       ])
     @GetMapping("/categoria/{categoria}")
     fun get(@PathVariable categoria: Categoria) =
         ResponseEntity.ok(listarProdutosPorCategoriaUseCase.executar(categoria))
@@ -80,9 +89,12 @@ class ProdutoController(
         ApiResponse(responseCode = "200", description = "Ok",
             content = [ (Content(mediaType = "application/json",
                 schema = Schema(implementation = ProdutoResponse::class)))]),
-    ApiResponse(responseCode = "404", description = "Produto não encontrado",
-        content = [ (Content(mediaType = "application/json",
-            schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))]),
+        ApiResponse(responseCode = "404", description = "Produto não encontrado",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long) =
         ResponseEntity.ok(obterProdutoPorIdUseCase.executar(id))
@@ -91,6 +103,9 @@ class ProdutoController(
     @ApiResponses(value = [
         ApiResponse(responseCode = "204", description = "No Content",
             content = [ (Content(mediaType = "application/json"))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))]),
         ApiResponse(responseCode = "404", description = "Produto não encontrado",
         content = [ (Content(mediaType = "application/json",
             schema = Schema(implementation = RecursoNaoEncontradoException::class)))])])

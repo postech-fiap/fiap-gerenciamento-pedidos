@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.api.interceptors
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.*
+import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
@@ -13,7 +14,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(Exception::class)
     private fun handleException(ex: Exception): ResponseEntity<ProblemDetail> {
-        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.message?: "")
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: "")
         problemDetail.title = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail)
     }

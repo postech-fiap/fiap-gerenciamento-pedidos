@@ -1,8 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.ports.ProdutoPort
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,7 +21,7 @@ class ObterProdutoPorIdUseCaseImplTest {
     lateinit var useCase: ObterProdutoPorIdUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoPort
+    lateinit var produtoPort: ProdutoRepository
 
     @Test
     fun `deve obter produto por id com sucesso`() {
@@ -38,7 +39,7 @@ class ObterProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.get(id) } returns Optional.of(produto)
+        every { produtoPort.get(id) } returns Optional.of(ProdutoDto.fromModel(produto))
 
         //when
         val result = useCase.executar(id)
