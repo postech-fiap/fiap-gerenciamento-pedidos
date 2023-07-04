@@ -2,7 +2,6 @@ package br.com.fiap.gerenciamentopedidos.application.requests
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
-import com.fasterxml.jackson.annotation.JsonProperty
 
 data class EditarProdutoRequest(
     val id: Long? = null,
