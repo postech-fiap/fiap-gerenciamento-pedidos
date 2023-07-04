@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteReq
 import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
@@ -39,7 +38,7 @@ class CadastrarClienteUseCaseImplTest {
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
-        val dto = ClienteDto.fromModel(request.toDomain())
+        val dto = ClienteDto.fromModel(request.toModel())
 
         every { clientePort.buscarPorCpf(request.cpf) } returns Optional.empty()
         every { clientePort.salvar(dto) } returns dto
@@ -61,7 +60,7 @@ class CadastrarClienteUseCaseImplTest {
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
-        val dto = ClienteDto.fromModel(request.toDomain())
+        val dto = ClienteDto.fromModel(request.toModel())
 
         every { clientePort.buscarPorCpf(request.cpf) } returns Optional.of(dto)
 
@@ -83,13 +82,13 @@ class CadastrarClienteUseCaseImplTest {
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
-        val dto = ClienteDto.fromModel(request.toDomain())
+        val dto = ClienteDto.fromModel(request.toModel())
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(request.cpf) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.buscarPorCpf(request.cpf) } throws RuntimeException(errorMessage)
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             cadastrarClienteUseCase.executar(request)
         }
 
@@ -106,14 +105,14 @@ class CadastrarClienteUseCaseImplTest {
         val nome = Random.nextLong().toString()
         val email = Email(EMAIL)
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
-        val dto = ClienteDto.fromModel(request.toDomain())
+        val dto = ClienteDto.fromModel(request.toModel())
         val errorMessage = "Erro na base de dados"
 
         every { clientePort.buscarPorCpf(request.cpf) } returns Optional.empty()
-        every { clientePort.salvar(dto) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.salvar(dto) } throws RuntimeException(errorMessage)
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             cadastrarClienteUseCase.executar(request)
         }
 

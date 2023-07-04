@@ -34,7 +34,7 @@ class CadastrarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        val dto = ProdutoDto.fromModel(produtoRequest.toDomain())
+        val dto = ProdutoDto.fromModel(produtoRequest.toModel())
 
         every { produtoPort.create(dto) } returns dto
 

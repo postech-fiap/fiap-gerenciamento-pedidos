@@ -5,14 +5,21 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
 data class CadastrarProdutoRequest(
-    val nome: String? = null,
+    val nome: String?,
+    val categoria: Categoria?,
+    val valor: Double?,
+    val tempoPreparo: Long?,
     val descricao: String? = null,
-    val categoria: Categoria? = null,
-    val valor: Double? = null,
-    val tempoPreparo: Long? = null,
     val imagem: String? = null
 ) {
-    fun toDomain() = Produto(
+    init {
+        require(nome.isNullOrEmpty().not()) { "Nome do produto não informado" }
+        require(categoria != null) { "Categoria do produto não informada" }
+        require(valor != null) { "Valor do produto não informado" }
+        require(tempoPreparo != null) { "Tempo de preparo do produto não informado" }
+    }
+
+    fun toModel() = Produto(
         nome = nome,
         descricao = descricao,
         categoria = categoria,
