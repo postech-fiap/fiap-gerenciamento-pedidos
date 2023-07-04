@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.text.SimpleDateFormat
@@ -15,6 +16,7 @@ class SpringConfig {
     fun objectMapper(): ObjectMapper {
         return JsonMapper.builder()
             .addModule(JavaTimeModule())
+            .addModule(kotlinModule())
             .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
             .propertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
