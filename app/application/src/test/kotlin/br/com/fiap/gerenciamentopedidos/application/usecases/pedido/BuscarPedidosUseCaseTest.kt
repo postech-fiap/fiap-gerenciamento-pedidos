@@ -3,7 +3,6 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
@@ -15,6 +14,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.lang.RuntimeException
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -58,10 +58,10 @@ class BuscarPedidosUseCaseTest {
 
         val errorMessage = "Erro na base de dados"
 
-        every { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) } throws BaseDeDadosException(errorMessage)
+        every { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) } throws RuntimeException(errorMessage)
 
         // when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             buscarUseCaseImpl.executar(buscarPedidosRequest)
         }
 

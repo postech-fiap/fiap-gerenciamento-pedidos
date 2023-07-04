@@ -10,8 +10,8 @@ data class PagamentoDto(
     val status: PagamentoStatus? = null
 ) {
     companion object {
-        fun fromModel(pagamento: Pagamento) = PagamentoDto(pagamento.id, pagamento.dataHora, pagamento.status)
+        fun fromModel(pagamento: Pagamento) = PagamentoDto(pagamento.id as Long, pagamento.dataHora, pagamento.status)
     }
 
-    fun toModel() = Pagamento(id, dataHora!!, status!!)
+    fun toModel() = Pagamento(id.toString(), dataHora!!, status!!)
 }

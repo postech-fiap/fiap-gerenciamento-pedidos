@@ -3,7 +3,6 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.cadastro
 import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
@@ -80,10 +79,10 @@ class BuscarClienteUseCaseImplTest {
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } throws BaseDeDadosException(errorMessage)
+        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } throws RuntimeException(errorMessage)
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             buscarClientePorCpfUseCaseImpl.executar(clienteDomain.cpf.numero)
         }
 

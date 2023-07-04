@@ -15,4 +15,6 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
         dataFinal: OffsetDateTime
     ) : List<PedidoEntity>
 
+    fun findByNumber(number : String): PedidoEntity
+
 }

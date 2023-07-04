@@ -35,6 +35,15 @@ class ClienteRepositoryImpl(private val clienteJpaRepository: ClienteJpaReposito
         return clienteEntity.map { it.toDto(Cpf.adicionaMascara(cpf)) }
     }
 
+    override fun buscarPorId(id: Long): Optional<ClienteDto> {
+        try {
+            return clienteJpaRepository.findById(id).map { it.cpf?.let { it1 -> it.toDto(it1) } }
+        } catch (ex: Exception) {
+            lancaDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
+        }
+        TODO("Not yet implemented")
+    }
+
     private fun lancaDataBaseException(ex: Exception, errorMessage: String) {
         throw BaseDeDadosException(
             String.format(errorMessage, ex.message)
