@@ -26,7 +26,7 @@ class CadastrarPedidoUseCaseImpl(
             .mapToLong() { it.tempoPreparo!! }
             .average().asDouble.toInt()
 
-        var pagamento = pagamentoPort.efetuarPagamento(numeroPedido.toString());
+        var pagamento = pagamentoPort.efetuarPagamento(numeroPedido as Long);
 
         return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(cadastrarPedidoRequest.toPedido(cadastrarPedidoRequest.produtos, tempoEspera, numeroPedido.toString(), cliente.toModel(), pagamento))))
     }

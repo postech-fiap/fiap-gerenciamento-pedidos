@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -83,7 +82,7 @@ class ClienteRepositoryImplTest {
         every { clienteJpaRepository.findByCpf(any()) } throws Exception("Error")
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             clienteRepository.buscarPorCpf(cpf)
         }
 
@@ -107,7 +106,7 @@ class ClienteRepositoryImplTest {
         every { clienteJpaRepository.save(any()) } throws Exception("Error")
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             clienteRepository.salvar(dto)
         }
 

@@ -7,7 +7,7 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.time.OffsetDateTime
 
 class PagamentoRepositoryImpl(private val pagamentoRepository: PagamentoRepository) : PagamentoRepository {
-    override fun efetuarPagamento(pedido: String): Pagamento {
+    override fun efetuarPagamento(pedido: Long): Pagamento {
         return Pagamento(
             id = pedido,
             dataHora = OffsetDateTime.now(),

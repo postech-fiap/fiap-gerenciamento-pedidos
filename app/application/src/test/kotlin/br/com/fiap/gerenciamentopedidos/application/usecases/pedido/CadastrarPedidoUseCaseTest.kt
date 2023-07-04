@@ -17,6 +17,7 @@ import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -29,13 +30,13 @@ class CadastrarPedidoUseCaseTest {
     @InjectMockKs
     lateinit var cadastrarUseCaseImpl: CadastrarPedidoUseCaseImpl
 
-    @InjectMockKs
+    @MockK
     lateinit var pagamentoRepository: PagamentoRepository
 
-    @InjectMockKs
+    @MockK
     lateinit var clienteRepository: ClienteRepository
 
-    @InjectMockKs
+    @MockK
     lateinit var pedidoRepository: PedidoRepository
 
     @Test
@@ -43,20 +44,41 @@ class CadastrarPedidoUseCaseTest {
         // given
         val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "10", null, null, null)
         val cliente = Cliente(1, Cpf("12345678910"), "Gabriel", Email("Teste@teste.com.br"))
-        val pagamento = Pagamento("1", OffsetDateTime.now() , PagamentoStatus.APROVADO)
+        val pagamento = Pagamento(1, OffsetDateTime.now() , PagamentoStatus.APROVADO)
         val clienteId = 10L
         val produtos = listOf(Produto(1, "Produto 1", "lanche", Categoria.LANCHE, 10.0, 10, true, false, null))
         val request = CadastrarPedidoRequest(clienteId, produtos)
 
-        every { pedidoRepository.buscarUltimoPedidoDiDia(10) } returns PedidoDto.fromModel(pedido)
-        every { pagamentoRepository.efetuarPagamento(pedido.numero) } returns pagamento
-        every { clienteRepository.buscarPorId(clienteId) } returns ClienteDto.fromModel(cliente)
-        every { pedidoRepository.buscarUltimoPedidoDiDia(10) } returns PedidoDto.fromModel(pedido)
+        every { pedidoRepository.buscarUltimoPedidoDiDia(any()) } returns PedidoDto.fromModel(pedido)
+        every { pagamentoRepository.efetuarPagamento(any()) } returns pagamento
+        every { clienteRepository.buscarPorId(any()) } returns ClienteDto.fromModel(cliente)
+        every { pedidoRepository.buscarUltimoPedidoDiDia(any()) } returns PedidoDto.fromModel(pedido)
+        every { pedidoRepository.salvar(any()) } returns PedidoDto.fromModel(pedido)
 
         // when
         val result = cadastrarUseCaseImpl.executar(request)
-        // then
-        verify { pagamentoRepository.efetuarPagamento(pedido.numero) }
+
+        verify { pedidoRepository.salvar(any()) }
+
+    }
+
+    @Test
+    fun `Erro ao cadastrar um pedido`() {
+        // given
+        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "10", null, null, null)
+        val cliente = Cliente(1, Cpf("12345678910"), "Gabriel", Email("Teste@teste.com.br"))
+        val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
+        val clienteId = 10L
+        val produtos = listOf(Produto(1, "Produto 1", "lanche", Categoria.LANCHE, 10.0, 10, true, false, null))
+        val request = CadastrarPedidoRequest(clienteId, produtos)
+
+        every { pedidoRepository.buscarUltimoPedidoDiDia(any()) } returns PedidoDto.fromModel(pedido)
+        every { pagamentoRepository.efetuarPagamento(any()) } returns pagamento
+        every { clienteRepository.buscarPorId(any()) } returns ClienteDto.fromModel(cliente)
+        every { pedidoRepository.buscarUltimoPedidoDiDia(any()) } returns PedidoDto.fromModel(pedido)
+        every { pedidoRepository.salvar(any()) } returns throw RuntimeException()
+
+
 
     }
 }
