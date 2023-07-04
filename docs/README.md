@@ -27,3 +27,8 @@ curl --location 'http://localhost:8080/clientes/cpf/111.111.11111' \
 ```
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/main/docs/assets/Exemplo_imagem_endpoint.png)
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/main/docs/assets/Exemplo_imagem_banco.png)
+
+## Executar swagger
+```sh
+curl --location 'http://localhost:8080/swagger-ui/index.html'
+```
