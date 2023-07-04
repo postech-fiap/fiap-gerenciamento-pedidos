@@ -35,7 +35,7 @@ class EditarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        val dto = ProdutoDto.fromModel(produtoRequest.toDomain())
+        val dto = ProdutoDto.fromModel(produtoRequest.toModel())
 
         every { produtoPort.update(dto) } returns dto
 

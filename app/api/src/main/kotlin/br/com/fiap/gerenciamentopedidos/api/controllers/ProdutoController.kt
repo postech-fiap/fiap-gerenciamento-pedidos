@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 
@@ -38,7 +37,7 @@ class ProdutoController(
             content = [ Content(mediaType = "application/json",
                 schema = Schema(implementation = BaseDeDadosException::class))])])
     @PostMapping
-    fun post(@RequestBody @Validated request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
+    fun post(@RequestBody request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
         val produto = cadastrarProdutoUseCase.executar(request)
         return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(produto)
     }

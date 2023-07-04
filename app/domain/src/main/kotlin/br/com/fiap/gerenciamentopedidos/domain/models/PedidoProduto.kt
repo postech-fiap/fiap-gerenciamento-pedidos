@@ -7,5 +7,5 @@ data class PedidoProduto(
     val produto: Produto?,
     val valorPago: BigDecimal,
     val quantidade: Int,
-    val comentario: String?,
+    val comentario: String?
 )

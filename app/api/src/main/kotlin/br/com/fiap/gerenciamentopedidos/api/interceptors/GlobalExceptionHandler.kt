@@ -2,11 +2,11 @@ package br.com.fiap.gerenciamentopedidos.api.interceptors
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
-import org.springframework.http.HttpStatus
-import org.springframework.http.ProblemDetail
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @RestControllerAdvice
@@ -54,4 +54,15 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
     }
 
+    override fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        val problemDetail =
+            ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.cause?.cause?.message ?: ex.message ?: "")
+        problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
+    }
 }
