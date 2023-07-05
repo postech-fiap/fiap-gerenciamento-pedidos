@@ -6,9 +6,9 @@ import java.math.BigDecimal
 data class PedidoProdutoDto(
     val id: Long? = null,
     val produto: ProdutoDto,
-    val quantidade: Int,
+    val quantidade: Long,
     val comentario: String? = null,
-    val valorPago: Double? = null
+    val valorPago: BigDecimal? = null
 ) {
     companion object {
         fun fromModel(pedidoProduto: PedidoProduto) = PedidoProdutoDto(
@@ -16,7 +16,7 @@ data class PedidoProdutoDto(
             pedidoProduto.produtoId?.let { ProdutoDto(it) }!!,
             pedidoProduto.quantidade,
             pedidoProduto.comentario,
-            pedidoProduto.getValorTotal()
+            pedidoProduto.produto?.valor
         )
     }
 

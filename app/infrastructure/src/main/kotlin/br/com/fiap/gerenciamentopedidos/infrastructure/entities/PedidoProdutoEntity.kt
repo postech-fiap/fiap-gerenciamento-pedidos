@@ -21,10 +21,10 @@ data class PedidoProdutoEntity(
     val produto: ProdutoEntity? = null,
 
     @Column(name = "valor_pago", nullable = false)
-    val valorPago: Double? = null,
+    val valorPago: BigDecimal? = null,
 
     @Column(name = "quantidade", nullable = false)
-    val quantidade: Int? = null,
+    val quantidade: Long? = null,
 
     @Column(name = "comentario", nullable = true)
     val comentario: String? = null

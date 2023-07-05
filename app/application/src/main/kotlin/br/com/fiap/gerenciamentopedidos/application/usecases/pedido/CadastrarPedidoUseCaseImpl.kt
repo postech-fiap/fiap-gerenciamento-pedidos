@@ -4,8 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarP
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoProdutoDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
@@ -32,20 +30,19 @@ class CadastrarPedidoUseCaseImpl(
             pedidoRepository.buscarUltimoPedidoDoDia(initOfDay, endOfDay).map { it.numero?.toLong()?.plus(1) }
                 .orElse(1).toString()
 
-        val pedido = Pedido(
-            numero = numero,
-            clienteId = request.clienteId,
-            produtos = request.produtos?.map {
-                PedidoProdutoDto(
-                    produto = ProdutoDto(it.produtoId),
-                    quantidade = it.quantidade!!,
-                    comentario = it.comentario
-                ).toModel()
-            }
-        )
+        val pedido = Pedido(numero = numero, clienteId = request.clienteId)
 
-        val pagamento = pagamentoService.efetuarPagamento(pedido.numero!!, pedido.getValorTotal()!!)
-        pedido.incluirPagamento(pagamento.dataHora, pagamento.status)
+        request.produtos?.forEach {
+            pedido.incluirProduto(
+                produtoId = it.produtoId!!,
+                quantidade = it.quantidade!!,
+                tempoPreparo = it.tempoPreparo!!,
+                comentario = it.comentario!!
+            )
+        }
+
+        val pagamento = pagamentoService.efetuarPagamento(pedido.numero!!, pedido.valorTotal!!)
+        pedido.incluirPagamento(pagamento.dataHora!!, pagamento.status!!)
 
         return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedido)))
     }

@@ -22,7 +22,7 @@ data class PedidoDto(
             pedido.tempoEsperaMinutos,
             pedido.numero,
             pedido.clienteId?.let { ClienteDto(id = it) },
-            pedido.produtos?.map { PedidoProdutoDto.fromModel(it) },
+            pedido.produtos.map { PedidoProdutoDto.fromModel(it) },
             pedido.pagamento?.let { PagamentoDto.fromModel(it) }
         )
     }

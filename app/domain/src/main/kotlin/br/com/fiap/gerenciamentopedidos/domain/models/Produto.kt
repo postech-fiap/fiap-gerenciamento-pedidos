@@ -2,13 +2,14 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
+import java.math.BigDecimal
 
 data class Produto(
     val id: Long? = null,
     val nome: String?,
     val descricao: String?,
     val categoria: Categoria?,
-    val valor: Double,
+    val valor: BigDecimal,
     val tempoPreparo: Long,
     var disponivel: Boolean = true,
     var excluido: Boolean = false,

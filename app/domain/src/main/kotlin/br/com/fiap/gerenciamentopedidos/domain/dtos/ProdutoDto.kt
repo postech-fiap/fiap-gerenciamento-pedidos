@@ -2,13 +2,14 @@ package br.com.fiap.gerenciamentopedidos.domain.dtos
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import java.math.BigDecimal
 
 data class ProdutoDto(
     val id: Long? = null,
     val nome: String? = null,
     val descricao: String? = null,
     val categoria: Categoria? = null,
-    val valor: Double? = null,
+    val valor: BigDecimal? = null,
     val tempoPreparo: Long? = null,
     var disponivel: Boolean? = null,
     var excluido: Boolean? = null,

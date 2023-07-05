@@ -8,7 +8,7 @@ data class PedidoProdutoResponse(private val pedidoProduto: PedidoProdutoDto) {
 
     val nome: String
     val valorPago: BigDecimal
-    val quantidade: Int
+    val quantidade: Long
     val comentario: String?
 
     init {
