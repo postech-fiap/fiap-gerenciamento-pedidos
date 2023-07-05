@@ -3,21 +3,19 @@
 Aplicação responsável pela automatização e gerenciamento de pedidos de uma lanchonete.
 
 ## Docker
-Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos:
-1. No arquivo `application.properties` incluir o usuário e senha do banco:
+Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos abaixo.
 
-`spring.datasource.username=**your_user**`
-
-`spring.datasource.password=**your_pass**`
-
-2. No terminal executar o comando:
+No terminal executar o comando:
 ```sh
-MYSQL_ROOT_PASSWORD=**your_pass** docker-compose up
+MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=teste@123 docker-compose up --build
 ```
+
 Sobre o comando acima:
 - Cria a imagem e container da aplicação, gerando o jar atualizado.
 - Cria a imagem e container do banco de dados MYSQL.
 
+**Observações:**
+Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.
 ## Executar a aplicação
 
 Curl de exemplo: Busca de cliente por cpf
