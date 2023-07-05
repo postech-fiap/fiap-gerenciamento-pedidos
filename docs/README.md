@@ -7,7 +7,7 @@ Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos 
 
 No terminal executar o comando:
 ```sh
-MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=teste@123 docker-compose up --build
+MYSQL_ROOT_USERNAME=**your_username** MYSQL_ROOT_PASSWORD=**your_password** docker-compose up --build
 ```
 
 Sobre o comando acima:
