@@ -29,7 +29,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         try {
             return repository.findByCategoriaAndExcluidoAndDisponivel(
                 categoria,
-                excluido = true,
+                excluido = false,
                 disponivel = true
             ).map { it.toDto() }.toList()
         } catch (ex: Exception) {
