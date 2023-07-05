@@ -29,14 +29,14 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve buscar pedidos com sucesso`() {
         // given
-        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "1234", null, null, null)
+        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.RECEBIDO, 10, "1234", null, null, null)
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
         val pedidoEntity = PedidoEntity.fromDto(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
 
@@ -66,7 +66,7 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve propagar erro ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val errorMessage = "Erro ao buscar pedidos na base de dados. Detalhes: Error"
@@ -94,6 +94,31 @@ class PedidoRepositoryImplTest {
                 dataFinal
             )
         }
+    }
+
+    @Test
+    fun `deve atualizar o status do pedido com sucesso`() {
+
+        // given
+        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.RECEBIDO, 10, "1234", null, null, null)
+        val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
+
+        val pedidoEntity = PedidoEntity.fromDto(dto)
+
+        every {
+            pedidoJpaRepository.save(pedidoEntity)
+        } returns pedidoEntity
+
+        // when
+        val result = pedidoRepository.alterarStatusPedido(dto)
+
+        // then
+        assertEquals(dto, result)
+
+        verify(exactly = 1) {
+            pedidoJpaRepository.save(pedidoEntity)
+        }
+
     }
 
 }

@@ -16,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/categorias")
 class CategoriaController {
     @Operation(summary = "Responsavel por listar as categorias")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok",
-            content = [ (Content(mediaType = "application/json",
-               array = ArraySchema( schema = Schema(implementation = Categoria::class))
-            ))])])
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Ok",
+                content = [(Content(
+                    mediaType = "application/json",
+                    array = ArraySchema(schema = Schema(implementation = Categoria::class))
+                ))]
+            )]
+    )
     @GetMapping
     fun listarCategorias() = ResponseEntity.ok().body(Categoria.values().toList())
 }

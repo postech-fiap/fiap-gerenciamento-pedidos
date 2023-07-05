@@ -28,10 +28,10 @@ class BuscarPedidosUseCaseTest {
     @Test
     fun `deve retornar um pedido`() {
         // given
-        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "1234", null, null, null)
+        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.RECEBIDO, 10, "1234", null, null, null)
         val pedidoList = listOf(PedidoDto.fromModel(pedido))
 
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
@@ -50,7 +50,7 @@ class BuscarPedidosUseCaseTest {
     @Test
     fun `deve propagar erro quando ocorrer falha ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
