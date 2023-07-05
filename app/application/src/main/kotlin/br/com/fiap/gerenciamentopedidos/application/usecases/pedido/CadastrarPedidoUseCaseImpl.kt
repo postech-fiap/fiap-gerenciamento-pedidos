@@ -46,6 +46,8 @@ class CadastrarPedidoUseCaseImpl(
             pedidoRepository.buscarUltimoPedidoDoDia(initOfDay, endOfDay).map { it.numero?.toLong()?.plus(1) }
                 .orElse(1).toString()
 
+        var testCliente = request.clienteId?.let { clienteRepository.buscarPorId(it).toModel() }
+
         val pedido = Pedido(
             numero = numero,
             cliente = request.clienteId?.let { clienteRepository.buscarPorId(it).toModel() },
