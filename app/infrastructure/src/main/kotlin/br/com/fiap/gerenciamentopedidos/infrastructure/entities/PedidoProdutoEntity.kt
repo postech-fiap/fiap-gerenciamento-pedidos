@@ -21,7 +21,7 @@ data class PedidoProdutoEntity(
     val produto: ProdutoEntity? = null,
 
     @Column(name = "valor_pago", nullable = false)
-    val valorPago: BigDecimal? = null,
+    val valorPago: Double? = null,
 
     @Column(name = "quantidade", nullable = false)
     val quantidade: Int? = null,
@@ -31,12 +31,12 @@ data class PedidoProdutoEntity(
 ) {
     fun toDto() = PedidoProdutoDto(id, produto!!.toDto(), quantidade!!, comentario)
 
-    fun fromDto(pedido: PedidoEntity) = PedidoProdutoEntity(
-        pedido = pedido,
-        produto = produto,
-        valorPago = valorPago,
-        quantidade = quantidade,
-        comentario = comentario
-    )
-
+    companion object {
+        fun fromDto(pedidoProduto: PedidoProdutoDto) = PedidoProdutoEntity(
+            produto = ProdutoEntity.fromDto(pedidoProduto.produto),
+            valorPago = pedidoProduto.valorPago,
+            quantidade = pedidoProduto.quantidade,
+            comentario = pedidoProduto.comentario
+        )
+    }
 }

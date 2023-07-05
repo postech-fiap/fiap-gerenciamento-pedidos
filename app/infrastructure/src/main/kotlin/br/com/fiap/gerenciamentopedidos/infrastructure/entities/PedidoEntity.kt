@@ -68,7 +68,10 @@ data class PedidoEntity(
                 dataHora = pedido.dataHora,
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
-                numero = pedido.numero
+                numero = pedido.numero,
+                cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
+                produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) },
+                pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it) }
             )
         }
     }

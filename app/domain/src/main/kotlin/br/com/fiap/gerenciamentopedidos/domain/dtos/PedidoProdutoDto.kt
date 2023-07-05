@@ -8,13 +8,15 @@ data class PedidoProdutoDto(
     val produto: ProdutoDto,
     val quantidade: Int,
     val comentario: String? = null,
+    val valorPago: Double? = null
 ) {
     companion object {
         fun fromModel(pedidoProduto: PedidoProduto) = PedidoProdutoDto(
             pedidoProduto.id,
             pedidoProduto.produto.let { ProdutoDto.fromModel(it) },
             pedidoProduto.quantidade,
-            pedidoProduto.comentario
+            pedidoProduto.comentario,
+            pedidoProduto.getValorTotal()
         )
     }
 
