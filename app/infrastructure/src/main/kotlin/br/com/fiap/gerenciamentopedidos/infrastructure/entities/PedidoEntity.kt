@@ -29,21 +29,21 @@ data class PedidoEntity(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "cliente_id", nullable = true)
-    val cliente: ClienteEntity? = null,
+    var cliente: ClienteEntity? = null,
 
     @OneToMany(
         mappedBy = "pedido",
         fetch = FetchType.LAZY,
+        cascade = [CascadeType.PERSIST],
         orphanRemoval = true
     )
-    val produtos: List<PedidoProdutoEntity>? = null,
+    var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, optional = true)
-    val pagamento: PagamentoEntity? = null
-
+    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST], optional = true)
+    var pagamento: PagamentoEntity? = null
 ) {
     fun toDto(): PedidoDto {
-        val cliente = cliente?.toDto(cliente.cpf!!)
+        val cliente = cliente?.toDto(cliente?.cpf!!)
 
         val produtos = produtos?.stream()
             ?.map { it.toDto() }
@@ -63,16 +63,18 @@ data class PedidoEntity(
 
     companion object {
         fun fromDto(pedido: PedidoDto): PedidoEntity {
-            return PedidoEntity(
+            val entity = PedidoEntity(
                 id = pedido.id,
                 dataHora = pedido.dataHora,
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
                 cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
-                produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) },
-                pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it) }
+                produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) }
             )
+            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it, entity) }
+
+            return entity
         }
     }
 }

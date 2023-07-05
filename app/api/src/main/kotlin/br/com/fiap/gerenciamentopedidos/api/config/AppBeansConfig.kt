@@ -5,7 +5,10 @@ import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarCl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.*
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
@@ -56,15 +59,20 @@ class AppBeansConfig {
     fun buscarClientePorCpfUseCase(repository: ClienteRepository) = BuscarClientePorCpfUseCaseImpl(repository)
 
     @Bean
-    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
+    fun pedidoRepository(
+        pedidoJpaRepository: PedidoJpaRepository,
+        clienteJpaRepository: ClienteJpaRepository,
+        produtoJpaRepository: ProdutoJpaRepository
+    ) =
+        PedidoRepositoryImpl(pedidoJpaRepository, clienteJpaRepository, produtoJpaRepository)
 
     @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
 
     @Bean
-    fun cadastrarPedidoUseCase(cadastrarPedidoRepository: PedidoRepository, clienteRepository: ClienteRepository, pagamentoService: PagamentoService, produtoRepository: ProdutoRepository) = CadastrarPedidoUseCaseImpl(cadastrarPedidoRepository, clienteRepository,pagamentoService, produtoRepository,)
+    fun cadastrarPedidoUseCase(cadastrarPedidoRepository: PedidoRepository, pagamentoService: PagamentoService) =
+        CadastrarPedidoUseCaseImpl(cadastrarPedidoRepository, pagamentoService)
 
     @Bean
     fun pagamentoService() = PagamentoServiceImpl()
-
 }

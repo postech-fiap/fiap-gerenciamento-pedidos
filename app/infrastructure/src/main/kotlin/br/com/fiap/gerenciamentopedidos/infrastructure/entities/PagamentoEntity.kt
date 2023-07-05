@@ -15,6 +15,7 @@ data class PagamentoEntity(
     @Column(name = "data_hora", nullable = false)
     val dataHora: OffsetDateTime? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     val status: PagamentoStatus? = null,
 
@@ -26,10 +27,11 @@ data class PagamentoEntity(
     fun toDto() = PagamentoDto(id, dataHora!!, status!!)
 
     companion object {
-        fun fromDto(pagamento: PagamentoDto) = PagamentoEntity(
+        fun fromDto(pagamento: PagamentoDto, pedido: PedidoEntity) = PagamentoEntity(
             id = pagamento.id,
             dataHora = pagamento.dataHora,
-            status = pagamento.status
+            status = pagamento.status,
+            pedido = pedido
         )
     }
 }

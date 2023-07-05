@@ -24,9 +24,9 @@ data class ClienteEntity(
 ) {
     companion object {
         fun fromDto(cliente: ClienteDto) = ClienteEntity(
-            cpf = Cpf.removeMascara(cliente.cpf!!.numero),
+            cpf = cliente.cpf?.removeMascara(),
             nome = cliente.nome,
-            email = cliente.email!!.endereco
+            email = cliente.email?.endereco
         )
     }
 
