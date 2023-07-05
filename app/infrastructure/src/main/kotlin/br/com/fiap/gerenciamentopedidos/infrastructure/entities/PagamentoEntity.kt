@@ -25,4 +25,11 @@ data class PagamentoEntity(
 
 ) {
     fun toDto() = PagamentoDto(id, dataHora!!, status!!)
+
+    fun fromDto(pagamento: PagamentoDto) = PagamentoEntity(
+        id = pagamento.id,
+        dataHora = pagamento.dataHora,
+        status = pagamento.status,
+        pedido = pedido
+    )
 }

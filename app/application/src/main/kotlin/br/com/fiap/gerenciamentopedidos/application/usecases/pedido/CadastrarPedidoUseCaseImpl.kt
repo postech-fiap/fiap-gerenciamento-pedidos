@@ -11,6 +11,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 
 class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
@@ -21,7 +22,7 @@ class CadastrarPedidoUseCaseImpl(
 
     override fun executar(request: CadastrarPedidoRequest): PedidoResponse {
         //PROBLEMA N+1
-        val produtos = request.produtos.map {
+        val produtos = request.produtos?.map {
             val produto = produtoRepository.get(it.produtoId!!).get()
             PedidoProdutoDto(
                 produto = produto,
@@ -30,13 +31,24 @@ class CadastrarPedidoUseCaseImpl(
             ).toModel()
         }
 
+        val now = OffsetDateTime.now()
+        val initOfDay = now
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+
+        val endOfDay = now
+            .withHour(23)
+            .withMinute(59)
+            .withSecond(59)
+
         val numero =
-            pedidoRepository.buscarUltimoPedidoDiDia(OffsetDateTime.now()).map { it.numero?.toLong()?.plus(1) }
+            pedidoRepository.buscarUltimoPedidoDoDia(initOfDay, endOfDay).map { it.numero?.toLong()?.plus(1) }
                 .orElse(1).toString()
 
         val pedido = Pedido(
             numero = numero,
-            cliente = clienteRepository.buscarPorId(request.clienteId).toModel(),
+            cliente = request.clienteId?.let { clienteRepository.buscarPorId(it).toModel() },
             produtos = produtos
         )
 

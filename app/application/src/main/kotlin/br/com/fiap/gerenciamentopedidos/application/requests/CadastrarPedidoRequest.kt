@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.requests
 
-class CadastrarPedidoRequest(
-    val clienteId: Long, val produtos: List<CadastrarPedidoProdutoRequest>
+data class CadastrarPedidoRequest(
+    val clienteId: Long? = null,
+    val produtos: List<CadastrarPedidoProdutoRequest>? = null
 )

@@ -29,15 +29,17 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun buscarUltimoPedidoDiDia(data: OffsetDateTime): Optional<PedidoDto> {
+    override fun buscarUltimoPedidoDoDia(dataInicio: OffsetDateTime, dataFim: OffsetDateTime): Optional<PedidoDto> {
         try {
-            return Optional.ofNullable(pedidoJpaRepository.findByDataHora(data).last()).map { it.toDto() }
+            val pediDia = pedidoJpaRepository.findByDataHora(dataInicio, dataFim)
+            return pediDia.lastOrNull()?.toDto()?.let { Optional.of(it) } ?: Optional.empty()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)
             )
         }
     }
+
 
     override fun salvar(pedido: PedidoDto): PedidoDto {
         try {

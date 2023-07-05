@@ -9,7 +9,7 @@ import javax.xml.crypto.Data
 interface PedidoRepository {
 
     fun buscarPedidos(status: PedidoStatus, dataInicial: OffsetDateTime, dataFinal: OffsetDateTime) : List<PedidoDto>
-    fun buscarUltimoPedidoDiDia(data: OffsetDateTime): Optional<PedidoDto>
+    fun buscarUltimoPedidoDoDia(dataInicio: OffsetDateTime, dataFim: OffsetDateTime): Optional<PedidoDto>
     fun salvar(pedido: PedidoDto): PedidoDto
 
 }

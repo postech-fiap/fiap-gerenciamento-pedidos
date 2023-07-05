@@ -30,4 +30,13 @@ data class PedidoProdutoEntity(
     val comentario: String? = null
 ) {
     fun toDto() = PedidoProdutoDto(id, produto!!.toDto(), quantidade!!, comentario)
+
+    fun fromDto(pedido: PedidoEntity) = PedidoProdutoEntity(
+        pedido = pedido,
+        produto = produto,
+        valorPago = valorPago,
+        quantidade = quantidade,
+        comentario = comentario
+    )
+
 }

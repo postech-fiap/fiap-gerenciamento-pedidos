@@ -19,4 +19,4 @@ data class CadastrarProdutoRequest(
         valor = valor!!,
         tempoPreparo = tempoPreparo!!,
         imagem = imagem?.let { Imagem(caminho = it) })
-}
+}   

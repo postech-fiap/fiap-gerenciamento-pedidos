@@ -65,6 +65,6 @@ class AppBeansConfig {
     fun cadastrarPedidoUseCase(cadastrarPedidoRepository: PedidoRepository, clienteRepository: ClienteRepository, pagamentoService: PagamentoService, produtoRepository: ProdutoRepository) = CadastrarPedidoUseCaseImpl(cadastrarPedidoRepository, clienteRepository,pagamentoService, produtoRepository,)
 
     @Bean
-    fun efetuarPagamento(pagamento: PagamentoService) = PagamentoServiceImpl(pagamento)
+    fun pagamentoService() = PagamentoServiceImpl()
 
 }
