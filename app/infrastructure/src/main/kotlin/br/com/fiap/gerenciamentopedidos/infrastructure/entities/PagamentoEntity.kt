@@ -15,6 +15,7 @@ data class PagamentoEntity(
     @Column(name = "data_hora", nullable = false)
     val dataHora: OffsetDateTime? = null,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     val status: PagamentoStatus? = null,
 

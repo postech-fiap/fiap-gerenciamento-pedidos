@@ -4,6 +4,7 @@ enum class PedidoStatus {
 
     PENDENTE,
     EM_PREPARACAO,
+    PRONTO,
     FINALIZADO
 
 }

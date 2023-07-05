@@ -33,7 +33,7 @@ create table if not exists imagem (
 create table if not exists pedido (
     id bigint auto_increment,
     data_hora timestamp not null default now(),
-    status enum('PENDENTE', 'EM_PREPARACAO', 'FINALIZADO') not null,
+    status enum('PENDENTE', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
     cliente_id bigint,
     tempo_espera_minutos int not null,
     numero char(4) not null,
@@ -56,7 +56,7 @@ create table if not exists pedido_produto (
 create table if not exists pagamento (
     pedido_id bigint not null,
     data_hora timestamp not null default now(),
-    status enum('PENDENTE', 'APROVADO', 'REJEITADO') not null,
+    status enum('APROVADO', 'REPROVADO') not null,
     constraint pk_pagamento primary key (pedido_id),
     constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
 );
