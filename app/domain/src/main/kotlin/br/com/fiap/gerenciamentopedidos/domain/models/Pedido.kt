@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import java.math.BigDecimal
@@ -11,7 +12,7 @@ data class Pedido(
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     val status: PedidoStatus = PedidoStatus.PENDENTE,
     val clienteId: Long? = null,
-    val produtos: List<PedidoProduto> = listOf(),
+    var produtos: List<PedidoProduto>  = listOf(),
     var pagamento: Pagamento? = null,
     var valorTotal: BigDecimal? = BigDecimal.ZERO,
     var tempoEsperaMinutos: Long? = 0,
@@ -24,7 +25,19 @@ data class Pedido(
     }
 
     fun incluirProduto(produtoId: Long, quantidade: Long, tempoPreparo: Long, comentario: String) {
-        produtos.plus(PedidoProduto(produtoId = produtoId, quantidade = quantidade, comentario = comentario))
+        this.produtos = produtos.plus(PedidoProduto(produtoId = produtoId, quantidade = quantidade, comentario = comentario ,
+            produto = Produto(
+                id = produtoId,
+                nome = "nome",
+                descricao = "nada importa mais",
+                categoria = Categoria.BEBIDA,
+                valor = BigDecimal.valueOf(10.0),
+                tempoPreparo = 10,
+                disponivel = true,
+                excluido = false,
+                imagem = null
+            )
+        ))
         valorTotal = BigDecimal.valueOf(
             produtos.stream()
                 .mapToDouble { it.produto?.valor?.multiply(BigDecimal.valueOf(it.quantidade))?.toDouble()!! }
