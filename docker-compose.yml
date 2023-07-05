@@ -1,19 +1,6 @@
 version: "3.9"
 
 services:
-  app:
-    build: .
-    image: gerenciamento-pedidos-app
-    container_name: gerenciamento-pedidos-app-container
-    ports:
-      - "8080:8080"
-    depends_on:
-      mysql-db:
-        condition: service_started
-    restart: always
-    networks:
-      - gerenciamento-pedidos-network
-
   mysql-db:
     image: mysql:8.0
     container_name: mysqldb-container
@@ -24,6 +11,24 @@ services:
       - "3306:3306"
     volumes:
       - ./app/infrastructure/src/main/resources/db/migrations:/docker-entrypoint-initdb.d/
+    networks:
+      - gerenciamento-pedidos-network
+    healthcheck:
+        test: [ "CMD", "curl", "-f", "http://localhost:3306" ]
+
+  app:
+    build: .
+    image: gerenciamento-pedidos-app
+    container_name: gerenciamento-pedidos-app-container
+    environment:
+      MYSQL_ROOT_USERNAME: "${MYSQL_ROOT_USERNAME}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    restart: always
     networks:
       - gerenciamento-pedidos-network
 
