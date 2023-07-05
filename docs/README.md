@@ -7,12 +7,15 @@ Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos 
 
 No terminal executar o comando:
 ```sh
-MYSQL_ROOT_USERNAME=**your_username** MYSQL_ROOT_PASSWORD=**your_password** docker-compose up --build
+MYSQL_ROOT_USERNAME=**root** MYSQL_ROOT_PASSWORD=**teste@123** docker-compose up --build
 ```
+
 Sobre o comando acima:
 - Cria a imagem e container da aplicação, gerando o jar atualizado.
 - Cria a imagem e container do banco de dados MYSQL.
 
+**Observações:**
+Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.
 ## Executar a aplicação
 
 Curl de exemplo: Busca de cliente por cpf
