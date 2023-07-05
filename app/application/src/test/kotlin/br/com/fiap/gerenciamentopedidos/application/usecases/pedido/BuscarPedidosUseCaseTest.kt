@@ -3,9 +3,12 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -14,8 +17,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.lang.RuntimeException
 import java.time.OffsetDateTime
+import kotlin.RuntimeException
 
 @ExtendWith(MockKExtension::class)
 class BuscarPedidosUseCaseTest {
@@ -28,8 +31,17 @@ class BuscarPedidosUseCaseTest {
 
     @Test
     fun `deve retornar um pedido`() {
+
+        var produtos = listOf(
+            PedidoProduto(
+                10,
+                Produto(1, "Hamburguer", "O brabo", Categoria.LANCHE, 10.0, 10, true, false, null ),
+                10,
+                "Sem mostarda"
+            )
+        )
         // given
-        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "1234", null, null, null)
+        var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, null, produtos, 15L, null)
         val pedidoList = listOf(PedidoDto.fromModel(pedido))
 
         val status = PedidoStatus.PENDENTE

@@ -10,13 +10,12 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import java.time.LocalDate
 import java.time.OffsetDateTime
 
 class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
     private val clienteRepository: ClienteRepository,
-    private val pagamentoRepository: PagamentoService,
+    private val pagamentoService: PagamentoService,
     private val produtoRepository: ProdutoRepository
 ) : CadastrarPedidoUseCase {
 
@@ -41,7 +40,7 @@ class CadastrarPedidoUseCaseImpl(
             produtos = produtos
         )
 
-        val pagamento = pagamentoRepository.efetuarPagamento(pedido.numero!!, pedido.getValorTotal()!!)
+        val pagamento = pagamentoService.efetuarPagamento(pedido.numero!!, pedido.getValorTotal()!!)
         pedido.incluirPagamento(pagamento.dataHora, pagamento.status)
 
         return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedido)))

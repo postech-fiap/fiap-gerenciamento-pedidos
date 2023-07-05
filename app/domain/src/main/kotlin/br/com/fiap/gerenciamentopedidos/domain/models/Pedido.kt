@@ -9,14 +9,14 @@ data class Pedido(
     val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     val status: PedidoStatus = PedidoStatus.PENDENTE,
-    val cliente: Cliente,
-    val produtos: List<PedidoProduto>,
-    var tempoEsperaMinutos: Long = 0,
+    val cliente: Cliente?,
+    val produtos: List<PedidoProduto>?,
+    var tempoEsperaMinutos: Long? = 0,
     var pagamento: Pagamento? = null
 ) {
     init {
         tempoEsperaMinutos =
-            produtos.stream().mapToLong { it.produto.tempoPreparo }?.average()?.asDouble?.toLong()!!
+            produtos?.stream()?.mapToLong { it.produto.tempoPreparo }?.average()?.asDouble?.toLong()!!
     }
 
     fun incluirPagamento(dataHora: OffsetDateTime, status: PagamentoStatus) {
@@ -26,5 +26,5 @@ data class Pedido(
         )
     }
 
-    fun getValorTotal() = produtos.stream().mapToDouble { it.getValorTotal() }?.sum()
+    fun getValorTotal() = produtos?.stream()?.mapToDouble { it.getValorTotal() }?.sum()
 }

@@ -53,7 +53,7 @@ data class PedidoEntity(
             id = id,
             dataHora = dataHora!!,
             status = status!!,
-            tempoEsperaMinutos = tempoEsperaMinutos!!,
+            tempoEsperaMinutos = tempoEsperaMinutos,
             numero = numero!!,
             cliente = cliente,
             produtos = produtos,

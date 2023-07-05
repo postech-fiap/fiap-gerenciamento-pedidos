@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 import java.time.OffsetDateTime
 import java.util.Optional
 
-@Repository
 interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
 
     fun findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
