@@ -1,9 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
-import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
-import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class Pedido(
@@ -11,37 +9,18 @@ data class Pedido(
     val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     val status: PedidoStatus = PedidoStatus.PENDENTE,
-    val clienteId: Long? = null,
-    var produtos: List<PedidoProduto>  = listOf(),
+    var cliente: Cliente? = null,
+    var produtos: List<PedidoProduto> = listOf(),
     var pagamento: Pagamento? = null,
-    var valorTotal: BigDecimal? = BigDecimal.ZERO,
     var tempoEsperaMinutos: Long? = 0,
 ) {
-    fun incluirPagamento(dataHora: OffsetDateTime, status: PagamentoStatus) {
-        pagamento = Pagamento(
-            dataHora = dataHora,
-            status = status
-        )
+    init {
+        require(produtos.isEmpty().not()) { "Ao menos um produto deve ser informado" }
+        require(PagamentoStatus.APROVADO == pagamento?.status) { "O pagamento deve estar aprovado para concluir o pedido" }
+        calcularTempoEspera()
     }
 
-    fun incluirProduto(produtoId: Long, quantidade: Long, tempoPreparo: Long, comentario: String) {
-        this.produtos = produtos.plus(PedidoProduto(produtoId = produtoId, quantidade = quantidade, comentario = comentario ,
-            produto = Produto(
-                id = produtoId,
-                nome = "nome",
-                descricao = "nada importa mais",
-                categoria = Categoria.BEBIDA,
-                valor = BigDecimal.valueOf(10.0),
-                tempoPreparo = 10,
-                disponivel = true,
-                excluido = false,
-                imagem = null
-            )
-        ))
-        valorTotal = BigDecimal.valueOf(
-            produtos.stream()
-                .mapToDouble { it.produto?.valor?.multiply(BigDecimal.valueOf(it.quantidade))?.toDouble()!! }
-                ?.sum()!!)
-        tempoEsperaMinutos = if (tempoPreparo > tempoEsperaMinutos!!) tempoPreparo else tempoEsperaMinutos
+    private fun calcularTempoEspera() {
+        tempoEsperaMinutos = produtos.map { it.produto?.tempoPreparo }.maxBy { it!! }
     }
 }

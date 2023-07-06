@@ -13,18 +13,12 @@ data class PedidoProdutoEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "pedido_id", nullable = false, updatable = false)
     val pedido: PedidoEntity? = null,
 
-    @Column(name = "pedido_id")
-    val pedidoId: Long? = null,
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "produto_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "produto_id", nullable = false, updatable = false)
     val produto: ProdutoEntity? = null,
-
-    @Column(name = "produto_id")
-    val produtoId: Long? = null,
 
     @Column(name = "valor_pago", nullable = false)
     val valorPago: BigDecimal? = null,
@@ -35,7 +29,13 @@ data class PedidoProdutoEntity(
     @Column(name = "comentario", nullable = true)
     val comentario: String? = null
 ) {
-    fun toDto() = PedidoProdutoDto(id, produto!!.toDto(), quantidade!!, comentario)
+    fun toDto() = PedidoProdutoDto(
+        id = id,
+        produto = produto?.toDto()!!,
+        valorPago = valorPago,
+        quantidade = quantidade!!,
+        comentario = comentario,
+    )
 
     companion object {
         fun fromDto(pedidoProduto: PedidoProdutoDto) = PedidoProdutoEntity(

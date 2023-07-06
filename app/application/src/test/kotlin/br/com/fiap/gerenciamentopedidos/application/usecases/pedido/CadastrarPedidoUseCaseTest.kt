@@ -75,10 +75,10 @@ class CadastrarPedidoUseCaseTest {
         val request = CadastrarPedidoRequest(clienteId, produtos)
 
 
-        every { pedidoRepository.buscarUltimoPedidoDoDia(any()) } returns Optional.of(PedidoDto.fromModel(pedido))
+        every { pedidoRepository.obterProximoNumeroPedidoDoDia(any()) } returns Optional.of(PedidoDto.fromModel(pedido))
         every { pagamentoRepository.efetuarPagamento(any(), any()) } returns pagamento
         every { clienteRepository.buscarPorId(any()) } returns ClienteDto.fromModel(cliente)
-        every { pedidoRepository.buscarUltimoPedidoDoDia(any()) } returns Optional.of(PedidoDto.fromModel(pedido))
+        every { pedidoRepository.obterProximoNumeroPedidoDoDia(any()) } returns Optional.of(PedidoDto.fromModel(pedido))
         every { pedidoRepository.salvar(any()) } returns PedidoDto.fromModel(pedido)
         every { produtoRepository.get(1L) } returns Optional.of(ProdutoDto.fromModel(produto))
 

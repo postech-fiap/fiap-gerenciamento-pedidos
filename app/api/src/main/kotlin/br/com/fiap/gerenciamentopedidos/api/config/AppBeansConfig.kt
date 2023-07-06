@@ -59,19 +59,18 @@ class AppBeansConfig {
     fun buscarClientePorCpfUseCase(repository: ClienteRepository) = BuscarClientePorCpfUseCaseImpl(repository)
 
     @Bean
-    fun pedidoRepository(
-        pedidoJpaRepository: PedidoJpaRepository,
-        clienteJpaRepository: ClienteJpaRepository,
-        produtoJpaRepository: ProdutoJpaRepository
-    ) =
-        PedidoRepositoryImpl(pedidoJpaRepository, clienteJpaRepository, produtoJpaRepository)
+    fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
 
     @Bean
-    fun cadastrarPedidoUseCase(cadastrarPedidoRepository: PedidoRepository, pagamentoService: PagamentoService) =
-        CadastrarPedidoUseCaseImpl(cadastrarPedidoRepository, pagamentoService)
+    fun cadastrarPedidoUseCase(
+        pedidoRepository: PedidoRepository,
+        produtoRepository: ProdutoRepository,
+        clienteRepository: ClienteRepository,
+        pagamentoService: PagamentoService
+    ) = CadastrarPedidoUseCaseImpl(pedidoRepository, produtoRepository, clienteRepository, pagamentoService)
 
     @Bean
     fun pagamentoService() = PagamentoServiceImpl()

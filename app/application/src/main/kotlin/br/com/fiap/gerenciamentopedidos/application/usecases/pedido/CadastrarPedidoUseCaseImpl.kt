@@ -4,46 +4,38 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarP
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import java.time.OffsetDateTime
+import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
 
 class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
+    private val produtoRepository: ProdutoRepository,
+    private val clienteRepository: ClienteRepository,
     private val pagamentoService: PagamentoService
 ) : CadastrarPedidoUseCase {
-
     override fun executar(request: CadastrarPedidoRequest): PedidoResponse {
-        val now = OffsetDateTime.now()
-        val initOfDay = now
-            .withHour(0)
-            .withMinute(0)
-            .withSecond(0)
+        val numero = pedidoRepository.obterProximoNumeroPedidoDoDia()
 
-        val endOfDay = now
-            .withHour(23)
-            .withMinute(59)
-            .withSecond(59)
+        val produtos = produtoRepository.get(request.produtos?.map { it.produtoId }!!)
 
-        val numero =
-            pedidoRepository.buscarUltimoPedidoDoDia(initOfDay, endOfDay).map { it.numero?.toLong()?.plus(1) }
-                .orElse(1).toString()
-
-        val pedido = Pedido(numero = numero, clienteId = request.clienteId)
-
-        request.produtos?.forEach {
-            pedido.incluirProduto(
-                produtoId = it.produtoId!!,
-                quantidade = it.quantidade!!,
-                tempoPreparo = it.tempoPreparo!!,
-                comentario = it.comentario!!
-            )
-        }
-
-        val pagamento = pagamentoService.efetuarPagamento(pedido.numero!!, pedido.valorTotal!!)
-        pedido.incluirPagamento(pagamento.dataHora!!, pagamento.status!!)
-
+        val pedido = Pedido(
+            numero = numero,
+            cliente = request.clienteId?.let { clienteRepository.buscarPorId(it) }?.toModel(),
+            pagamento = pagamentoService.efetuarPagamento(numero).toModel(),
+            produtos = request.produtos.map {
+                val produto = produtos.first { p -> p.id == it.produtoId }.toModel()
+                PedidoProduto(
+                    quantidade = it.quantidade,
+                    comentario = it.comentario,
+                    produto = produto,
+                    valorPago = produto.valor
+                )
+            }
+        )
         return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedido)))
     }
 }

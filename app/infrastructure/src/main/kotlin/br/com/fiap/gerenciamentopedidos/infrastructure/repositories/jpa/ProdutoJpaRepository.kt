@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 
 interface ProdutoJpaRepository : JpaRepository<ProdutoEntity, Long> {
     fun findByCategoria(categoria: Categoria): List<ProdutoEntity>
+
+    fun findByIdIn(ids: List<Long>): List<ProdutoEntity>
 }

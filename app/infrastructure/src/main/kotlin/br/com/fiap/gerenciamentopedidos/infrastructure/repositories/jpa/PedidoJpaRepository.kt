@@ -4,9 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.stereotype.Repository
 import java.time.OffsetDateTime
-import java.util.Optional
 
 interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
 
@@ -16,10 +14,6 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
         dataFinal: OffsetDateTime
     ): List<PedidoEntity>
 
-
-    @Query("SELECT p FROM PedidoEntity p WHERE p.dataHora >= :dataInicio AND p.dataHora <= :dataFim")
-    fun findByDataHora(dataInicio: OffsetDateTime, dataFim: OffsetDateTime): List<PedidoEntity>
-
-   // fun findByDataHora(dataHoraInicio: OffsetDateTime, dataHoraFim: OffsetDateTime): List<PedidoEntity>
-
+    @Query("SELECT CAST(IFNULL(MAX(p.numero),'0') AS UNSIGNED) + 1 FROM pedido p WHERE DATE(p.data_hora) = CURDATE()", nativeQuery = true)
+    fun obterProximoNumeroPedidoDoDia(): String
 }

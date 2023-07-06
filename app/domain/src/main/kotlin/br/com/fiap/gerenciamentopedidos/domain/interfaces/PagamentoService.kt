@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
 import java.math.BigDecimal
 
 interface PagamentoService {
-    fun efetuarPagamento(numeroPedido: String, valor: BigDecimal): PagamentoDto
+    fun efetuarPagamento(numeroPedido: String): PagamentoDto
 }

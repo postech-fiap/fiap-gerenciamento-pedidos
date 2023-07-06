@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import jakarta.persistence.*
 import java.time.OffsetDateTime
-import java.util.stream.Collectors
 
 @Entity
 @Table(name = "pedido")
@@ -31,9 +30,6 @@ data class PedidoEntity(
     @JoinColumn(name = "cliente_id", nullable = true)
     var cliente: ClienteEntity? = null,
 
-    @Column(name = "cliente_id", insertable = false, updatable = false)
-    val clienteId: Long? = null,
-
     @OneToMany(
         mappedBy = "pedido",
         fetch = FetchType.LAZY,
@@ -48,9 +44,7 @@ data class PedidoEntity(
     fun toDto(): PedidoDto {
         val cliente = cliente?.toDto(cliente?.cpf!!)
 
-        val produtos = produtos?.stream()
-            ?.map { it.toDto() }
-            ?.collect(Collectors.toList())
+        val produtos = produtos?.stream()?.map { it.toDto() }?.toList()
 
         return PedidoDto(
             id = id,
@@ -72,14 +66,14 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                clienteId = pedido.cliente?.id,
+                cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
                 produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) }
             )
             entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it, entity) }
             entity.produtos = pedido.produtos?.map {
                 PedidoProdutoEntity(
                     pedido = entity,
-                    produtoId = it.produto.id,
+                    produto = ProdutoEntity.fromDto(it.produto),
                     valorPago = it.valorPago,
                     quantidade = it.quantidade,
                     comentario = it.comentario

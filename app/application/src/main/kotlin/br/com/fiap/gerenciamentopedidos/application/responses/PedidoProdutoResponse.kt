@@ -13,7 +13,7 @@ data class PedidoProdutoResponse(private val pedidoProduto: PedidoProdutoDto) {
 
     init {
         nome = pedidoProduto.produto.nome!!
-        valorPago = 0.toBigDecimal()
+        valorPago = pedidoProduto.valorPago!!
         quantidade = pedidoProduto.quantidade
         comentario = pedidoProduto.comentario
     }

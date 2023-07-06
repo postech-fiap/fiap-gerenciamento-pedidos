@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 
 class PagamentoServiceImpl : PagamentoService {
 
-    override fun efetuarPagamento(numeroPedido: String, valor: BigDecimal): PagamentoDto {
+    override fun efetuarPagamento(numeroPedido: String): PagamentoDto {
         return PagamentoDto(
             dataHora = OffsetDateTime.now(),
             status = PagamentoStatus.APROVADO,

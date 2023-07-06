@@ -13,12 +13,18 @@ data class PedidoProdutoDto(
     companion object {
         fun fromModel(pedidoProduto: PedidoProduto) = PedidoProdutoDto(
             pedidoProduto.id,
-            pedidoProduto.produtoId?.let { ProdutoDto(it) }!!,
+            produto = ProdutoDto.fromModel(pedidoProduto.produto!!),
             pedidoProduto.quantidade,
             pedidoProduto.comentario,
-            pedidoProduto.produto?.valor
+            pedidoProduto.valorPago
         )
     }
 
-    fun toModel() = PedidoProduto(id, produto.id, quantidade, comentario)
+    fun toModel() = PedidoProduto(
+        id,
+        quantidade,
+        comentario,
+        produto.toModel(),
+        valorPago
+    )
 }
