@@ -18,6 +18,7 @@ data class Produto(
     init {
         require(nome.isNullOrEmpty().not()) { "Nome do produto não informado" }
         require(categoria != null) { "Categoria do produto não informada" }
+        require(valor > BigDecimal.ZERO) { "Valor do produto deve ser maior que zero" }
     }
 
     fun alterarDisponibilidade(disponivel: Boolean) {
