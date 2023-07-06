@@ -17,6 +17,7 @@ data class Pedido(
     init {
         require(produtos.isEmpty().not()) { "Ao menos um produto deve ser informado" }
         require(PagamentoStatus.APROVADO == pagamento?.status) { "O pagamento deve estar aprovado para concluir o pedido" }
+        require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
         calcularTempoEspera()
     }
 

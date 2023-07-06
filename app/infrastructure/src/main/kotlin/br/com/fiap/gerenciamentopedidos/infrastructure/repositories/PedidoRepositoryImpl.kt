@@ -32,7 +32,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         try {
             return pedidoJpaRepository.obterProximoNumeroPedidoDoDia()
         } catch (ex: Exception) {
-            throw BaseDeDadosException(String.format(ERROR_MESSAGE_TO_LIST, ex.message))
+            throw RuntimeException(String.format(ERROR_MESSAGE_TO_LIST, ex.message))
         }
     }
 
@@ -41,7 +41,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
             val entity = PedidoEntity.fromDto(pedido)
             return pedidoJpaRepository.save(entity).toDto()
         } catch (ex: Exception) {
-            throw BaseDeDadosException(
+            throw RuntimeException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)
             )
         }

@@ -11,5 +11,6 @@ data class PedidoProduto(
 ) {
     init {
         require(quantidade > 0) { "A quantidade deve ser maior que zero" }
+        require(produto != null) { "O produto deve ser informado" }
     }
 }
