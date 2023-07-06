@@ -13,12 +13,18 @@ data class PedidoProdutoEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false)
+    @JoinColumn(name = "pedido_id", nullable = false, insertable = false, updatable = false)
     val pedido: PedidoEntity? = null,
 
+    @Column(name = "pedido_id")
+    val pedidoId: Long? = null,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "produto_id", nullable = false)
+    @JoinColumn(name = "produto_id", nullable = false, insertable = false, updatable = false)
     val produto: ProdutoEntity? = null,
+
+    @Column(name = "produto_id")
+    val produtoId: Long? = null,
 
     @Column(name = "valor_pago", nullable = false)
     val valorPago: BigDecimal? = null,

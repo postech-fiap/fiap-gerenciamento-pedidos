@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
@@ -48,17 +47,9 @@ class PedidoRepositoryImpl(
     override fun salvar(pedido: PedidoDto): PedidoDto {
         try {
             val entity = PedidoEntity.fromDto(pedido)
-            entity.cliente = pedido.cliente?.id?.let { clienteJpaRepository.findById(it).get() }
-            entity.produtos = pedido.produtos?.map {
-                PedidoProdutoEntity(
-                    pedido = entity,
-                    produto = it.produto.id?.let { p -> produtoJpaRepository.findById(p).get() },
-                    valorPago = it.valorPago,
-                    quantidade = it.quantidade,
-                    comentario = it.comentario
-                )
-            }
-            return pedidoJpaRepository.save(entity).toDto()
+
+            val result = pedidoJpaRepository.save(entity)
+            return result.toDto()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)

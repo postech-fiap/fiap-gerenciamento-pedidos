@@ -34,20 +34,8 @@ class PedidoController(
         content = [ Content(mediaType = "application/json",
             schema = Schema(implementation = BaseDeDadosException::class))])])
     @GetMapping
-    fun buscarPedidos(@RequestBody @Validated buscarPedidosRequest: BuscarPedidosRequest) =
+    fun buscarPedidos(buscarPedidosRequest: BuscarPedidosRequest) =
         ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
-
-//    @ApiResponses(value = [
-//        ApiResponse(responseCode = "201", description = "Created",
-//            content = [ (Content(mediaType = "application/json",
-//                array = ArraySchema( schema = Schema(implementation = PedidoResponse::class))))]),
-//        ApiResponse(responseCode = "500", description = "Internal Server Error",
-//            content = [ Content(mediaType = "application/json",
-//                schema = Schema(implementation = BaseDeDadosException::class))])])
-//    @PostMapping
-//    fun cadastrarPedido(cadastrarPedidoRequest: CadastrarPedidoRequest) {
-//        ResponseEntity.ok().body(cadastrarPedidoUseCase.executar(cadastrarPedidoRequest))
-//    }
 
     @Operation(summary = "Cadastrar um pedido")
     @ApiResponses(value = [

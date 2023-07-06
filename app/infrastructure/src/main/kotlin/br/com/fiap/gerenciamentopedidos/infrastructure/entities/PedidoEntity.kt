@@ -27,9 +27,12 @@ data class PedidoEntity(
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = true)
     var cliente: ClienteEntity? = null,
+
+    @Column(name = "cliente_id", insertable = false, updatable = false)
+    val clienteId: Long? = null,
 
     @OneToMany(
         mappedBy = "pedido",
@@ -69,11 +72,19 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
+                clienteId = pedido.cliente?.id,
                 produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) }
             )
             entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it, entity) }
-
+            entity.produtos = pedido.produtos?.map {
+                PedidoProdutoEntity(
+                    pedido = entity,
+                    produtoId = it.produto.id,
+                    valorPago = it.valorPago,
+                    quantidade = it.quantidade,
+                    comentario = it.comentario
+                )
+            }
             return entity
         }
     }
