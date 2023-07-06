@@ -28,12 +28,16 @@ class CadastrarPedidoUseCaseImpl(
             pagamento = pagamentoService.efetuarPagamento(numero).toModel(),
             produtos = request.produtos.map {
                 val produto = produtos.first { p -> p.id == it.produtoId }.toModel()
-                PedidoProduto(
-                    quantidade = it.quantidade,
-                    comentario = it.comentario,
-                    produto = produto,
-                    valorPago = produto.valor
-                )
+                if(produto.disponivel){
+                    PedidoProduto(
+                        quantidade = it.quantidade,
+                        comentario = it.comentario,
+                        produto = produto,
+                        valorPago = produto.valor
+                    )
+                }else{
+                    throw Exception("Produto ${produto.nome} não está disponível")
+                }
             }
         )
         return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedido)))
