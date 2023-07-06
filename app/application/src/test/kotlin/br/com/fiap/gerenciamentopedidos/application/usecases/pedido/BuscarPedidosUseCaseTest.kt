@@ -4,11 +4,12 @@ import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosReques
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import br.com.fiap.gerenciamentopedidos.domain.models.*
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
+import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -17,6 +18,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.math.BigDecimal
 import java.time.OffsetDateTime
 import kotlin.RuntimeException
 
@@ -34,14 +36,25 @@ class BuscarPedidosUseCaseTest {
 
         var produtos = listOf(
             PedidoProduto(
-                10,
-                Produto(1, "Hamburguer", "O brabo", Categoria.LANCHE, 10.0, 10, true, false, null ),
-                10,
-                "Sem mostarda"
-            )
-        )
+                1, 1, "comentario",
+                Produto(
+                    id = 1,
+                    nome= "produto",
+                    descricao= "descricao",
+                    categoria= Categoria.BEBIDA,
+                    valor= BigDecimal(10),
+                    tempoPreparo= 10,
+                    disponivel= true,
+                    excluido = false,
+                    imagem= Imagem(1, "nome")
+                )))
+
+        var cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
+
+        var pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
         // given
-        var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, null, produtos, 15L, null)
+
+        var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, cliente, produtos, pagamento, 10)
         val pedidoList = listOf(PedidoDto.fromModel(pedido))
 
         val status = PedidoStatus.PENDENTE

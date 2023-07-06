@@ -15,6 +15,6 @@ class CadastrarClienteUseCaseImpl(private val clientePort: ClienteRepository) : 
                 throw RecursoJaExisteException(String.format("CPF %s já está cadastrado", request.cpf))
             }
 
-        return ClienteResponse.fromDomain(clientePort.salvar(ClienteDto.fromModel(request.toDomain())))
+        return ClienteResponse.fromDomain(clientePort.salvar(ClienteDto.fromModel(request.toModel())))
     }
 }

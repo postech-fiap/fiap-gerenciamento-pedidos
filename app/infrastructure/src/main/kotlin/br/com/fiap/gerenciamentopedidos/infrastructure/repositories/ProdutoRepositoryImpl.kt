@@ -37,7 +37,11 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
 
     override fun get(categoria: Categoria): List<ProdutoDto> {
         try {
-            return repository.findByCategoria(categoria).map { it.toDto() }.toList()
+            return repository.findByCategoriaAndExcluidoAndDisponivel(
+                categoria,
+                excluido = false,
+                disponivel = true
+            ).map { it.toDto() }.toList()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)

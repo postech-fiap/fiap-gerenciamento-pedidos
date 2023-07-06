@@ -4,8 +4,8 @@ import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
-import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
@@ -58,16 +58,16 @@ class BuscarClienteUseCaseImplTest {
         val email = Email(EMAIL)
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
 
-        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } returns Optional.empty()
+        every { clienteDomain.cpf?.let { clientePort.buscarPorCpf(it.numero) } } returns Optional.empty()
 
         //when-then
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
-            buscarClientePorCpfUseCaseImpl.executar(clienteDomain.cpf.numero)
+            clienteDomain.cpf?.let { buscarClientePorCpfUseCaseImpl.executar(it.numero) }
         }
 
         Assertions.assertEquals("CPF ${cpf.numero} não encontrado", exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(clienteDomain.cpf.numero) }
+        verify(exactly = 1) { clienteDomain.cpf?.let { clientePort.buscarPorCpf(it.numero) } }
     }
 
     @Test
@@ -79,16 +79,16 @@ class BuscarClienteUseCaseImplTest {
         val clienteDomain = Cliente(cpf = cpf, nome = nome, email = email)
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(clienteDomain.cpf.numero) } throws RuntimeException(errorMessage)
+        every { clienteDomain.cpf?.let { clientePort.buscarPorCpf(it.numero) } } throws RuntimeException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            buscarClientePorCpfUseCaseImpl.executar(clienteDomain.cpf.numero)
+            clienteDomain.cpf?.let { buscarClientePorCpfUseCaseImpl.executar(it.numero) }
         }
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(clienteDomain.cpf.numero) }
+        verify(exactly = 1) { clienteDomain.cpf?.let { clientePort.buscarPorCpf(it.numero) } }
     }
 
 }
