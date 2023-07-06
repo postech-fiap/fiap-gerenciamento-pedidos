@@ -135,7 +135,6 @@ class CadastrarPedidoUseCaseTest {
         var cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
 
         var pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
-        var pagamentoDto = PagamentoDto.fromModel(pagamento)
         var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, cliente, produtos, pagamento, 10)
         var pedidoProdutoDto = PedidoProdutoDto.fromModel(produtos[0])
         // Act
