@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -46,8 +47,8 @@ class PedidoController(
     fun buscarPedidos(buscarPedidosRequest: BuscarPedidosRequest) =
         ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
 
-    @PatchMapping
-    fun alterarStatusPedido(alterarStatusPedidoRequest: AlterarStatusPedidoRequest): PedidoDto {
+    @PatchMapping("/status")
+    fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest): PedidoDto {
         return alterarStatusPedido.executar(alterarStatusPedidoRequest)
     }
 }

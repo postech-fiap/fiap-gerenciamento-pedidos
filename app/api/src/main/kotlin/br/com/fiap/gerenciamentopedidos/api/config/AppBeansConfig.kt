@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.api.config
 
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
@@ -59,4 +60,7 @@ class AppBeansConfig {
 
     @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
+
+    @Bean
+    fun alterarStatusPedidoUseCase(repository: PedidoRepository) = AlterarStatusPedidoUseCaseImpl(repository)
 }

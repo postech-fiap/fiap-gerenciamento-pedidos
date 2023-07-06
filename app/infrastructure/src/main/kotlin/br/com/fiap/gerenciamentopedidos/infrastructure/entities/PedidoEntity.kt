@@ -33,8 +33,7 @@ data class PedidoEntity(
 
     @OneToMany(
         mappedBy = "pedido",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true
+        fetch = FetchType.LAZY
     )
     val produtos: List<PedidoProdutoEntity>? = null,
 
@@ -68,7 +67,7 @@ data class PedidoEntity(
                 dataHora = pedido.dataHora,
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
-                numero = pedido.numero
+                numero = pedido.numero,
             )
         }
     }
