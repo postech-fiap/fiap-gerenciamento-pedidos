@@ -19,6 +19,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -51,7 +52,7 @@ class CadastrarPedidoUseCaseTest {
             PedidoProduto(
                 1, 1, "Sem mostarda",
                 Produto(
-                    id = 1,
+                    id = null,
                     nome= "Produto 1",
                     descricao= "descricao",
                     categoria= Categoria.BEBIDA,
@@ -113,6 +114,8 @@ class CadastrarPedidoUseCaseTest {
     }
 
 
+
+
     @Test
     fun `deve criar lista de produtosResponse corretamente`() {
         // Arrange
@@ -153,9 +156,5 @@ class CadastrarPedidoUseCaseTest {
         assertNotNull(produto1Response?.comentario)
 
     }
-
-
-
-
 
 }
