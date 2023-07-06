@@ -39,7 +39,7 @@ class BuscarPedidosUseCaseTest {
                 1, 1, "comentario",
                 Produto(
                     id = 1,
-                    nome= "produto",
+                    nome= "Produto 1",
                     descricao= "descricao",
                     categoria= Categoria.BEBIDA,
                     valor= BigDecimal(10),
@@ -47,7 +47,7 @@ class BuscarPedidosUseCaseTest {
                     disponivel= true,
                     excluido = false,
                     imagem= Imagem(1, "nome")
-                )))
+                ), valorPago = BigDecimal(10)))
 
         var cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
 

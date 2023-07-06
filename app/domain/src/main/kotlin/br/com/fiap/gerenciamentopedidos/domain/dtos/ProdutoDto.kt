@@ -13,7 +13,7 @@ data class ProdutoDto(
     val tempoPreparo: Long? = null,
     var disponivel: Boolean? = null,
     var excluido: Boolean? = null,
-    val imagem: ImagemDto? = null
+    val imagem: ImagemDto?
 ) {
     companion object {
         fun fromModel(produto: Produto) = ProdutoDto(
