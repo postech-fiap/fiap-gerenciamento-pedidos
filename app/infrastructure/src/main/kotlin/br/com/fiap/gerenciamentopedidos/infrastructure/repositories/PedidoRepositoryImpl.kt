@@ -12,7 +12,7 @@ private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar pedidos por c
 private const val ERROR_MESSAGE_GET_NEXT_NUMBER = "Erro ao obter próximo número pedido. Detalhes: %s"
 private const val ERROR_MESSAGE_CREATE = "Erro ao salvar pedido. Detalhes: %s"
 private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao listar pedidos por Id. Detalhes: %s"
-private const val ERROR_MESSAGE_UPDATE_STATUS = "Erro ao realiar a atualização do status do pedido. Detalhes: %s"
+private const val ERROR_MESSAGE_UPDATE_STATUS = "Erro ao realizar a atualização do status do pedido. Detalhes: %s"
 
 class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository) : PedidoRepository {
 
