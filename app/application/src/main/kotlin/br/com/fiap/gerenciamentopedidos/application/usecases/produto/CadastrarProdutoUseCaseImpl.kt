@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
-class CadastrarProdutoUseCaseImpl(private val produtoPort: ProdutoRepository) : CadastrarProdutoUseCase {
+class CadastrarProdutoUseCaseImpl(private val produtoRepository: ProdutoRepository) : CadastrarProdutoUseCase {
     override fun executar(request: CadastrarProdutoRequest) =
-        ProdutoResponse(produtoPort.create(ProdutoDto.fromModel(request.toModel())))
+        ProdutoResponse(produtoRepository.create(ProdutoDto.fromModel(request.toModel())))
 }

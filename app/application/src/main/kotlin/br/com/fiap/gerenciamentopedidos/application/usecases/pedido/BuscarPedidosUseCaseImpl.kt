@@ -5,10 +5,10 @@ import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosReques
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 
-class BuscarPedidosUseCaseImpl(private val pedidoPort: PedidoRepository) : BuscarPedidosUseCase {
+class BuscarPedidosUseCaseImpl(private val pedidoRepository: PedidoRepository) : BuscarPedidosUseCase {
 
     override fun executar(buscarPedidosRequest: BuscarPedidosRequest): List<PedidoResponse> {
-        return pedidoPort.buscarPedidos(
+        return pedidoRepository.buscarPedidos(
             buscarPedidosRequest.status,
             buscarPedidosRequest.dataInicial,
             buscarPedidosRequest.dataFinal

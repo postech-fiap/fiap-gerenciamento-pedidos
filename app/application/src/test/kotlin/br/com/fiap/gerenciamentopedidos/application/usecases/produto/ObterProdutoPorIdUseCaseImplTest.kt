@@ -22,7 +22,7 @@ class ObterProdutoPorIdUseCaseImplTest {
     lateinit var useCase: ObterProdutoPorIdUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoRepository
+    lateinit var produtoRepository: ProdutoRepository
 
     @Test
     fun `deve obter produto por id com sucesso`() {
@@ -40,7 +40,7 @@ class ObterProdutoPorIdUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.get(id) } returns Optional.of(ProdutoDto.fromModel(produto))
+        every { produtoRepository.get(id) } returns Optional.of(ProdutoDto.fromModel(produto))
 
         //when
         val result = useCase.executar(id)
@@ -49,7 +49,7 @@ class ObterProdutoPorIdUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoPort.get(id) }
+        verify(exactly = 1) { produtoRepository.get(id) }
     }
 
     @Test
@@ -57,7 +57,7 @@ class ObterProdutoPorIdUseCaseImplTest {
         //given
         val id = 1L
 
-        every { produtoPort.get(id) } returns Optional.empty()
+        every { produtoRepository.get(id) } returns Optional.empty()
 
         //when
         val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
@@ -67,6 +67,6 @@ class ObterProdutoPorIdUseCaseImplTest {
         //then
         Assertions.assertEquals("Produto não encontrado", exception.message)
 
-        verify(exactly = 1) { produtoPort.get(id) }
+        verify(exactly = 1) { produtoRepository.get(id) }
     }
 }

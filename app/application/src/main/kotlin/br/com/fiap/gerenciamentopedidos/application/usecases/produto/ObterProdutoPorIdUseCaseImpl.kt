@@ -5,7 +5,7 @@ import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
-class ObterProdutoPorIdUseCaseImpl(private val produtoPort: ProdutoRepository) : ObterProdutoPorIdUseCase {
-    override fun executar(id: Long) = ProdutoResponse(produtoPort.get(id)
+class ObterProdutoPorIdUseCaseImpl(private val produtoRepository: ProdutoRepository) : ObterProdutoPorIdUseCase {
+    override fun executar(id: Long) = ProdutoResponse(produtoRepository.get(id)
         .orElseThrow { RecursoNaoEncontradoException("Produto não encontrado") })
 }
