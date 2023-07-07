@@ -7,6 +7,8 @@ data class Cpf(val numero: String) {
         require(numero.matches(Regex("(\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2})|\\d{11}"))) { "Formato do CPF é inválido!" }
     }
 
+    fun removeMascara() = removeMascara(numero)
+
     companion object {
         fun removeMascara(numero: String) =
             numero.replace(".", "").replace("-", "")

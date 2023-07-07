@@ -8,11 +8,11 @@ import java.util.stream.Collectors
 
 data class PedidoResponse(private val pedido: PedidoDto) {
 
-    val id: Long
-    val dataHora: OffsetDateTime
-    val status: PedidoStatus
-    val tempoEsperaMinutos: Int
-    val numero: String
+    val id: Long?
+    val dataHora: OffsetDateTime?
+    val status: PedidoStatus?
+    val tempoEsperaMinutos: Long?
+    val numero: String?
     val cliente: ClienteResponse?
     val produtos: List<PedidoProdutoResponse>?
     val pagamento: PagamentoResponse?
@@ -33,11 +33,11 @@ data class PedidoResponse(private val pedido: PedidoDto) {
             pagamentoResponse = PagamentoResponse(pedido.pagamento!!)
         }
 
-        id = pedido.id!!
-        dataHora = pedido.dataHora!!
-        status = pedido.status!!
-        tempoEsperaMinutos = pedido.tempoEsperaMinutos!!
-        numero = pedido.numero!!
+        id = pedido.id
+        dataHora = pedido.dataHora
+        status = pedido.status
+        tempoEsperaMinutos = pedido.tempoEsperaMinutos
+        numero = pedido.numero
         cliente = clienteResponse
         produtos = produtosResponse
         pagamento = pagamentoResponse

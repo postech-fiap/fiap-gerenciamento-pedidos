@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import jakarta.persistence.*
 import java.time.OffsetDateTime
-import java.util.stream.Collectors
 
 @Entity
 @Table(name = "pedido")
@@ -22,31 +21,30 @@ data class PedidoEntity(
     val status: PedidoStatus? = null,
 
     @Column(name = "tempo_espera_minutos", nullable = false)
-    val tempoEsperaMinutos: Int? = 0,
+    val tempoEsperaMinutos: Long? = 0,
 
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = true)
-    val cliente: ClienteEntity? = null,
+    var cliente: ClienteEntity? = null,
 
     @OneToMany(
         mappedBy = "pedido",
-        fetch = FetchType.LAZY
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.PERSIST],
+        orphanRemoval = true
     )
-    val produtos: List<PedidoProdutoEntity>? = null,
+    var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, optional = true)
-    val pagamento: PagamentoEntity? = null
-
+    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST], optional = true)
+    var pagamento: PagamentoEntity? = null
 ) {
     fun toDto(): PedidoDto {
-        val cliente = cliente?.toDto(cliente.cpf!!)
+        val cliente = cliente?.toDto(cliente?.cpf!!)
 
-        val produtos = produtos?.stream()
-            ?.map { it.toDto() }
-            ?.collect(Collectors.toList())
+        val produtos = produtos?.stream()?.map { it.toDto() }?.toList()
 
         return PedidoDto(
             id = id,
@@ -62,13 +60,26 @@ data class PedidoEntity(
 
     companion object {
         fun fromDto(pedido: PedidoDto): PedidoEntity {
-            return PedidoEntity(
+            val entity = PedidoEntity(
                 id = pedido.id,
                 dataHora = pedido.dataHora,
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
+                cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
+                produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) }
             )
+            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it, entity) }
+            entity.produtos = pedido.produtos?.map {
+                PedidoProdutoEntity(
+                    pedido = entity,
+                    produto = ProdutoEntity.fromDto(it.produto),
+                    valorPago = it.valorPago,
+                    quantidade = it.quantidade,
+                    comentario = it.comentario
+                )
+            }
+            return entity
         }
     }
 }

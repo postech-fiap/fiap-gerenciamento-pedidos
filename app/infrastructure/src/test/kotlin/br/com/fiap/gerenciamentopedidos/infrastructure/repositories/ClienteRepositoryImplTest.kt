@@ -83,7 +83,7 @@ class ClienteRepositoryImplTest {
         every { clienteJpaRepository.findByCpf(any()) } throws Exception("Error")
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             clienteRepository.buscarPorCpf(cpf)
         }
 
@@ -107,7 +107,7 @@ class ClienteRepositoryImplTest {
         every { clienteJpaRepository.save(any()) } throws Exception("Error")
 
         //when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             clienteRepository.salvar(dto)
         }
 

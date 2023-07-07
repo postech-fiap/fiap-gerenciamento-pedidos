@@ -3,9 +3,14 @@ package br.com.fiap.gerenciamentopedidos.api.controllers
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
+import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
+import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
+import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -17,11 +22,14 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.validation.annotation.Validated
+import java.net.URI
 
 @RestController
 @RequestMapping("/pedidos")
 class PedidoController(
     private val buscarPedidosUseCase: BuscarPedidosUseCase,
+    private val cadastrarPedidoUseCase: CadastrarPedidoUseCase
     private val alterarStatusPedido: AlterarStatusPedidoUseCase
 ) {
 
@@ -45,6 +53,20 @@ class PedidoController(
     @GetMapping
     fun buscarPedidos(buscarPedidosRequest: BuscarPedidosRequest) =
         ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
+
+    @Operation(summary = "Cadastrar um pedido")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "201", description = "Created",
+            content = [ (Content(mediaType = "application/json",
+                schema = Schema(implementation = PedidoResponse::class)))]),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [ Content(mediaType = "application/json",
+                schema = Schema(implementation = BaseDeDadosException::class))])])
+    @PostMapping
+    fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
+        val pedido = cadastrarPedidoUseCase.executar(request)
+        return ResponseEntity.created(URI.create("/pedidos/${pedido.id}")).body(pedido)
+    }
 
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) {
