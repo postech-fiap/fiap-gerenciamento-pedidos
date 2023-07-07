@@ -20,7 +20,7 @@ Sobre o comando acima:
 
 Curl de exemplo: Busca de cliente por cpf
 ```sh
-curl --location 'http://localhost:8080/clientes/cpf/111.111.11111'
+curl --location 'http://localhost:8080/clientes/cpf/111.111.111-11'
 ```
 
   ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_imagem_banco.png?raw=true)
