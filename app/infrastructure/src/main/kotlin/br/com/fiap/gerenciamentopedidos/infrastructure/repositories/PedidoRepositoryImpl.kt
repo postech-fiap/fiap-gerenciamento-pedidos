@@ -3,7 +3,6 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import java.time.OffsetDateTime
@@ -38,10 +37,9 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun alterarStatusPedido(pedidoDto: PedidoDto): PedidoDto {
+    override fun alterarStatusPedido(pedidoDto: PedidoDto) {
         try {
-            return pedidoJpaRepository.save(PedidoEntity.fromDto(pedidoDto))
-                .toDto()
+            return pedidoJpaRepository.updateStatusById(pedidoDto.status!!, pedidoDto.id!!)
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)

@@ -5,7 +5,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedi
 import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -48,7 +47,7 @@ class PedidoController(
         ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
 
     @PatchMapping("/status")
-    fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest): PedidoDto {
+    fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) {
         return alterarStatusPedido.executar(alterarStatusPedidoRequest)
     }
 }
