@@ -1,8 +1,13 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
@@ -15,6 +20,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -29,7 +35,27 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve buscar pedidos com sucesso`() {
         // given
-        var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, null, null, null, null)
+        val pedido = Pedido(
+            id = 1,
+            numero = "1",
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            produtos = listOf(
+                PedidoProduto(
+                    produto = Produto(
+                        id = 1L,
+                        nome = "Nome",
+                        descricao = null,
+                        categoria = Categoria.BEBIDA,
+                        valor = BigDecimal.valueOf(1.0),
+                        tempoPreparo = 1,
+                        disponivel = true,
+                        excluido = false,
+                        imagem = null
+                    ),
+                    quantidade = 1,
+                )
+            ),
+        )
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
@@ -95,5 +121,4 @@ class PedidoRepositoryImplTest {
             )
         }
     }
-
 }
