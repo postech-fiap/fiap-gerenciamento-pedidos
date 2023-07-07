@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.cadastro
 
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
@@ -30,7 +29,7 @@ class CadastrarClienteUseCaseImplTest {
     lateinit var cadastrarClienteUseCase: CadastrarClienteUseCaseImpl
 
     @MockK
-    lateinit var clientePort: ClienteRepository
+    lateinit var clienteRepository: ClienteRepository
 
     @Test
     fun `deve cadastrar um cliente com sucesso quando ele não existir`() {
@@ -41,17 +40,17 @@ class CadastrarClienteUseCaseImplTest {
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
         val dto = ClienteDto.fromModel(request.toModel())
 
-        every { clientePort.buscarPorCpf(request.cpf) } returns Optional.empty()
-        every { clientePort.salvar(dto) } returns dto
+        every { clienteRepository.buscarPorCpf(request.cpf) } returns Optional.empty()
+        every { clienteRepository.salvar(dto) } returns dto
 
         //when
         val result = cadastrarClienteUseCase.executar(request)
 
         //then
-        Assertions.assertEquals(ClienteResponse.fromDomain(dto), result)
+        Assertions.assertEquals(dto.cpf?.numero, result.cpf)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(request.cpf) }
-        verify(exactly = 1) { clientePort.salvar(dto) }
+        verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
+        verify(exactly = 1) { clienteRepository.salvar(dto) }
     }
 
     @Test
@@ -63,7 +62,7 @@ class CadastrarClienteUseCaseImplTest {
         val request = CadastrarClienteRequest(cpf = cpf.numero, nome = nome, email = email.endereco)
         val dto = ClienteDto.fromModel(request.toModel())
 
-        every { clientePort.buscarPorCpf(request.cpf) } returns Optional.of(dto)
+        every { clienteRepository.buscarPorCpf(request.cpf) } returns Optional.of(dto)
 
         //when-then
         val exception = Assertions.assertThrows(RecursoJaExisteException::class.java) {
@@ -72,8 +71,8 @@ class CadastrarClienteUseCaseImplTest {
 
         Assertions.assertEquals("CPF ${cpf.numero} já está cadastrado", exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(request.cpf) }
-        verify(exactly = 0) { clientePort.salvar(dto) }
+        verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
+        verify(exactly = 0) { clienteRepository.salvar(dto) }
     }
 
     @Test
@@ -86,7 +85,7 @@ class CadastrarClienteUseCaseImplTest {
         val dto = ClienteDto.fromModel(request.toModel())
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(request.cpf) } throws RuntimeException(errorMessage)
+        every { clienteRepository.buscarPorCpf(request.cpf) } throws RuntimeException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
@@ -95,8 +94,8 @@ class CadastrarClienteUseCaseImplTest {
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(request.cpf) }
-        verify(exactly = 0) { clientePort.salvar(dto) }
+        verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
+        verify(exactly = 0) { clienteRepository.salvar(dto) }
     }
 
     @Test
@@ -109,8 +108,8 @@ class CadastrarClienteUseCaseImplTest {
         val dto = ClienteDto.fromModel(request.toModel())
         val errorMessage = "Erro na base de dados"
 
-        every { clientePort.buscarPorCpf(request.cpf) } returns Optional.empty()
-        every { clientePort.salvar(dto) } throws RuntimeException(errorMessage)
+        every { clienteRepository.buscarPorCpf(request.cpf) } returns Optional.empty()
+        every { clienteRepository.salvar(dto) } throws RuntimeException(errorMessage)
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
@@ -119,8 +118,8 @@ class CadastrarClienteUseCaseImplTest {
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(request.cpf) }
-        verify(exactly = 1) { clientePort.salvar(dto) }
+        verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
+        verify(exactly = 1) { clienteRepository.salvar(dto) }
     }
 
 }

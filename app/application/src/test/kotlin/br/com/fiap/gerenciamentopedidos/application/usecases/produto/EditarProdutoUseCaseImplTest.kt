@@ -20,7 +20,7 @@ class EditarProdutoUseCaseImplTest {
     lateinit var useCase: EditarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoRepository
+    lateinit var produtoRepository: ProdutoRepository
 
     @Test
     fun `deve editar produto com sucesso`() {
@@ -38,7 +38,7 @@ class EditarProdutoUseCaseImplTest {
 
         val dto = ProdutoDto.fromModel(produtoRequest.toModel())
 
-        every { produtoPort.update(dto) } returns dto
+        every { produtoRepository.update(dto) } returns dto
 
         //when
         val result = useCase.executar(produtoRequest)
@@ -47,6 +47,6 @@ class EditarProdutoUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoPort.update(dto) }
+        verify(exactly = 1) { produtoRepository.update(dto) }
     }
 }

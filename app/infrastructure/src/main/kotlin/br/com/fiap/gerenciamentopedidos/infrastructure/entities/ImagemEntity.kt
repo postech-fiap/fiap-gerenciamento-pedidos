@@ -10,7 +10,7 @@ class ImagemEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "caminho", nullable = false)
+    @Column(name = "caminho", nullable = false, length = 100)
     var caminho: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY)

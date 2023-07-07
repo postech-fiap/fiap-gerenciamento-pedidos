@@ -5,13 +5,13 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
-class RemoverProdutoPorIdUseCaseImpl(private val produtoPort: ProdutoRepository) : RemoverProdutoPorIdUseCase {
+class RemoverProdutoPorIdUseCaseImpl(private val produtoRepository: ProdutoRepository) : RemoverProdutoPorIdUseCase {
     override fun executar(id: Long) {
         val produto =
-            produtoPort.get(id).orElseThrow { RecursoNaoEncontradoException("Produto não encontrado") }.toModel()
+            produtoRepository.get(id).orElseThrow { RecursoNaoEncontradoException("Produto não encontrado") }.toModel()
 
         produto.excluir()
 
-        produtoPort.update(ProdutoDto.fromModel(produto))
+        produtoRepository.update(ProdutoDto.fromModel(produto))
     }
 }

@@ -7,14 +7,14 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 
-class CadastrarClienteUseCaseImpl(private val clientePort: ClienteRepository) : CadastrarClienteUseCase {
+class CadastrarClienteUseCaseImpl(private val clienteRepository: ClienteRepository) : CadastrarClienteUseCase {
 
     override fun executar(request: CadastrarClienteRequest): ClienteResponse {
-        clientePort.buscarPorCpf(request.cpf)
+        clienteRepository.buscarPorCpf(request.cpf)
             .ifPresent {
                 throw RecursoJaExisteException(String.format("CPF %s já está cadastrado", request.cpf))
             }
 
-        return ClienteResponse.fromDomain(clientePort.salvar(ClienteDto.fromModel(request.toModel())))
+        return ClienteResponse(clienteRepository.salvar(ClienteDto.fromModel(request.toModel())))
     }
 }

@@ -3,7 +3,6 @@ package br.com.fiap.gerenciamentopedidos.application.requests
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
-import java.time.OffsetDateTime
 
 data class CadastrarClienteRequest(
     val cpf: String,
