@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProdutoJpaRepository : JpaRepository<ProdutoEntity, Long> {
-    fun findByCategoria(categoria: Categoria): List<ProdutoEntity>
+    fun findByCategoriaAndExcluidoAndDisponivel(
+        categoria: Categoria,
+        excluido: Boolean,
+        disponivel: Boolean
+    ): List<ProdutoEntity>
 }
