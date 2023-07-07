@@ -62,7 +62,7 @@ class PedidoRepositoryImplTest {
         val pedidoEntity = PedidoEntity.fromDto(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
 
@@ -92,7 +92,7 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve propagar erro ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val errorMessage = "Erro ao listar pedidos por categoria. Detalhes: Error"
@@ -217,4 +217,46 @@ class PedidoRepositoryImplTest {
 
         assertEquals(errorMessage, exception.message)
     }
+
+    @Test
+    fun `deve atualizar o status do pedido com sucesso`() {
+
+        // given
+        val pedido = Pedido(
+            id = 1,
+            numero = "1",
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            produtos = listOf(
+                PedidoProduto(
+                    produto = Produto(
+                        id = 1L,
+                        nome = "Nome",
+                        descricao = null,
+                        categoria = Categoria.BEBIDA,
+                        valor = BigDecimal.valueOf(1.0),
+                        tempoPreparo = 1,
+                        disponivel = true,
+                        excluido = false,
+                        imagem = null
+                    ),
+                    quantidade = 1,
+                )
+            ),
+        )
+        val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
+
+        every {
+            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
+        } returns Unit
+
+        // when
+        val result = pedidoRepository.alterarStatusPedido(dto.status!!, dto.id!!)
+
+        // then
+
+        verify(exactly = 1) {
+            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
+        }
+    }
+
 }

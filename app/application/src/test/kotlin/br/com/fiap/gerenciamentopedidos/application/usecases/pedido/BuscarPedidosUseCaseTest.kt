@@ -53,9 +53,9 @@ class BuscarPedidosUseCaseTest {
         )
         val cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
-        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, cliente, produtos, pagamento, 10)
+        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val pedidoList = listOf(PedidoDto.fromModel(pedido))
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
@@ -74,7 +74,7 @@ class BuscarPedidosUseCaseTest {
     @Test
     fun `deve propagar erro quando ocorrer falha ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.PENDENTE
+        val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
         val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)

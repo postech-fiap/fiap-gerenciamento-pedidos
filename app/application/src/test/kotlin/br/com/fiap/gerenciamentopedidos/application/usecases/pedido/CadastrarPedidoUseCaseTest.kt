@@ -19,6 +19,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -68,7 +69,7 @@ class CadastrarPedidoUseCaseTest {
         val cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
         val pagamentoDto = PagamentoDto.fromModel(pagamento)
-        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, cliente, produtos, pagamento, 10)
+        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val clienteId = 10L
         val produtoss = listOf(CadastrarPedidoProdutoRequest(1, 10, "Sem mostarda"))
         val request = CadastrarPedidoRequest(clienteId, produtoss)
@@ -107,7 +108,7 @@ class CadastrarPedidoUseCaseTest {
         assertEquals("Sem mostarda", produtosResult[0]?.comentario)
         assertEquals(BigDecimal(10), produtosResult[0]?.valorPago)
         assertEquals(10L, result.tempoEsperaMinutos)
-        assertEquals(PedidoStatus.PENDENTE, result.status)
+        assertEquals(PedidoStatus.RECEBIDO, result.status)
         assertEquals(1, result.cliente?.id)
 
         verify { pedidoRepository.salvar(any()) }
@@ -138,7 +139,7 @@ class CadastrarPedidoUseCaseTest {
 
         val cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
-        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, cliente, produtos, pagamento, 10)
+        val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val pedidoProdutoDto = PedidoProdutoDto.fromModel(produtos[0])
         // Act
         val produtosResponse = pedido.produtos?.stream()
