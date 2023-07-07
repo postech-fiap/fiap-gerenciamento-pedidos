@@ -8,7 +8,9 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosExc
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import java.time.OffsetDateTime
 
-private const val ERROR_MESSAGE_TO_LIST = "Erro ao buscar pedidos na base de dados. Detalhes: %s"
+private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar pedidos por categoria. Detalhes: %s"
+private const val ERROR_MESSAGE_GET_NEXT_NUMBER = "Erro ao obter próximo número pedido. Detalhes: %s"
+private const val ERROR_MESSAGE_CREATE = "Erro ao salvar pedido. Detalhes: %s"
 
 class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository) : PedidoRepository {
 
@@ -23,16 +25,16 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
                 .map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
-                String.format(ERROR_MESSAGE_TO_LIST, ex.message)
+                String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)
             )
         }
     }
 
-    override fun obterProximoNumeroPedidoDoDia(): String {
+    override fun obterUltimoNumeroPedidoDoDia(): String {
         try {
-            return pedidoJpaRepository.obterProximoNumeroPedidoDoDia()
+            return pedidoJpaRepository.obterUtimoNumeroPedidoDoDia()
         } catch (ex: Exception) {
-            throw RuntimeException(String.format(ERROR_MESSAGE_TO_LIST, ex.message))
+            throw BaseDeDadosException(String.format(ERROR_MESSAGE_GET_NEXT_NUMBER, ex.message))
         }
     }
 
@@ -41,8 +43,8 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
             val entity = PedidoEntity.fromDto(pedido)
             return pedidoJpaRepository.save(entity).toDto()
         } catch (ex: Exception) {
-            throw RuntimeException(
-                String.format(ERROR_MESSAGE_TO_LIST, ex.message)
+            throw BaseDeDadosException(
+                String.format(ERROR_MESSAGE_CREATE, ex.message)
             )
         }
     }

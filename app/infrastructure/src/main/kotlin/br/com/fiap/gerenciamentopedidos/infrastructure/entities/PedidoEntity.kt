@@ -44,7 +44,7 @@ data class PedidoEntity(
     fun toDto(): PedidoDto {
         val cliente = cliente?.toDto(cliente?.cpf!!)
 
-        val produtos = produtos?.stream()?.map { it.toDto() }?.toList()
+        val produtos = produtos?.map { it.toDto() }
 
         return PedidoDto(
             id = id,
