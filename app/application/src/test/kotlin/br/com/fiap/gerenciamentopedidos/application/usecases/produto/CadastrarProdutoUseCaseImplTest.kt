@@ -20,7 +20,7 @@ class CadastrarProdutoUseCaseImplTest {
     lateinit var useCase: CadastrarProdutoUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoRepository
+    lateinit var produtoRepository: ProdutoRepository
 
     @Test
     fun `deve cadastrar produto com sucesso`() {
@@ -36,7 +36,7 @@ class CadastrarProdutoUseCaseImplTest {
 
         val dto = ProdutoDto.fromModel(produtoRequest.toModel())
 
-        every { produtoPort.create(dto) } returns dto
+        every { produtoRepository.create(dto) } returns dto
 
         //when
         val result = useCase.executar(produtoRequest)
@@ -44,6 +44,6 @@ class CadastrarProdutoUseCaseImplTest {
         //then
         Assertions.assertNotNull(result)
 
-        verify(exactly = 1) { produtoPort.create(dto) }
+        verify(exactly = 1) { produtoRepository.create(dto) }
     }
 }

@@ -20,7 +20,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
     lateinit var useCase: ListarProdutosPorCategoriaUseCaseImpl
 
     @MockK
-    lateinit var produtoPort: ProdutoRepository
+    lateinit var produtoRepository: ProdutoRepository
 
     @Test
     fun `deve listar produtos por categoria com sucesso`() {
@@ -38,7 +38,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoPort.get(categoria) } returns listOf(ProdutoDto.fromModel(produto))
+        every { produtoRepository.get(categoria) } returns listOf(ProdutoDto.fromModel(produto))
 
         //when
         val result = useCase.executar(categoria)
@@ -48,6 +48,6 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
         Assertions.assertTrue(result.isNotEmpty())
         Assertions.assertEquals(categoria, result.first().categoria)
 
-        verify(exactly = 1) { produtoPort.get(categoria) }
+        verify(exactly = 1) { produtoRepository.get(categoria) }
     }
 }

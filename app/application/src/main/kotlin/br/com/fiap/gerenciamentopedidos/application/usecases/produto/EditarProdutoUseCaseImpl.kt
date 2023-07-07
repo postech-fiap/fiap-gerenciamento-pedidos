@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
-class EditarProdutoUseCaseImpl(private val produtoPort: ProdutoRepository) : EditarProdutoUseCase {
+class EditarProdutoUseCaseImpl(private val produtoRepository: ProdutoRepository) : EditarProdutoUseCase {
     override fun executar(request: EditarProdutoRequest) =
-        ProdutoResponse(produtoPort.update(ProdutoDto.fromModel(request.toModel())))
+        ProdutoResponse(produtoRepository.update(ProdutoDto.fromModel(request.toModel())))
 }

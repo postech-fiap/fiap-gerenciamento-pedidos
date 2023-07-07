@@ -26,7 +26,7 @@ data class PedidoProdutoEntity(
     @Column(name = "quantidade", nullable = false)
     val quantidade: Int? = null,
 
-    @Column(name = "comentario", nullable = true)
+    @Column(name = "comentario", nullable = true, length = 1000)
     val comentario: String? = null
 ) {
     fun toDto() = PedidoProdutoDto(id, produto!!.toDto(), valorPago!!, quantidade!!, comentario)

@@ -12,10 +12,10 @@ data class ProdutoEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome", nullable = false, length = 100)
     val nome: String? = null,
 
-    @Column(name = "descricao", nullable = true)
+    @Column(name = "descricao", nullable = true, length = 1000)
     val descricao: String? = null,
 
     @Column(name = "categoria", nullable = false)

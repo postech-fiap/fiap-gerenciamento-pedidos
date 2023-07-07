@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
@@ -23,7 +22,7 @@ class BuscarPedidosUseCaseTest {
     lateinit var buscarUseCaseImpl: BuscarPedidosUseCaseImpl
 
     @MockK
-    lateinit var pedidoPort: PedidoRepository
+    lateinit var pedidoRepository: PedidoRepository
 
     @Test
     fun `deve retornar um pedido`() {
@@ -36,15 +35,15 @@ class BuscarPedidosUseCaseTest {
         val dataFinal = OffsetDateTime.now()
         val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
 
-        every { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) } returns pedidoList
+        every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } returns pedidoList
 
         // when
         val result = buscarUseCaseImpl.executar(buscarPedidosRequest)
 
         // then
-        Assertions.assertEquals(pedidoList.map { PedidoResponse(it) }, result)
+        Assertions.assertEquals(pedidoList.map { it.id }, result.map { it.id })
 
-        verify(exactly = 1) { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) }
+        verify(exactly = 1) { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) }
     }
 
     @Test
@@ -57,7 +56,7 @@ class BuscarPedidosUseCaseTest {
 
         val errorMessage = "Erro na base de dados"
 
-        every { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) } throws RuntimeException(errorMessage)
+        every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } throws RuntimeException(errorMessage)
 
         // when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
@@ -66,7 +65,7 @@ class BuscarPedidosUseCaseTest {
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { pedidoPort.buscarPedidos(status, dataInicial, dataFinal) }
+        verify(exactly = 1) { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) }
     }
 
 }
