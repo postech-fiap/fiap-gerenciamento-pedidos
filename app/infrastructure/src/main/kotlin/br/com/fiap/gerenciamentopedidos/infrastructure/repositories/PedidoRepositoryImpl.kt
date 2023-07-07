@@ -38,9 +38,9 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun alterarStatusPedido(pedidoDto: PedidoDto) {
+    override fun alterarStatusPedido(status: PedidoStatus, id: Long) {
         try {
-            return pedidoJpaRepository.updateStatusById(pedidoDto.status!!, pedidoDto.id!!)
+            return pedidoJpaRepository.updateStatusById(status, id)
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_TO_LIST, ex.message)

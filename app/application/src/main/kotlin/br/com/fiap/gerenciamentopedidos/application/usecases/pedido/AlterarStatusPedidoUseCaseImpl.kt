@@ -13,13 +13,12 @@ class AlterarStatusPedidoUseCaseImpl(
     override fun executar(alterarStatusPedidoRequest: AlterarStatusPedidoRequest) {
         val pedido = pedidoRepository.buscarPedidoPorId(alterarStatusPedidoRequest.pedidoId)
 
-        try {
-            return when (pedido.status) {
-                alterarStatusPedidoRequest.status -> throw BusinessException("O status do pedido ja está igual à ${alterarStatusPedidoRequest.status}")
-                else -> pedidoRepository.alterarStatusPedido(pedido.copy(status = alterarStatusPedidoRequest.status))
-            }
-        } catch (ex: Exception) {
-
+        return when (pedido.status) {
+            alterarStatusPedidoRequest.status -> throw BusinessException("O status do pedido ja está igual à ${alterarStatusPedidoRequest.status}")
+            else -> pedidoRepository.alterarStatusPedido(
+                alterarStatusPedidoRequest.status,
+                alterarStatusPedidoRequest.pedidoId
+            )
         }
     }
 }

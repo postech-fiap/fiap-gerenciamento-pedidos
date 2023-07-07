@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import java.time.OffsetDateTime
 
 data class Pedido(

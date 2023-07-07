@@ -53,19 +53,46 @@ class PedidoController(
         ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
 
     @Operation(summary = "Cadastrar um pedido")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "201", description = "Created",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = PedidoResponse::class)))]),
-        ApiResponse(responseCode = "500", description = "Internal Server Error",
-            content = [ Content(mediaType = "application/json",
-                schema = Schema(implementation = BaseDeDadosException::class))])])
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "201", description = "Created",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = PedidoResponse::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = BaseDeDadosException::class)
+                )]
+            )]
+    )
     @PostMapping
     fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
         val pedido = cadastrarPedidoUseCase.executar(request)
         return ResponseEntity.created(URI.create("/pedidos/${pedido.id}")).body(pedido)
     }
 
+    @Operation(summary = "Alterar status de um pedido")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Ok",
+                content = [(Content(
+                    mediaType = "application/json"
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = BaseDeDadosException::class)
+                )]
+            )]
+    )
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) {
         return alterarStatusPedido.executar(alterarStatusPedidoRequest)

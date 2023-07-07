@@ -10,5 +10,5 @@ interface PedidoRepository {
     fun obterProximoNumeroPedidoDoDia(): String
     fun salvar(pedido: PedidoDto): PedidoDto
     fun buscarPedidoPorId(id: Long): PedidoDto
-    fun alterarStatusPedido(pedidoDto: PedidoDto)
+    fun alterarStatusPedido(status: PedidoStatus, id: Long)
 }
