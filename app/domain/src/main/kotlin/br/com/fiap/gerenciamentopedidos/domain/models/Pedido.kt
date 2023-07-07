@@ -8,7 +8,7 @@ data class Pedido(
     val id: Long? = null,
     val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    val status: PedidoStatus = PedidoStatus.PENDENTE,
+    val status: PedidoStatus = PedidoStatus.RECEBIDO,
     var cliente: Cliente? = null,
     var produtos: List<PedidoProduto> = listOf(),
     var pagamento: Pagamento? = null,
