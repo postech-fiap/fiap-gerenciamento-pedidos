@@ -99,11 +99,13 @@ class CadastrarPedidoUseCaseTest {
         // when
         val result = cadastrarUseCaseImpl.executar(request)
 
+        val produtosResult = result.produtos?.toList()!!
+
         assertEquals("1", result.numero)
-        assertEquals(1, result.produtos?.size)
-        assertEquals(1, result.produtos?.get(0)?.quantidade)
-        assertEquals("Sem mostarda", result.produtos?.get(0)?.comentario)
-        assertEquals(BigDecimal(10), result.produtos?.get(0)?.valorPago)
+        assertEquals(1, produtosResult.size)
+        assertEquals(1, produtosResult[0]?.quantidade)
+        assertEquals("Sem mostarda", produtosResult[0]?.comentario)
+        assertEquals(BigDecimal(10), produtosResult[0]?.valorPago)
         assertEquals(10L, result.tempoEsperaMinutos)
         assertEquals(PedidoStatus.PENDENTE, result.status)
         assertEquals(1, result.cliente?.id)
