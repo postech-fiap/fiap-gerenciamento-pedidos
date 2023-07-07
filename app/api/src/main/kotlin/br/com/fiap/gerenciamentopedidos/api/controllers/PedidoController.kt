@@ -30,7 +30,7 @@ class PedidoController(
     private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
     private val alterarStatusPedido: AlterarStatusPedidoUseCase
 ) {
-
+    @Operation(summary = "Busca pedidos por status")
     @ApiResponses(
         value = [ApiResponse(
             responseCode = "200", description = "Ok",
