@@ -25,6 +25,16 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         }
     }
 
+    override fun get(ids: List<Long>): List<ProdutoDto> {
+        try {
+            return repository.findByIdIn(ids).map { it.toDto() }
+        } catch (ex: Exception) {
+            throw BaseDeDadosException(
+                String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
+            )
+        }
+    }
+
     override fun get(categoria: Categoria): List<ProdutoDto> {
         try {
             return repository.findByCategoriaAndExcluidoAndDisponivel(

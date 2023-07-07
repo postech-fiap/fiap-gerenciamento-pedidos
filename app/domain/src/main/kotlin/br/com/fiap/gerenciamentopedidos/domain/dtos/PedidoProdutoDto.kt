@@ -5,20 +5,26 @@ import java.math.BigDecimal
 
 data class PedidoProdutoDto(
     val id: Long? = null,
-    val produto: ProdutoDto?,
-    val valorPago: BigDecimal,
-    val quantidade: Int,
-    val comentario: String?,
+    val produto: ProdutoDto,
+    val quantidade: Long,
+    val comentario: String? = null,
+    val valorPago: BigDecimal? = null
 ) {
     companion object {
         fun fromModel(pedidoProduto: PedidoProduto) = PedidoProdutoDto(
             pedidoProduto.id,
-            pedidoProduto.produto?.let { ProdutoDto.fromModel(it) },
-            pedidoProduto.valorPago,
+            produto = ProdutoDto.fromModel(pedidoProduto.produto!!),
             pedidoProduto.quantidade,
-            pedidoProduto.comentario
+            pedidoProduto.comentario,
+            pedidoProduto.valorPago
         )
     }
 
-    fun toModel() = PedidoProduto(id, produto?.toModel(), valorPago, quantidade, comentario)
+    fun toModel() = PedidoProduto(
+        id,
+        quantidade,
+        comentario,
+        produto.toModel(),
+        valorPago
+    )
 }

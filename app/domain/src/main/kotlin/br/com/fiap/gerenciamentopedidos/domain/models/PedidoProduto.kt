@@ -4,8 +4,13 @@ import java.math.BigDecimal
 
 data class PedidoProduto(
     val id: Long? = null,
-    val produto: Produto?,
-    val valorPago: BigDecimal,
-    val quantidade: Int,
-    val comentario: String?
-)
+    val quantidade: Long,
+    val comentario: String? = null,
+    val produto: Produto? = null,
+    val valorPago: BigDecimal? = null,
+) {
+    init {
+        require(quantidade > 0) { "A quantidade deve ser maior que zero" }
+        require(produto != null) { "O produto deve ser informado" }
+    }
+}

@@ -12,6 +12,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -29,7 +30,7 @@ class CadastrarProdutoUseCaseImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = 1.0,
+            valor = BigDecimal(1),
             tempoPreparo = 1,
             imagem = null
         )

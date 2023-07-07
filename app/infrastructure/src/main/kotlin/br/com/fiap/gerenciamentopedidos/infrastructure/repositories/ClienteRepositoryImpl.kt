@@ -35,6 +35,16 @@ class ClienteRepositoryImpl(private val clienteJpaRepository: ClienteJpaReposito
         return clienteEntity.map { it.toDto(Cpf.adicionaMascara(cpf)) }
     }
 
+    override fun buscarPorId(id: Long): ClienteDto {
+        var clienteEntity: Optional<ClienteEntity> = Optional.empty()
+        try {
+            clienteEntity =  clienteJpaRepository.findById(id)
+        } catch (ex: Exception) {
+            lancaDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
+        }
+        return clienteEntity.get().toDto(Cpf.adicionaMascara(clienteEntity.get().cpf!!))
+    }
+
     private fun lancaDataBaseException(ex: Exception, errorMessage: String) {
         throw BaseDeDadosException(
             String.format(errorMessage, ex.message)
