@@ -148,22 +148,18 @@ class PedidoRepositoryImplTest {
         )
         val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
 
-        val pedidoEntity = PedidoEntity.fromDto(dto)
-
         every {
-            pedidoJpaRepository.save(pedidoEntity)
-        } returns pedidoEntity
+            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
+        } returns Unit
 
         // when
         val result = pedidoRepository.alterarStatusPedido(dto.status!!, dto.id!!)
 
         // then
-        assertEquals(dto, result)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.save(pedidoEntity)
+            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
         }
-
     }
 
 }
