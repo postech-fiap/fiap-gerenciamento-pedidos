@@ -23,7 +23,15 @@ data class PagamentoEntity(
     @JoinColumn(name = "pedido_id")
     @MapsId
     val pedido: PedidoEntity? = null
-
 ) {
     fun toDto() = PagamentoDto(id, dataHora!!, status!!)
+
+    companion object {
+        fun fromDto(pagamento: PagamentoDto, pedido: PedidoEntity) = PagamentoEntity(
+            id = pagamento.id,
+            dataHora = pagamento.dataHora,
+            status = pagamento.status,
+            pedido = pedido
+        )
+    }
 }

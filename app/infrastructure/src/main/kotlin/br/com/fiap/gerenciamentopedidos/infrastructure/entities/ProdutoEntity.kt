@@ -2,8 +2,8 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "produto")
@@ -23,7 +23,7 @@ data class ProdutoEntity(
     val categoria: Categoria? = null,
 
     @Column(name = "valor", nullable = false)
-    val valor: Double? = null,
+    val valor: BigDecimal? = null,
 
     @Column(name = "tempo_preparo_minutos", nullable = false)
     val tempoPreparo: Long? = null,

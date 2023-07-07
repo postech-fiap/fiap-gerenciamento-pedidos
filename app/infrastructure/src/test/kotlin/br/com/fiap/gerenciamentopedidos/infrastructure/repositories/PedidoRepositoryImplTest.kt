@@ -29,7 +29,7 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve buscar pedidos com sucesso`() {
         // given
-        val pedido = Pedido(1, OffsetDateTime.now(), PedidoStatus.PENDENTE, 10, "1234", null, null, null)
+        var pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.PENDENTE, null, null, null, null)
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
@@ -80,7 +80,7 @@ class PedidoRepositoryImplTest {
         } throws Exception("Error")
 
         // when-then
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
         }
 

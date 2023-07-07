@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.*
 import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.*
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest

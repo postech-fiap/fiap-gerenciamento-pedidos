@@ -16,6 +16,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.lang.RuntimeException
 import java.util.*
 import kotlin.random.Random
 
