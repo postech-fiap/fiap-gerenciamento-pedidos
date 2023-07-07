@@ -13,6 +13,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -33,7 +34,7 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = 1.0,
+            valor = BigDecimal.valueOf(1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
@@ -60,21 +61,23 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = categoria,
-            valor = 1.0,
+            valor = BigDecimal.valueOf(1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
             imagem = null
         )
         val dto = ProdutoDto.fromModel(produto)
-        every { produtoJpaRepository.findByCategoria(any()) } returns listOf(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) } returns listOf(
+            ProdutoEntity.fromDto(dto)
+        )
 
         //when
         val result = produtoRepository.get(categoria)
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result.first())
-        verify(exactly = 1) { produtoJpaRepository.findByCategoria(categoria) }
+        verify(exactly = 1) { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) }
     }
 
     @Test
@@ -85,7 +88,7 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = 1.0,
+            valor = BigDecimal.valueOf( 1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
@@ -112,7 +115,7 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = 1.0,
+            valor = BigDecimal.valueOf( 1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
