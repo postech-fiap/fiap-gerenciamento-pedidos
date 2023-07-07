@@ -91,7 +91,7 @@ class CadastrarPedidoUseCaseTest {
 
         every { produtoRepository.get(requestProdutos) } returns produtosRetorno
 
-        every { pedidoRepository.obterProximoNumeroPedidoDoDia() } returns "1"
+        every { pedidoRepository.obterUltimoNumeroPedidoDoDia() } returns "1"
         every { pagamentoService.efetuarPagamento(any()) } returns pagamentoDto
         every { clienteRepository.buscarPorId(any()) } returns ClienteDto.fromModel(cliente)
         every { pedidoRepository.salvar(any()) } returns PedidoDto.fromModel(pedido)
