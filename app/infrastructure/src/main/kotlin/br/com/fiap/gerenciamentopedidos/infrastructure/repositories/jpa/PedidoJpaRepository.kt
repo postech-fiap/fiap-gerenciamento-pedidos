@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 
 interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
 
-    fun findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+    fun findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
         status: PedidoStatus,
         dataInicial: OffsetDateTime,
         dataFinal: OffsetDateTime

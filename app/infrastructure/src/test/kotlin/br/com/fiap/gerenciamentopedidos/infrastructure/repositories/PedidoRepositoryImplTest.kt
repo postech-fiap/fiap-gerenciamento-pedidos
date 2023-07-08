@@ -9,7 +9,6 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -67,7 +66,7 @@ class PedidoRepositoryImplTest {
         val dataFinal = OffsetDateTime.now()
 
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
                 status,
                 dataInicial,
                 dataFinal
@@ -81,7 +80,7 @@ class PedidoRepositoryImplTest {
         assertEquals(pedidoList, result)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
                 status,
                 dataInicial,
                 dataFinal
@@ -98,7 +97,7 @@ class PedidoRepositoryImplTest {
         val errorMessage = "Erro ao buscar pedidos na base de dados. Detalhes: Error"
 
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
                 status,
                 dataInicial,
                 dataFinal
@@ -114,7 +113,7 @@ class PedidoRepositoryImplTest {
         assertEquals(errorMessage, exception.message)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(
+            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
                 status,
                 dataInicial,
                 dataFinal

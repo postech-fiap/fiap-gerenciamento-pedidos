@@ -19,7 +19,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
     ): List<PedidoDto> {
         try {
             return pedidoJpaRepository
-                .findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqual(status, dataInicial, dataFinal)
+                .findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(status, dataInicial, dataFinal)
                 .map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
