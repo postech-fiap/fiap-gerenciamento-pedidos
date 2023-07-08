@@ -15,7 +15,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(Exception::class)
     private fun handleException(ex: Exception): ResponseEntity<ProblemDetail> {
-        println(ex)
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.message ?: "")
         problemDetail.title = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail)
