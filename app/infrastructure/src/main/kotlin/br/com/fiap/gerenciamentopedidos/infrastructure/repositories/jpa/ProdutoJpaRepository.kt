@@ -12,7 +12,7 @@ interface ProdutoJpaRepository : JpaRepository<ProdutoEntity, Long> {
         disponivel: Boolean
     ): List<ProdutoEntity>
 
-    fun findByIdInAndExcluidoFalse(ids: List<Long>): List<ProdutoEntity>
+    fun findByIdInAndExcluidoFalseAndDisponivelTrue(ids: List<Long>): List<ProdutoEntity>
 
     fun findByIdAndExcluidoFalse(id: Long): Optional<ProdutoEntity>
 }

@@ -28,7 +28,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
 
     override fun get(ids: List<Long>): List<ProdutoDto> {
         try {
-            return repository.findByIdInAndExcluidoFalse(ids).map { it.toDto() }
+            return repository.findByIdInAndExcluidoFalseAndDisponivelTrue(ids).map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
@@ -62,14 +62,15 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
 
     override fun update(produto: ProdutoDto): ProdutoDto {
         try {
-            val entity = repository.findById(produto.id!!).orElseThrow().copy(
-                nome = produto.nome,
-                descricao = produto.descricao,
-                categoria = produto.categoria,
-                valor = produto.valor,
-                tempoPreparo = produto.tempoPreparo,
-                disponivel = produto.disponivel
-            )
+            val entity = repository.findByIdAndExcluidoFalse(produto.id!!)
+                .orElseThrow { BaseDeDadosException("Produto não encontrado") }
+                .copy(
+                    nome = produto.nome,
+                    descricao = produto.descricao,
+                    categoria = produto.categoria,
+                    valor = produto.valor,
+                    tempoPreparo = produto.tempoPreparo
+                )
             if (entity.imagem == null && produto.imagem != null) {
                 entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
             } else if (entity.imagem != null && produto.imagem == null) {

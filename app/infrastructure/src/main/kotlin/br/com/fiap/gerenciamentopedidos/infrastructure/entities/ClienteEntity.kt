@@ -31,5 +31,5 @@ data class ClienteEntity(
         )
     }
 
-    fun toDto(cpf: String) = ClienteDto(id = id, Cpf(cpf), nome!!, Email(email!!))
+    fun toDto() = ClienteDto(id = id, Cpf(Cpf.adicionaMascara(cpf!!)), nome!!, Email(email!!))
 }
