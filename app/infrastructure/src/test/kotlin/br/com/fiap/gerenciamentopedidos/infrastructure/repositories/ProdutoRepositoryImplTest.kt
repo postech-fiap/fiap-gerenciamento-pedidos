@@ -43,14 +43,14 @@ class ProdutoRepositoryImplTest {
         )
         val dto = ProdutoDto.fromModel(produto)
 
-        every { produtoJpaRepository.findById(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
 
         //when
         val result = produtoRepository.get(id)
 
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result.get())
-        verify(exactly = 1) { produtoJpaRepository.findById(any()) }
+        verify(exactly = 1) { produtoJpaRepository.findByIdAndExcluidoFalse(any()) }
     }
 
     @Test

@@ -18,7 +18,7 @@ private const val ERROR_MESSAGE_DELETE = "Erro ao excluir produto. Detalhes: %s"
 class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : ProdutoRepository {
     override fun get(id: Long): Optional<ProdutoDto> {
         try {
-            return repository.findById(id).map { it.toDto() }
+            return repository.findByIdAndExcluidoFalse(id).map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
@@ -28,7 +28,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
 
     override fun get(ids: List<Long>): List<ProdutoDto> {
         try {
-            return repository.findByIdIn(ids).map { it.toDto() }
+            return repository.findByIdInAndExcluidoFalse(ids).map { it.toDto() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
