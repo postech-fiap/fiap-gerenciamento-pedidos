@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.api.interceptors
 
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
+import org.springframework.beans.BeanInstantiationException
 import org.springframework.http.*
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -50,6 +51,13 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(IllegalArgumentException::class)
     private fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ProblemDetail> {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.message ?: "")
+        problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
+    }
+
+    @ExceptionHandler(BeanInstantiationException::class)
+    private fun handleBeanInstantiationException(ex: BeanInstantiationException): ResponseEntity<ProblemDetail> {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.cause?.message ?: "")
         problemDetail.title = HttpStatus.BAD_REQUEST.reasonPhrase
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail)
     }
