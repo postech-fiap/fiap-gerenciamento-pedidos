@@ -18,7 +18,7 @@ class CadastrarPedidoUseCaseImpl(
     private val pagamentoService: PagamentoService
 ) : CadastrarPedidoUseCase {
     override fun executar(request: CadastrarPedidoRequest): PedidoResponse {
-        val numero = pedidoRepository.obterProximoNumeroPedidoDoDia()
+        val numero = pedidoRepository.obterUltimoNumeroPedidoDoDia()
 
         val produtos = produtoRepository.get(request.produtos?.map { it.produtoId }!!)
 

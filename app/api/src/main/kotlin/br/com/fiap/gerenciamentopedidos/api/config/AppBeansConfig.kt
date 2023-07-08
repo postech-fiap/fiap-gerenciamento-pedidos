@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.api.config
 
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
@@ -20,7 +21,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
@@ -63,6 +63,9 @@ class AppBeansConfig {
 
     @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
+
+    @Bean
+    fun alterarStatusPedidoUseCase(repository: PedidoRepository) = AlterarStatusPedidoUseCaseImpl(repository)
 
     @Bean
     fun cadastrarPedidoUseCase(

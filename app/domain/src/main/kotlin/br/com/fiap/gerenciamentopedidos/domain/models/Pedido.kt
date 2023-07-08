@@ -2,13 +2,14 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import java.time.OffsetDateTime
 
 data class Pedido(
     val id: Long? = null,
     val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    val status: PedidoStatus = PedidoStatus.PENDENTE,
+    val status: PedidoStatus = PedidoStatus.RECEBIDO,
     var cliente: Cliente? = null,
     var produtos: List<PedidoProduto> = listOf(),
     var pagamento: Pagamento? = null,

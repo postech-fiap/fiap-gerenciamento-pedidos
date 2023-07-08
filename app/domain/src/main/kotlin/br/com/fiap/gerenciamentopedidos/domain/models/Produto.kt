@@ -30,8 +30,10 @@ data class Produto(
     }
 
     fun disponibilizar() {
-        if (disponivel) throw BusinessException("Produto já está disponível")
-        this.disponivel = true
+        when {
+            disponivel -> throw BusinessException("Produto já está disponível")
+            else -> this.disponivel = true
+        }
     }
 
     fun indisponibilizar() {

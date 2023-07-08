@@ -28,43 +28,85 @@ class ClienteController(
     }
 
     @Operation(summary = "Responsável por cadastrar um cliente")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "201", description = "Created",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = ClienteResponse::class)))]),
-        ApiResponse(responseCode = "409", description = "Conflict",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = RecursoJaExisteException::class)))]),
-        ApiResponse(responseCode = "400", description = "Bad Request",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = IllegalArgumentException::class)))]),
-        ApiResponse(responseCode = "500", description = "Internal Server Error",
-            content = [ Content(mediaType = "application/json",
-                schema = Schema(implementation = BaseDeDadosException::class))]),
-        ApiResponse(responseCode = "500", description = "Internal Server Error",
-            content = [ Content(mediaType = "application/json",
-                schema = Schema(implementation = Exception::class))])])
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "201", description = "Created",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ClienteResponse::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "409", description = "Conflict",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = RecursoJaExisteException::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "400", description = "Bad Request",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = IllegalArgumentException::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = BaseDeDadosException::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = Exception::class)
+                )]
+            )]
+    )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody request: CadastrarClienteRequest) =
         ResponseEntity.status(HttpStatus.CREATED).body(cadastrarClienteUseCase.executar(request))
 
     @Operation(summary = "Responsável por buscar um cliente")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = ClienteResponse::class)))]),
-        ApiResponse(responseCode = "404", description = "Not Found",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = RecursoNaoEncontradoException::class)))]),
-        ApiResponse(responseCode = "500", description = "Internal Server Error",
-            content = [ (Content(mediaType = "application/json",
-                schema = Schema(implementation = BaseDeDadosException::class)))]),
-        ApiResponse(responseCode = "500", description = "Internal Server Error",
-            content = [ Content(mediaType = "application/json",
-                schema = Schema(implementation = Exception::class))])])
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Ok",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ClienteResponse::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "404", description = "Not Found",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = RecursoNaoEncontradoException::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = BaseDeDadosException::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = Exception::class)
+                )]
+            )]
+    )
     @GetMapping("$CPF_URI/{cpf}")
-    fun buscarClientePorCpf(@PathVariable("cpf")
-                            @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
-                            cpf: String) = ResponseEntity.status(HttpStatus.OK)
-                                .body(buscarClientePorCpfUseCase.executar(cpf))
+    fun buscarClientePorCpf(
+        @PathVariable("cpf")
+        @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
+        cpf: String
+    ) = ResponseEntity.status(HttpStatus.OK)
+        .body(buscarClientePorCpfUseCase.executar(cpf))
 }
