@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class CadastrarPedidoUseCaseTest {
@@ -52,7 +53,7 @@ class CadastrarPedidoUseCaseTest {
         every { produtoRepository.get(any<List<Long>>()) } returns pedido.produtos.map { ProdutoDto.fromModel(it.produto!!) }
         every { pedidoRepository.obterUltimoNumeroPedidoDoDia() } returns "1"
         every { pagamentoService.efetuarPagamento(any()) } returns PagamentoDto.fromModel(pedido.pagamento!!)
-        every { clienteRepository.buscarPorId(any()) } returns ClienteDto.fromModel(pedido.cliente!!)
+        every { clienteRepository.buscarPorId(any()) } returns Optional.of(ClienteDto.fromModel(pedido.cliente!!))
         every { pedidoRepository.salvar(any()) } returns PedidoDto.fromModel(pedido)
 
         // Act

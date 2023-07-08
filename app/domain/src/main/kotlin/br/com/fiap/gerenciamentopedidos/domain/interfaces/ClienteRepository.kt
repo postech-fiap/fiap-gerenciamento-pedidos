@@ -7,5 +7,5 @@ interface ClienteRepository {
 
     fun salvar(cliente: ClienteDto): ClienteDto
     fun buscarPorCpf(cpf: String): Optional<ClienteDto>
-    fun buscarPorId(id: Long): ClienteDto
+    fun buscarPorId(id: Long): Optional<ClienteDto>
 }

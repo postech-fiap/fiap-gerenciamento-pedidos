@@ -14,40 +14,30 @@ private const val ERROR_MESSAGE_TO_FIND = "Erro ao buscar o cliente na base de d
 class ClienteRepositoryImpl(private val clienteJpaRepository: ClienteJpaRepository) : ClienteRepository {
 
     override fun salvar(cliente: ClienteDto): ClienteDto {
-        var clienteEntity: ClienteEntity? = null
-
         try {
-            clienteEntity = clienteJpaRepository.save(ClienteEntity.fromDto(cliente))
+            return clienteJpaRepository.save(ClienteEntity.fromDto(cliente))
+                .toDto()
         } catch (ex: Exception) {
-            lancaDataBaseException(ex, ERROR_MESSAGE_TO_SAVE)
+            throw obterDataBaseException(ex, ERROR_MESSAGE_TO_SAVE)
         }
-        return clienteEntity!!.toDto(cliente.cpf!!.numero)
     }
 
     override fun buscarPorCpf(cpf: String): Optional<ClienteDto> {
-        var clienteEntity: Optional<ClienteEntity> = Optional.empty()
-
         try {
-            clienteEntity = clienteJpaRepository.findByCpf(Cpf.removeMascara(cpf))
+            return clienteJpaRepository.findByCpf(Cpf.removeMascara(cpf)).map { it.toDto() }
         } catch (ex: Exception) {
-            lancaDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
+            throw obterDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
         }
-        return clienteEntity.map { it.toDto(Cpf.adicionaMascara(cpf)) }
     }
 
-    override fun buscarPorId(id: Long): ClienteDto {
-        var clienteEntity: Optional<ClienteEntity> = Optional.empty()
+    override fun buscarPorId(id: Long): Optional<ClienteDto> {
         try {
-            clienteEntity =  clienteJpaRepository.findById(id)
+            return clienteJpaRepository.findById(id).map { it.toDto() }
         } catch (ex: Exception) {
-            lancaDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
+            throw obterDataBaseException(ex, ERROR_MESSAGE_TO_FIND)
         }
-        return clienteEntity.get().toDto(Cpf.adicionaMascara(clienteEntity.get().cpf!!))
     }
 
-    private fun lancaDataBaseException(ex: Exception, errorMessage: String) {
-        throw BaseDeDadosException(
-            String.format(errorMessage, ex.message)
-        )
-    }
+    private fun obterDataBaseException(ex: Exception, errorMessage: String) =
+        BaseDeDadosException(String.format(errorMessage, ex.message))
 }

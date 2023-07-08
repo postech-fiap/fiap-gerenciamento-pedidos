@@ -42,7 +42,7 @@ data class PedidoEntity(
     var pagamento: PagamentoEntity? = null
 ) {
     fun toDto(): PedidoDto {
-        val cliente = cliente?.toDto(cliente?.cpf!!)
+        val cliente = cliente?.toDto()
 
         val produtos = produtos?.map { it.toDto() }
 

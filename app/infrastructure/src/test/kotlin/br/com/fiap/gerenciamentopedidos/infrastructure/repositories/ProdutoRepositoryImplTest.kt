@@ -125,7 +125,7 @@ class ProdutoRepositoryImplTest {
         val dto = ProdutoDto.fromModel(produto)
         val entity = ProdutoEntity.fromDto(dto)
 
-        every { produtoJpaRepository.findById(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
         every { produtoJpaRepository.save(any()) } returns entity
 
         //when
