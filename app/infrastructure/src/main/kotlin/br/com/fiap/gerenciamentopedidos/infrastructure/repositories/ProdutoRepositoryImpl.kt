@@ -69,7 +69,8 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
                     descricao = produto.descricao,
                     categoria = produto.categoria,
                     valor = produto.valor,
-                    tempoPreparo = produto.tempoPreparo
+                    tempoPreparo = produto.tempoPreparo,
+                    disponivel = produto.disponivel
                 )
             if (entity.imagem == null && produto.imagem != null) {
                 entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
