@@ -3,10 +3,14 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.Where
 import java.math.BigDecimal
 
 @Entity
 @Table(name = "produto")
+@SQLDelete(sql = "UPDATE produto SET excluido = true WHERE id=?")
+@Where(clause = "excluido = false")
 data class ProdutoEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

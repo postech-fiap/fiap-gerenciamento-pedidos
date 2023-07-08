@@ -28,7 +28,8 @@ class CadastrarPedidoUseCaseImpl(
             cliente = request.clienteId?.let { clienteRepository.buscarPorId(it) }?.toModel(),
             pagamento = pagamentoService.efetuarPagamento(numero).toModel(),
             produtos = request.produtos.map {
-                val produto = produtos.first { p -> p.id == it.produtoId }.toModel()
+                val produto = produtos.firstOrNull { p -> p.id == it.produtoId }?.toModel()
+                    ?: throw Exception("Produto ${it.produtoId} não encontrado")
                 if (produto.disponivel) {
                     PedidoProduto(
                         quantidade = it.quantidade,

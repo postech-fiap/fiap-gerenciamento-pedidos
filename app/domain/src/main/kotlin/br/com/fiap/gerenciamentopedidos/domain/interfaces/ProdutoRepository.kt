@@ -10,4 +10,5 @@ interface ProdutoRepository {
     fun get(categoria: Categoria): List<ProdutoDto>
     fun create(produto: ProdutoDto): ProdutoDto
     fun update(produto: ProdutoDto): ProdutoDto
+    fun remove(id: Long)
 }

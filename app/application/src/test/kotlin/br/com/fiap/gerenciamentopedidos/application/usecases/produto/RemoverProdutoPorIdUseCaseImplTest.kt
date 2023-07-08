@@ -1,11 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
-import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
-import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -14,7 +9,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -26,80 +20,33 @@ class RemoverProdutoPorIdUseCaseImplTest {
     lateinit var produtoRepository: ProdutoRepository
 
     @Test
-    fun `deve obter produto por id com sucesso`() {
+    fun `deve exluir produto com sucesso`() {
         //given
         val id = 1L
-        val produto = Produto(
-            id = id,
-            nome = "Nome",
-            descricao = null,
-            categoria = Categoria.BEBIDA,
-            valor = BigDecimal(1),
-            tempoPreparo = 1,
-            disponivel = true,
-            excluido = false,
-            imagem = null
-        )
-
-        val dto = ProdutoDto.fromModel(produto)
-
-        every { produtoRepository.get(id) } returns Optional.of(dto)
-        every { produtoRepository.update(any()) } returns dto
+        every { produtoRepository.remove(id) } returns Unit
 
         //when
         Assertions.assertDoesNotThrow { useCase.executar(id) }
 
         //then
-        verify(exactly = 1) { produtoRepository.get(id) }
-        verify(exactly = 1) { produtoRepository.update(any()) }
+        verify(exactly = 1) { produtoRepository.remove(id) }
     }
 
     @Test
-    fun `deve lançar exceção por produto já excluído`() {
+    fun `deve propagar erro ao exluir produto`() {
         //given
+        val errorMessage = "Erro ao excluir produto. Detalhes: Error"
         val id = 1L
-        val produto = Produto(
-            id = id,
-            nome = "Nome",
-            descricao = null,
-            categoria = Categoria.BEBIDA,
-            valor = BigDecimal(1),
-            tempoPreparo = 1,
-            disponivel = true,
-            excluido = true,
-            imagem = null
-        )
-
-        val dto = ProdutoDto.fromModel(produto)
-
-        every { produtoRepository.get(id) } returns Optional.of(dto)
+        every { produtoRepository.remove(id) } throws RuntimeException(errorMessage)
 
         //when
-        val exception = Assertions.assertThrows(BusinessException::class.java) {
+        val exception = Assertions.assertThrows(RuntimeException::class.java) {
             useCase.executar(id)
         }
 
-        //then
-        Assertions.assertEquals("Produto já está excluído", exception.message)
-        verify(exactly = 1) { produtoRepository.get(id) }
-        verify(exactly = 0) { produtoRepository.update(dto) }
-    }
-
-    @Test
-    fun `deve lançar exceção por não encontrar produto`() {
-        //given
-        val id = 1L
-
-        every { produtoRepository.get(id) } returns Optional.empty()
-
-        //when
-        val exception = Assertions.assertThrows(RecursoNaoEncontradoException::class.java) {
-            useCase.executar(id)
-        }
+        Assertions.assertEquals(errorMessage, exception.message)
 
         //then
-        Assertions.assertEquals("Produto não encontrado", exception.message)
-
-        verify(exactly = 1) { produtoRepository.get(id) }
+        verify(exactly = 1) { produtoRepository.remove(id) }
     }
 }

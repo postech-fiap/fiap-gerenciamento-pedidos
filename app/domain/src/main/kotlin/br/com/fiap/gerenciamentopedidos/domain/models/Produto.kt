@@ -40,9 +40,4 @@ data class Produto(
         if (!disponivel) throw BusinessException("Produto já está indisponível")
         this.disponivel = false
     }
-
-    fun excluir() {
-        if (excluido) throw BusinessException("Produto já está excluído")
-        this.excluido = true
-    }
 }
