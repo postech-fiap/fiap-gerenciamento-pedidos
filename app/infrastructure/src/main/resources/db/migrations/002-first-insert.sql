@@ -16,7 +16,7 @@ insert into imagem (id, produto_id, caminho)
            (4, 4, 'pudim.png');
 
 insert into pedido (id, data_hora, status, cliente_id, tempo_espera_minutos, numero)
-    values (1, now(), 'PENDENTE', 1, 20, '0001'),
+    values (1, now(), 'RECEBIDO', 1, 20, '0001'),
           (2, now(), 'EM_PREPARACAO', 1, 10, '0002'),
           (3, now(), 'PRONTO', 1, 5, '0003'),
           (4, now(), 'FINALIZADO', 1, 5, '0004');
