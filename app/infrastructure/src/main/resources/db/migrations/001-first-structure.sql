@@ -33,7 +33,7 @@ create table if not exists imagem (
 create table if not exists pedido (
     id bigint auto_increment,
     data_hora timestamp not null default now(),
-    status enum('PENDENTE', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
+    status enum('RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
     cliente_id bigint,
     tempo_espera_minutos int not null,
     numero char(4) not null,
