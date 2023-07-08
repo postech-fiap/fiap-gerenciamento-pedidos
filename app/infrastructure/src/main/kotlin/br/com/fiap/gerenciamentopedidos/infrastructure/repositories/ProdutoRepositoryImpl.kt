@@ -11,8 +11,9 @@ import java.util.*
 
 private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao listar produtos por id. Detalhes: %s"
 private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar produtos por categoria. Detalhes: %s"
-private const val ERROR_MESSAGE_CREATE = "Erro ao salvar produtos. Detalhes: %s"
-private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produtos. Detalhes: %s"
+private const val ERROR_MESSAGE_CREATE = "Erro ao salvar produto. Detalhes: %s"
+private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produto. Detalhes: %s"
+private const val ERROR_MESSAGE_DELETE = "Erro ao excluir produto. Detalhes: %s"
 
 class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : ProdutoRepository {
     override fun get(id: Long): Optional<ProdutoDto> {
@@ -67,8 +68,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
                 categoria = produto.categoria,
                 valor = produto.valor,
                 tempoPreparo = produto.tempoPreparo,
-                disponivel = produto.disponivel,
-                excluido = produto.excluido
+                disponivel = produto.disponivel
             )
             if (entity.imagem == null && produto.imagem != null) {
                 entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
@@ -81,6 +81,16 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_UPDATE, ex.message)
+            )
+        }
+    }
+
+    override fun remove(id: Long) {
+        try {
+            repository.deleteById(id)
+        } catch (ex: Exception) {
+            throw BaseDeDadosException(
+                String.format(ERROR_MESSAGE_DELETE, ex.message)
             )
         }
     }

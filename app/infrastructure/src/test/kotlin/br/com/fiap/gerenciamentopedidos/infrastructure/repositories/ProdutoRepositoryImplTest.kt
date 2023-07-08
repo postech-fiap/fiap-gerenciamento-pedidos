@@ -4,6 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
+import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -88,7 +89,7 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = BigDecimal.valueOf( 1.0),
+            valor = BigDecimal.valueOf(1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
@@ -115,7 +116,7 @@ class ProdutoRepositoryImplTest {
             nome = "Nome",
             descricao = null,
             categoria = Categoria.BEBIDA,
-            valor = BigDecimal.valueOf( 1.0),
+            valor = BigDecimal.valueOf(1.0),
             tempoPreparo = 1,
             disponivel = true,
             excluido = false,
@@ -133,5 +134,36 @@ class ProdutoRepositoryImplTest {
         //then
         Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
         verify(exactly = 1) { produtoJpaRepository.save(entity) }
+    }
+
+    @Test
+    fun `deve excluir um produto com sucesso`() {
+        //given
+        val id = 1L
+        every { produtoJpaRepository.deleteById(id) } returns Unit
+
+        //when
+        Assertions.assertDoesNotThrow { produtoRepository.remove(id) }
+
+        //then
+        verify(exactly = 1) { produtoJpaRepository.deleteById(id) }
+    }
+
+    @Test
+    fun `deve propagar erro ao exluir produto`() {
+        //given
+        val errorMessage = "Erro ao excluir produto. Detalhes: Error"
+        val id = 1L
+        every { produtoRepository.remove(id) } throws RuntimeException("Error")
+
+        //when
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+            produtoRepository.remove(id)
+        }
+
+        //then
+        Assertions.assertEquals(errorMessage, exception.message)
+
+        verify(exactly = 1) { produtoJpaRepository.deleteById(id) }
     }
 }
