@@ -19,6 +19,6 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
     @Query("UPDATE PedidoEntity p SET p.status = :status WHERE p.id = :id")
     fun updateStatusById(status: PedidoStatus, id: Long)
 
-    @Query("SELECT CAST(IFNULL(MAX(p.numero),'0') AS UNSIGNED) FROM pedido p WHERE DATE(p.data_hora) = CURDATE()", nativeQuery = true)
+    @Query("SELECT IFNULL(MAX(CAST(p.numero AS UNSIGNED)),0) FROM pedido p WHERE DATE(p.data_hora) = CURDATE()", nativeQuery = true)
     fun obterUtimoNumeroPedidoDoDia(): String
 }
