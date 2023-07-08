@@ -10,6 +10,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
+import java.math.BigInteger
 
 class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
@@ -18,7 +19,7 @@ class CadastrarPedidoUseCaseImpl(
     private val pagamentoService: PagamentoService
 ) : CadastrarPedidoUseCase {
     override fun executar(request: CadastrarPedidoRequest): PedidoResponse {
-        val numero = pedidoRepository.obterUltimoNumeroPedidoDoDia()
+        val numero = (pedidoRepository.obterUltimoNumeroPedidoDoDia().toInt() + 1).toString()
 
         val produtos = produtoRepository.get(request.produtos?.map { it.produtoId }!!)
 
@@ -28,14 +29,14 @@ class CadastrarPedidoUseCaseImpl(
             pagamento = pagamentoService.efetuarPagamento(numero).toModel(),
             produtos = request.produtos.map {
                 val produto = produtos.first { p -> p.id == it.produtoId }.toModel()
-                if(produto.disponivel){
+                if (produto.disponivel) {
                     PedidoProduto(
                         quantidade = it.quantidade,
                         comentario = it.comentario,
                         produto = produto,
                         valorPago = produto.valor
                     )
-                }else{
+                } else {
                     throw Exception("Produto ${produto.nome} não está disponível")
                 }
             }
