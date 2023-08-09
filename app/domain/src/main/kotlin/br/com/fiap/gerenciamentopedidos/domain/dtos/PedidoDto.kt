@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.dtos
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class PedidoDto(
@@ -12,7 +13,8 @@ data class PedidoDto(
     val cliente: ClienteDto? = null,
     val produtos: List<PedidoProdutoDto>? = null,
     val pagamento: PagamentoDto? = null,
-    val tempoEsperaMinutos: Long? = null
+    val tempoEsperaMinutos: Long? = null,
+    val valorTotal: BigDecimal? = null
 ) {
     companion object {
         fun fromModel(pedido: Pedido) = PedidoDto(
@@ -23,7 +25,8 @@ data class PedidoDto(
             pedido.cliente?.let { ClienteDto.fromModel(it) },
             pedido.produtos.map { PedidoProdutoDto.fromModel(it) },
             pedido.pagamento?.let { PagamentoDto.fromModel(it) },
-            pedido.tempoEsperaMinutos
+            pedido.tempoEsperaMinutos,
+            pedido.valorTotal
         )
     }
 
@@ -35,7 +38,8 @@ data class PedidoDto(
         cliente?.toModel(),
         produtos!!.map { it.toModel() },
         pagamento?.toModel(),
-        tempoEsperaMinutos
+        tempoEsperaMinutos,
+        valorTotal
     )
 
 }
