@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarP
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
@@ -40,7 +39,7 @@ class CadastrarPedidoUseCaseImpl(
                     quantidade = it.quantidade,
                     comentario = it.comentario,
                     produto = produto,
-                    valorPago = produto.valor
+                    valorPago = produto.valor * it.quantidade.toBigDecimal()
                 )
             }
         )
