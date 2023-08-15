@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
 import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -54,7 +53,7 @@ class BuscarPedidosUseCaseTest {
         val cliente = Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com"))
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
         val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
-        val pedidoList = listOf(PedidoDto.fromModel(pedido))
+        val pedidoList = listOf(pedido)
         val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
@@ -92,5 +91,4 @@ class BuscarPedidosUseCaseTest {
 
         verify(exactly = 1) { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) }
     }
-
 }

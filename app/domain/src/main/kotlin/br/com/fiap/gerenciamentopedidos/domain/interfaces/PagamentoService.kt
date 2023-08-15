@@ -1,8 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
-import java.math.BigDecimal
+import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 
 interface PagamentoService {
-    fun efetuarPagamento(numeroPedido: String): PagamentoDto
+    fun efetuarPagamento(numeroPedido: String): Pagamento
 }

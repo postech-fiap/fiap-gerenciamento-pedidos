@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import jakarta.persistence.*
@@ -23,7 +23,7 @@ data class ClienteEntity(
     val nome: String? = null
 ) {
     companion object {
-        fun fromDto(cliente: ClienteDto) = ClienteEntity(
+        fun fromModel(cliente: Cliente) = ClienteEntity(
             id = cliente.id,
             cpf = cliente.cpf?.removeMascara(),
             nome = cliente.nome,
@@ -31,5 +31,5 @@ data class ClienteEntity(
         )
     }
 
-    fun toDto() = ClienteDto(id = id, Cpf(Cpf.adicionaMascara(cpf!!)), nome!!, Email(email!!))
+    fun toModel() = Cliente(id = id, Cpf(Cpf.adicionaMascara(cpf!!)), nome!!, Email(email!!))
 }

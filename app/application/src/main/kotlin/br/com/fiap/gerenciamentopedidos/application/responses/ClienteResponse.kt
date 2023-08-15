@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 
-class ClienteResponse(cliente: ClienteDto) {
+class ClienteResponse(cliente: Cliente) {
     val id = cliente.id
     val cpf = cliente.cpf?.numero
     val nome = cliente.nome

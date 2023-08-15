@@ -5,7 +5,6 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -40,7 +39,7 @@ class ClienteRepositoryImplTest {
         val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
         val clienteDto = ClienteDto.fromModel(cliente)
 
-        every { clienteJpaRepository.save(any()) } returns ClienteEntity.fromDto(clienteDto)
+        every { clienteJpaRepository.save(any()) } returns ClienteEntity.fromModel(clienteDto)
 
         //when
         val result = clienteRepository.salvar(ClienteDto.fromModel(cliente))
@@ -61,7 +60,7 @@ class ClienteRepositoryImplTest {
         val clienteDto = ClienteDto.fromModel(cliente)
         val cpfSemMascara = Cpf.removeMascara(cpf)
 
-        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(ClienteEntity.fromDto(clienteDto))
+        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(ClienteEntity.fromModel(clienteDto))
 
         //when
         val result = clienteRepository.buscarPorCpf(cpf)
@@ -102,7 +101,7 @@ class ClienteRepositoryImplTest {
         val errorMessage = "Erro ao salvar o cliente na base de dados. Detalhes: Error"
         val clienteDomain = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
         val dto = ClienteDto.fromModel(clienteDomain)
-        val clienteEntity = ClienteEntity.fromDto(dto)
+        val clienteEntity = ClienteEntity.fromModel(dto)
 
         every { clienteJpaRepository.save(any()) } throws Exception("Error")
 

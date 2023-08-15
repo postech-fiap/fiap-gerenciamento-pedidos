@@ -43,7 +43,7 @@ class ProdutoRepositoryImplTest {
         )
         val dto = ProdutoDto.fromModel(produto)
 
-        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(ProdutoEntity.fromModel(dto))
 
         //when
         val result = produtoRepository.get(id)
@@ -70,7 +70,7 @@ class ProdutoRepositoryImplTest {
         )
         val dto = ProdutoDto.fromModel(produto)
         every { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) } returns listOf(
-            ProdutoEntity.fromDto(dto)
+            ProdutoEntity.fromModel(dto)
         )
 
         //when
@@ -96,7 +96,7 @@ class ProdutoRepositoryImplTest {
             imagem = null
         )
         val dto = ProdutoDto.fromModel(produto)
-        val entity = ProdutoEntity.fromDto(dto)
+        val entity = ProdutoEntity.fromModel(dto)
 
         every { produtoJpaRepository.save(any()) } returns entity
 
@@ -123,7 +123,7 @@ class ProdutoRepositoryImplTest {
             imagem = null
         )
         val dto = ProdutoDto.fromModel(produto)
-        val entity = ProdutoEntity.fromDto(dto)
+        val entity = ProdutoEntity.fromModel(dto)
 
         every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
         every { produtoJpaRepository.save(any()) } returns entity

@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 
-class ProdutoResponse(produto: ProdutoDto) {
+class ProdutoResponse(produto: Produto) {
     val id = produto.id
     val nome = produto.nome
     val descricao = produto.descricao

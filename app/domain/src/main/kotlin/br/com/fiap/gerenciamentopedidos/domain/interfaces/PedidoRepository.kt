@@ -1,14 +1,14 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.time.OffsetDateTime
 
 interface PedidoRepository {
 
-    fun buscarPedidos(status: PedidoStatus, dataInicial: OffsetDateTime, dataFinal: OffsetDateTime): List<PedidoDto>
+    fun buscarPedidos(status: PedidoStatus, dataInicial: OffsetDateTime, dataFinal: OffsetDateTime): List<Pedido>
     fun obterUltimoNumeroPedidoDoDia(): String
-    fun salvar(pedido: PedidoDto): PedidoDto
-    fun buscarPedidoPorId(id: Long): PedidoDto
+    fun salvar(pedido: Pedido): Pedido
+    fun buscarPedidoPorId(id: Long): Pedido
     fun alterarStatusPedido(status: PedidoStatus, id: Long)
 }

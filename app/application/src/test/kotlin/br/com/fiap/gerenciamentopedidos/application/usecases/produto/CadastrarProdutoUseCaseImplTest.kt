@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
-import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class CadastrarProdutoUseCaseImplTest {
@@ -35,9 +33,9 @@ class CadastrarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        val dto = ProdutoDto.fromModel(produtoRequest.toModel())
+        val produto = produtoRequest.toModel()
 
-        every { produtoRepository.create(dto) } returns dto
+        every { produtoRepository.create(produto) } returns produto
 
         //when
         val result = useCase.executar(produtoRequest)
@@ -45,6 +43,6 @@ class CadastrarProdutoUseCaseImplTest {
         //then
         Assertions.assertNotNull(result)
 
-        verify(exactly = 1) { produtoRepository.create(dto) }
+        verify(exactly = 1) { produtoRepository.create(produto) }
     }
 }

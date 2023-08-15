@@ -1,7 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
 import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import io.mockk.every
@@ -36,9 +35,9 @@ class EditarProdutoUseCaseImplTest {
             imagem = null
         )
 
-        val dto = ProdutoDto.fromModel(produtoRequest.toModel())
+        val produto = produtoRequest.toModel()
 
-        every { produtoRepository.update(dto) } returns dto
+        every { produtoRepository.update(produto) } returns produto
 
         //when
         val result = useCase.executar(produtoRequest)
@@ -47,6 +46,6 @@ class EditarProdutoUseCaseImplTest {
         Assertions.assertNotNull(result)
         Assertions.assertEquals(id, result.id)
 
-        verify(exactly = 1) { produtoRepository.update(dto) }
+        verify(exactly = 1) { produtoRepository.update(produto) }
     }
 }

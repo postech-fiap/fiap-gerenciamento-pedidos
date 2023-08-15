@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
-import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class ListarProdutosPorCategoriaUseCaseImplTest {
@@ -39,7 +37,7 @@ class ListarProdutosPorCategoriaUseCaseImplTest {
             imagem = null
         )
 
-        every { produtoRepository.get(categoria) } returns listOf(ProdutoDto.fromModel(produto))
+        every { produtoRepository.get(categoria) } returns listOf(produto)
 
         //when
         val result = useCase.executar(categoria)

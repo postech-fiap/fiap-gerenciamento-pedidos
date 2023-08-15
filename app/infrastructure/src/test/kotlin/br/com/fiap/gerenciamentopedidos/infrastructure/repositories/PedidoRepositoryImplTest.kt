@@ -59,7 +59,7 @@ class PedidoRepositoryImplTest {
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
-        val pedidoEntity = PedidoEntity.fromDto(dto)
+        val pedidoEntity = PedidoEntity.fromModel(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
         val status = PedidoStatus.RECEBIDO
@@ -147,7 +147,7 @@ class PedidoRepositoryImplTest {
             ),
         )
         val dto = PedidoDto.fromModel(pedido)
-        val entity = PedidoEntity.fromDto(dto)
+        val entity = PedidoEntity.fromModel(dto)
 
         every { pedidoJpaRepository.save(any()) } returns entity
 

@@ -1,9 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.produto
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
-import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
@@ -41,10 +40,9 @@ class AlterarDisponibilidadeProdutoUseCaseImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
 
-        every { produtoRepository.get(id) } returns Optional.of(dto)
-        every { produtoRepository.update(any()) } returns dto.copy(disponivel = false)
+        every { produtoRepository.get(id) } returns Optional.of(produto)
+        every { produtoRepository.update(any()) } returns produto.copy(disponivel = false)
 
         //when
         val result = useCase.executar(id, false)
@@ -72,9 +70,8 @@ class AlterarDisponibilidadeProdutoUseCaseImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
 
-        every { produtoRepository.get(id) } returns Optional.of(dto)
+        every { produtoRepository.get(id) } returns Optional.of(produto)
 
         //when
         val exception = Assertions.assertThrows(BusinessException::class.java) {
@@ -85,7 +82,7 @@ class AlterarDisponibilidadeProdutoUseCaseImplTest {
         Assertions.assertEquals("Produto já está indisponível", exception.message)
 
         verify(exactly = 1) { produtoRepository.get(id) }
-        verify(exactly = 0) { produtoRepository.update(dto) }
+        verify(exactly = 0) { produtoRepository.update(produto) }
     }
 
     @Test

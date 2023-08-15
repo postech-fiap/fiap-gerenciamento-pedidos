@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import jakarta.persistence.*
 import java.time.OffsetDateTime
 
@@ -24,10 +24,10 @@ data class PagamentoEntity(
     @MapsId
     val pedido: PedidoEntity? = null
 ) {
-    fun toDto() = PagamentoDto(id, dataHora!!, status!!)
+    fun toModel() = Pagamento(id, dataHora!!, status!!)
 
     companion object {
-        fun fromDto(pagamento: PagamentoDto, pedido: PedidoEntity) = PagamentoEntity(
+        fun fromModel(pagamento: Pagamento, pedido: PedidoEntity) = PagamentoEntity(
             id = pagamento.id,
             dataHora = pagamento.dataHora,
             status = pagamento.status,

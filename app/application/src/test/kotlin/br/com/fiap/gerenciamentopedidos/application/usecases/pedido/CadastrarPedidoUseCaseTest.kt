@@ -2,7 +2,6 @@ package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
-import br.com.fiap.gerenciamentopedidos.domain.dtos.*
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -18,7 +17,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
@@ -50,17 +49,17 @@ class CadastrarPedidoUseCaseTest {
 
         val request = CadastrarPedidoRequest(10L, listOf(CadastrarPedidoProdutoRequest(1, 10, "Sem mostarda")))
 
-        every { produtoRepository.get(any<List<Long>>()) } returns pedido.produtos.map { ProdutoDto.fromModel(it.produto!!) }
+        every { produtoRepository.get(any<List<Long>>()) } returns pedido.produtos.map { it.produto!! }
         every { pedidoRepository.obterUltimoNumeroPedidoDoDia() } returns "1"
-        every { pagamentoService.efetuarPagamento(any()) } returns PagamentoDto.fromModel(pedido.pagamento!!)
-        every { clienteRepository.buscarPorId(any()) } returns Optional.of(ClienteDto.fromModel(pedido.cliente!!))
-        every { pedidoRepository.salvar(any()) } returns PedidoDto.fromModel(pedido)
+        every { pagamentoService.efetuarPagamento(any()) } returns pedido.pagamento!!
+        every { clienteRepository.buscarPorId(any()) } returns Optional.of(pedido.cliente!!)
+        every { pedidoRepository.salvar(any()) } returns pedido
 
         // Act
         val result = cadastrarUseCaseImpl.executar(request)
 
         // Assert
-        val produtosResult = result.produtos?.toList()!!
+        val produtosResult = result.produtos.toList()
 
         assertEquals("1", result.numero)
         assertEquals(1, produtosResult.size)
