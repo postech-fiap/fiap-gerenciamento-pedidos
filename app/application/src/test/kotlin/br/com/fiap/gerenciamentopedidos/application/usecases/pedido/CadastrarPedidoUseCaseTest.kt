@@ -1,14 +1,15 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorIdUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pagamento.EfetuarPagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.GerarNumeroPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoProdutoRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.*
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -22,7 +23,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
-import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class CadastrarPedidoUseCaseTest {
@@ -31,16 +31,19 @@ class CadastrarPedidoUseCaseTest {
     lateinit var cadastrarUseCaseImpl: CadastrarPedidoUseCaseImpl
 
     @MockK
-    lateinit var pagamentoService: PagamentoService
-
-    @MockK
-    lateinit var clienteRepository: ClienteRepository
-
-    @MockK
     lateinit var pedidoRepository: PedidoRepository
 
     @MockK
-    lateinit var produtoRepository: ProdutoRepository
+    lateinit var buscarClientePorIdUseCase: BuscarClientePorIdUseCase
+
+    @MockK
+    lateinit var gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase
+
+    @MockK
+    lateinit var obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
+
+    @MockK
+    lateinit var efetuarPagamentoUseCase: EfetuarPagamentoUseCase
 
     @Test
     fun `deve cadastrar um pedido com sucesso`() {
@@ -49,10 +52,10 @@ class CadastrarPedidoUseCaseTest {
 
         val request = CadastrarPedidoRequest(10L, listOf(CadastrarPedidoProdutoRequest(1, 10, "Sem mostarda")))
 
-        every { produtoRepository.get(any<List<Long>>()) } returns pedido.produtos.map { it.produto!! }
-        every { pedidoRepository.obterUltimoNumeroPedidoDoDia() } returns "1"
-        every { pagamentoService.efetuarPagamento(any()) } returns pedido.pagamento!!
-        every { clienteRepository.buscarPorId(any()) } returns Optional.of(pedido.cliente!!)
+        every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
+        every { gerarNumeroPedidoUseCase.executar() } returns "1"
+        every { efetuarPagamentoUseCase.executar(any()) } returns pedido.pagamento!!
+        every { buscarClientePorIdUseCase.executar(any()) } returns pedido.cliente!!
         every { pedidoRepository.salvar(any()) } returns pedido
 
         // Act
@@ -80,7 +83,7 @@ class CadastrarPedidoUseCaseTest {
         PedidoStatus.RECEBIDO,
         Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")),
         listOf(
-            PedidoProduto(
+            Item(
                 id = 1,
                 quantidade = 1,
                 comentario = "Sem mostarda",

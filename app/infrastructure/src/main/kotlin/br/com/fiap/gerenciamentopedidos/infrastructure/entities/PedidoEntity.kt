@@ -53,7 +53,7 @@ data class PedidoEntity(
             tempoEsperaMinutos = tempoEsperaMinutos!!,
             numero = numero!!,
             cliente = cliente,
-            produtos = produtos!!,
+            items = produtos!!,
             pagamento = pagamento?.toModel()
         )
     }
@@ -67,10 +67,10 @@ data class PedidoEntity(
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
                 cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) },
-                produtos = pedido.produtos.map { PedidoProdutoEntity.fromModel(it) }
+                produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it) }
             )
             entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromModel(it, entity) }
-            entity.produtos = pedido.produtos.map {
+            entity.produtos = pedido.items.map {
                 PedidoProdutoEntity(
                     pedido = entity,
                     produto = ProdutoEntity.fromModel(it.produto!!),

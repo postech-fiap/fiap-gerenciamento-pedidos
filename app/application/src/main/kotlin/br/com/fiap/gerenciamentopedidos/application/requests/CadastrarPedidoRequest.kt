@@ -7,4 +7,6 @@ data class CadastrarPedidoRequest(
     init {
         require(produtos.isNullOrEmpty().not()) { "Deve ser informado ao menos um produto" }
     }
+
+    val produtoIds get() = produtos?.map { it.produtoId } ?: emptyList()
 }

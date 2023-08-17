@@ -32,7 +32,7 @@ class BuscarPedidosUseCaseTest {
     fun `deve retornar um pedido`() {
         // given
         val produtos = listOf(
-            PedidoProduto(
+            Item(
                 id = 1,
                 quantidade = 1,
                 comentario = "comentario",

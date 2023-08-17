@@ -35,7 +35,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         //given
         val pedidoId = 1L
         val produtos = listOf(
-            PedidoProduto(
+            Item(
                 1, 1, "comentario",
                 Produto(
                     id = 1,
@@ -77,7 +77,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         val pedidoId = 1L
 
         val produtos = listOf(
-            PedidoProduto(
+            Item(
                 1, 1, "comentario",
                 Produto(
                     id = 1,

@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -39,8 +39,8 @@ class PedidoRepositoryImplTest {
             id = 1,
             numero = "1",
             pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -129,8 +129,8 @@ class PedidoRepositoryImplTest {
             id = 1,
             numero = "1",
             pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -167,8 +167,8 @@ class PedidoRepositoryImplTest {
             id = 1,
             numero = "1",
             pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -226,8 +226,8 @@ class PedidoRepositoryImplTest {
             id = 1,
             numero = "1",
             pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",

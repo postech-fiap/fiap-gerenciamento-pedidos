@@ -1,10 +1,17 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
+import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorIdUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pagamento.EfetuarPagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.GerarNumeroPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pagamento.EfetuarPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
@@ -59,6 +66,9 @@ class AppBeansConfig {
     fun buscarClientePorCpfUseCase(repository: ClienteRepository) = BuscarClientePorCpfUseCaseImpl(repository)
 
     @Bean
+    fun buscarClientePorIdUseCase(repository: ClienteRepository) = BuscarClientePorIdUseCaseImpl(repository)
+
+    @Bean
     fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
@@ -68,12 +78,28 @@ class AppBeansConfig {
     fun alterarStatusPedidoUseCase(repository: PedidoRepository) = AlterarStatusPedidoUseCaseImpl(repository)
 
     @Bean
+    fun gerarNumeroPedidoUseCase(repository: PedidoRepository) = GerarNumeroPedidoUseCaseImpl(repository)
+
+    @Bean
+    fun obterProdutosPorIdsUseCase(repository: ProdutoRepository) = ObterProdutosPorIdsUseCaseImpl(repository)
+
+    @Bean
+    fun efetuarPagamentoUseCase(service: PagamentoService) = EfetuarPagamentoUseCaseImpl(service)
+
+    @Bean
     fun cadastrarPedidoUseCase(
         pedidoRepository: PedidoRepository,
-        produtoRepository: ProdutoRepository,
-        clienteRepository: ClienteRepository,
-        pagamentoService: PagamentoService
-    ) = CadastrarPedidoUseCaseImpl(pedidoRepository, produtoRepository, clienteRepository, pagamentoService)
+        buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
+        gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
+        obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
+        efetuarPagamentoUseCase: EfetuarPagamentoUseCase
+    ) = CadastrarPedidoUseCaseImpl(
+        pedidoRepository,
+        buscarClientePorIdUseCase,
+        gerarNumeroPedidoUseCase,
+        obterProdutosPorIdsUseCase,
+        efetuarPagamentoUseCase
+    )
 
     @Bean
     fun pagamentoService() = PagamentoServiceImpl()

@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 import java.math.BigDecimal
 
-data class PedidoProduto(
+data class Item(
     val id: Long? = null,
     val quantidade: Long,
     val comentario: String? = null,

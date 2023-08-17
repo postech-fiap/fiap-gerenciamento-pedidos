@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.responses
 
-import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 
-class PedidoProdutoResponse(pedidoProduto: PedidoProduto) {
+class PedidoProdutoResponse(pedidoProduto: Item) {
     val nome = pedidoProduto.produto?.nome
     val valorPago = pedidoProduto.valorPago
     val quantidade = pedidoProduto.quantidade
