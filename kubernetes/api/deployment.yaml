@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: fiap-gerenciamento-pedidos-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fiap-gerenciamento-pedidos-api
+  template:
+    metadata:
+      labels:
+        app: fiap-gerenciamento-pedidos-api
+    spec:
+      containers:
+        - name: api
+          image: gabrielgarciasp/gerenciamento-pedidos-app:1.0.3
+          ports:
+            - containerPort: 80
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.host
+            - name: MYSQL_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.database
+            - name: MYSQL_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.root.username
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.root.password
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 2
