@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -57,12 +56,11 @@ class BuscarPedidosUseCaseTest {
         val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
-        val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
 
         every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } returns pedidoList
 
         // when
-        val result = buscarUseCaseImpl.executar(buscarPedidosRequest)
+        val result = buscarUseCaseImpl.executar(status, dataInicial, dataFinal)
 
         // then
         Assertions.assertEquals(pedidoList.map { it.id }, result.map { it.id })
@@ -76,15 +74,13 @@ class BuscarPedidosUseCaseTest {
         val status = PedidoStatus.RECEBIDO
         val dataInicial = OffsetDateTime.now().minusHours(24)
         val dataFinal = OffsetDateTime.now()
-        val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
-
         val errorMessage = "Erro na base de dados"
 
         every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } throws RuntimeException(errorMessage)
 
         // when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            buscarUseCaseImpl.executar(buscarPedidosRequest)
+            buscarUseCaseImpl.executar(status, dataInicial, dataFinal)
         }
 
         Assertions.assertEquals(errorMessage, exception.message)

@@ -4,7 +4,5 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.RemoverPr
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 
 class RemoverProdutoPorIdUseCaseImpl(private val produtoRepository: ProdutoRepository) : RemoverProdutoPorIdUseCase {
-    override fun executar(id: Long) {
-        produtoRepository.remove(id)
-    }
+    override fun executar(id: Long) = produtoRepository.remove(id)
 }

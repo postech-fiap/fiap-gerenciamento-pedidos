@@ -4,8 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarCli
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pagamento.EfetuarPagamentoUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.ObterProdutosPorIdsUseCase
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -49,8 +47,8 @@ class CadastrarPedidoUseCaseTest {
     fun `deve cadastrar um pedido com sucesso`() {
         // Arrange
         val pedido = criarPedido()
-
-        val request = CadastrarPedidoRequest(10L, listOf(CadastrarPedidoProdutoRequest(1, 10, "Sem mostarda")))
+        val clienteId = 10L
+        val itens = listOf(criarItem())
 
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
         every { gerarNumeroPedidoUseCase.executar() } returns "1"
@@ -59,10 +57,10 @@ class CadastrarPedidoUseCaseTest {
         every { pedidoRepository.salvar(any()) } returns pedido
 
         // Act
-        val result = cadastrarUseCaseImpl.executar(request)
+        val result = cadastrarUseCaseImpl.executar(clienteId, itens)
 
         // Assert
-        val produtosResult = result.produtos.toList()
+        val produtosResult = result.items.toList()
 
         assertEquals("1", result.numero)
         assertEquals(1, produtosResult.size)
@@ -82,26 +80,28 @@ class CadastrarPedidoUseCaseTest {
         OffsetDateTime.now(),
         PedidoStatus.RECEBIDO,
         Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")),
-        listOf(
-            Item(
-                id = 1,
-                quantidade = 1,
-                comentario = "Sem mostarda",
-                valorPago = BigDecimal(10),
-                produto = Produto(
-                    id = 1,
-                    nome = "Produto 1",
-                    descricao = "descricao",
-                    categoria = Categoria.BEBIDA,
-                    valor = BigDecimal(10),
-                    tempoPreparo = 10,
-                    disponivel = true,
-                    excluido = false,
-                    imagem = Imagem(1, "/caminho.jpg")
-                )
-            )
-        ),
+        listOf(criarItem()),
         Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
         10
+    )
+
+    fun criarItem() = Item(
+        id = 1,
+        quantidade = 1,
+        comentario = "Sem mostarda",
+        valorPago = BigDecimal(10),
+        produto = criarProduto()
+    )
+
+    fun criarProduto() = Produto(
+        id = 1,
+        nome = "Produto 1",
+        descricao = "descricao",
+        categoria = Categoria.BEBIDA,
+        valor = BigDecimal(10),
+        tempoPreparo = 10,
+        disponivel = true,
+        excluido = false,
+        imagem = Imagem(1, "/caminho.jpg")
     )
 }

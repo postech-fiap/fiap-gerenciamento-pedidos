@@ -5,10 +5,9 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pagamento.Efetuar
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.ObterProdutosPorIdsUseCase
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 
 class CadastrarPedidoUseCaseImpl(
@@ -18,24 +17,24 @@ class CadastrarPedidoUseCaseImpl(
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
     private val efetuarPagamentoUseCase: EfetuarPagamentoUseCase
 ) : CadastrarPedidoUseCase {
-    override fun executar(request: CadastrarPedidoRequest): PedidoResponse {
+    override fun executar(clienteId: Long?, itens: List<Item>): Pedido {
         val numeroPedido = gerarNumeroPedidoUseCase.executar()
-        val produtos = obterProdutosPorIdsUseCase.executar(request.produtoIds)
+        val produtos = obterProdutosPorIdsUseCase.executar(itens.map { it.produto?.id!! })
         val pagamento = efetuarPagamentoUseCase.executar(numeroPedido)
 
         val pedido = Pedido(numero = numeroPedido, pagamento = pagamento)
 
-        request.clienteId?.let {
+        clienteId?.let {
             pedido.atribuirCliente(buscarClientePorIdUseCase.executar(it))
         }
 
-        request.produtos?.map {
-            val produto = produtos.firstOrNull { p -> p.id == it.produtoId }
-                ?: throw RecursoNaoEncontradoException("Produto ${it.produtoId} não encontrado ou indisponível")
+        itens.map {
+            val produto = produtos.firstOrNull { p -> p.id == it.produto?.id!! && p.disponivel }
+                ?: throw RecursoNaoEncontradoException("Produto ${it.produto?.id!!} não encontrado ou indisponível")
 
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        return PedidoResponse(pedidoRepository.salvar(pedido))
+        return pedidoRepository.salvar(pedido)
     }
 }

@@ -40,7 +40,7 @@ class EditarProdutoUseCaseImplTest {
         every { produtoRepository.update(produto) } returns produto
 
         //when
-        val result = useCase.executar(produtoRequest)
+        val result = useCase.executar(produto)
 
         //then
         Assertions.assertNotNull(result)

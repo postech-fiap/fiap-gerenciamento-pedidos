@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
@@ -56,16 +55,14 @@ class AlterarStatusPedidoUseCaseImplTest {
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
         val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val copyPedido = pedido.copy(status = PedidoStatus.EM_PREPARACAO)
-        val alterarStatusPedidoRequest = AlterarStatusPedidoRequest(pedidoId, PedidoStatus.EM_PREPARACAO)
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
         every { pedidoPort.alterarStatusPedido(copyPedido.status, copyPedido.id!!) } returns Unit
 
         //when
-        useCase.executar(alterarStatusPedidoRequest)
+        useCase.executar(pedidoId, PedidoStatus.EM_PREPARACAO)
 
         //then
-
         verify(exactly = 1) { pedidoPort.buscarPedidoPorId(pedidoId) }
         verify(exactly = 1) { pedidoPort.alterarStatusPedido(copyPedido.status, copyPedido.id!!) }
     }
@@ -99,14 +96,13 @@ class AlterarStatusPedidoUseCaseImplTest {
         val errorMessage = "O status do pedido ja está igual à RECEBIDO"
         val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val copyPedido = pedido.copy(status = PedidoStatus.RECEBIDO)
-        val alterarStatusPedidoRequest = AlterarStatusPedidoRequest(pedidoId, PedidoStatus.RECEBIDO)
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
         every { pedidoPort.alterarStatusPedido(copyPedido.status, copyPedido.id!!) } returns Unit
 
         //when
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(alterarStatusPedidoRequest)
+            useCase.executar(pedidoId, PedidoStatus.RECEBIDO)
         }
 
         //then

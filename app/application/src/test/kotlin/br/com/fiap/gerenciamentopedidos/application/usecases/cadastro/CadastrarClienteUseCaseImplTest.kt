@@ -42,10 +42,10 @@ class CadastrarClienteUseCaseImplTest {
         every { clienteRepository.salvar(cliente) } returns cliente
 
         //when
-        val result = cadastrarClienteUseCase.executar(request)
+        val result = cadastrarClienteUseCase.executar(cliente)
 
         //then
-        Assertions.assertEquals(cliente.cpf?.numero, result.cpf)
+        Assertions.assertEquals(cliente.cpf, result.cpf)
 
         verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
         verify(exactly = 1) { clienteRepository.salvar(cliente) }
@@ -64,10 +64,10 @@ class CadastrarClienteUseCaseImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RecursoJaExisteException::class.java) {
-            cadastrarClienteUseCase.executar(request)
+            cadastrarClienteUseCase.executar(cliente)
         }
 
-        Assertions.assertEquals("CPF ${cpf.numero} já está cadastrado", exception.message)
+        Assertions.assertEquals("CPF $cpf já está cadastrado", exception.message)
 
         verify(exactly = 1) { clienteRepository.buscarPorCpf(request.cpf) }
         verify(exactly = 0) { clienteRepository.salvar(cliente) }
@@ -87,7 +87,7 @@ class CadastrarClienteUseCaseImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            cadastrarClienteUseCase.executar(request)
+            cadastrarClienteUseCase.executar(cliente)
         }
 
         Assertions.assertEquals(errorMessage, exception.message)
@@ -111,7 +111,7 @@ class CadastrarClienteUseCaseImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            cadastrarClienteUseCase.executar(request)
+            cadastrarClienteUseCase.executar(cliente)
         }
 
         Assertions.assertEquals(errorMessage, exception.message)

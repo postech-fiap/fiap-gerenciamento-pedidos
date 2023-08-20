@@ -43,7 +43,7 @@ class BuscarClienteUseCaseImplTest {
         val result = buscarClientePorCpfUseCaseImpl.executar(cliente.cpf!!.numero)
 
         //then
-        Assertions.assertEquals(cliente.cpf?.numero, result.cpf)
+        Assertions.assertEquals(cliente.cpf, result.cpf)
 
         verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
     }

@@ -1,9 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.application.interfaces.cliente
 
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 
 interface CadastrarClienteUseCase {
 
-    fun executar(request: CadastrarClienteRequest): ClienteResponse
+    fun executar(request: Cliente): Cliente
 }
