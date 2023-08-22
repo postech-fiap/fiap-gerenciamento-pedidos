@@ -4,10 +4,11 @@ metadata:
   name: api
   labels:
     app: fiap-gerenciamento-pedidos-api-load-balancer
-  type: LoadBalancer
+    type: LoadBalancer
+spec:
   selector:
     app: fiap-gerenciamento-pedidos-api
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 30000
+      targetPort: 3000
