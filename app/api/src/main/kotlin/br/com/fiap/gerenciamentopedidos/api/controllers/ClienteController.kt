@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorCpfUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.CadastrarClienteUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
