@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/clientes")
-class ClienteController(
+class ClienteApi(
     private val cadastrarClienteUseCase: CadastrarClienteUseCase,
     private val buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
 ) {

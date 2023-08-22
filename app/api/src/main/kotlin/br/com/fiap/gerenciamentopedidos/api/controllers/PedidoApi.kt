@@ -25,7 +25,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/pedidos")
-class PedidoController(
+class PedidoApi(
     private val buscarPedidosUseCase: BuscarPedidosUseCase,
     private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
     private val alterarStatusPedido: AlterarStatusPedidoUseCase

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/categorias")
-class CategoriaController {
+class CategoriaApi {
     @Operation(summary = "Responsável por listar as categorias")
     @ApiResponses(
         value = [

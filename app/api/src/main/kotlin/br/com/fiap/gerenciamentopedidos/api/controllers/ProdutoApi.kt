@@ -19,7 +19,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/produtos")
-class ProdutoController(
+class ProdutoApi(
     private val cadastrarProdutoUseCase: CadastrarProdutoUseCase,
     private val editarProdutoUseCase: EditarProdutoUseCase,
     private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoriaUseCase,
