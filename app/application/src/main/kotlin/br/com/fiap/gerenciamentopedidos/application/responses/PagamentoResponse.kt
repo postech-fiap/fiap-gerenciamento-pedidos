@@ -6,4 +6,6 @@ class PagamentoResponse(pagamento: PagamentoDto) {
     val id = pagamento.id
     val dataHora = pagamento.dataHora
     val status = pagamento.status
+    val qrCode = pagamento.qrCode
+    val valorTotal = pagamento.valorTotal
 }

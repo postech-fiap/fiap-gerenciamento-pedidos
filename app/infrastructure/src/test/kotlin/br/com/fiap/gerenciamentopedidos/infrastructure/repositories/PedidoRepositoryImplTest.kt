@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
 class PedidoRepositoryImplTest {
@@ -38,7 +39,8 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()),
             produtos = listOf(
                 PedidoProduto(
                     produto = Produto(
@@ -53,9 +55,12 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
-                )
+                    valorPago = Random.nextLong().toBigDecimal()
+                ),
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
@@ -128,7 +133,8 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
             produtos = listOf(
                 PedidoProduto(
                     produto = Produto(
@@ -143,9 +149,12 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido)
         val entity = PedidoEntity.fromDto(dto)
 
@@ -166,7 +175,8 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
             produtos = listOf(
                 PedidoProduto(
                     produto = Produto(
@@ -181,6 +191,7 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
@@ -225,7 +236,8 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
             produtos = listOf(
                 PedidoProduto(
                     produto = Produto(
@@ -240,9 +252,12 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
 
         every {
