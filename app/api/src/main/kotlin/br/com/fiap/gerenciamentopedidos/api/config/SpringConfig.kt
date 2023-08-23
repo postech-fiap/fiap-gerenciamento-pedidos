@@ -7,12 +7,16 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import io.swagger.v3.core.jackson.ModelResolver
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.web.client.RestTemplate
 import java.text.SimpleDateFormat
 
 @Configuration
 class SpringConfig {
+
     @Bean
     fun objectMapper(): ObjectMapper {
         return JsonMapper.builder()
@@ -21,6 +25,13 @@ class SpringConfig {
             .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
             .propertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+            .build()
+    }
+
+    @Bean
+    fun restTemplate(): RestTemplate {
+        return RestTemplateBuilder()
+            .messageConverters(MappingJackson2HttpMessageConverter(objectMapper()))
             .build()
     }
 

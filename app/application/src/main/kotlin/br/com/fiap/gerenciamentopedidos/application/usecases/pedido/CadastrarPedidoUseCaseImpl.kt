@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarP
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
@@ -32,7 +31,6 @@ class CadastrarPedidoUseCaseImpl(
         val pedido = Pedido(
             numero = numero,
             cliente = cliente,
-            pagamento = pagamentoService.efetuarPagamento(numero).toModel(),
             produtos = request.produtos.map {
                 val produto = produtos.firstOrNull { p -> p.id == it.produtoId }?.toModel()
                     ?: throw RecursoNaoEncontradoException("Produto ${it.produtoId} não encontrado ou indisponível")
@@ -40,10 +38,15 @@ class CadastrarPedidoUseCaseImpl(
                     quantidade = it.quantidade,
                     comentario = it.comentario,
                     produto = produto,
-                    valorPago = produto.valor
+                    valorPago = produto.valor * it.quantidade.toBigDecimal()
                 )
             }
         )
-        return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedido)))
+
+        val pedidoComPagamento = pedido
+            .copy(pagamento = pagamentoService.gerarPagamento(PedidoDto.fromModel(pedido)).toModel()
+        )
+
+        return PedidoResponse(pedidoRepository.salvar(PedidoDto.fromModel(pedidoComPagamento)))
     }
 }
