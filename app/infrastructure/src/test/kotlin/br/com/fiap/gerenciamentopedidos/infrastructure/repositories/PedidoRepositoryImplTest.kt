@@ -67,63 +67,40 @@ class PedidoRepositoryImplTest {
         val pedidoEntity = PedidoEntity.fromDto(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
-
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         } returns pedidoEntityList
 
         // when
-        val result = pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
+        val result = pedidoRepository.buscarPedidos()
 
         // then
         assertEquals(pedidoList, result)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         }
     }
 
     @Test
     fun `deve propagar erro ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
         val errorMessage = "Erro ao listar pedidos por categoria. Detalhes: Error"
 
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         } throws Exception("Error")
 
         // when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
+            pedidoRepository.buscarPedidos()
         }
 
         // then
         assertEquals(errorMessage, exception.message)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos( )
         }
     }
 

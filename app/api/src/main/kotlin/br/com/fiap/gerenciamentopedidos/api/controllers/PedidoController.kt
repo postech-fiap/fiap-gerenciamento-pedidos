@@ -4,7 +4,6 @@ import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.AlterarSta
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
-import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -49,8 +48,7 @@ class PedidoController(
         )]
     )
     @GetMapping
-    fun buscarPedidos(buscarPedidosRequest: BuscarPedidosRequest) =
-        ResponseEntity.ok().body(buscarPedidosUseCase.executar(buscarPedidosRequest))
+    fun buscarPedidos() = ResponseEntity.ok().body(buscarPedidosUseCase.executar())
 
     @Operation(summary = "Cadastrar um pedido")
     @ApiResponses(
