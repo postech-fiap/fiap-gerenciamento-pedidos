@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.application.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.application.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
@@ -55,42 +54,33 @@ class BuscarPedidosUseCaseTest {
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO)
         val pedido = Pedido(1, "1", OffsetDateTime.now(), PedidoStatus.RECEBIDO, cliente, produtos, pagamento, 10)
         val pedidoList = listOf(PedidoDto.fromModel(pedido))
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
-        val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
 
-        every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } returns pedidoList
+        every { pedidoRepository.buscarPedidos() } returns pedidoList
 
         // when
-        val result = buscarUseCaseImpl.executar(buscarPedidosRequest)
+        val result = buscarUseCaseImpl.executar()
 
         // then
         Assertions.assertEquals(pedidoList.map { it.id }, result.map { it.id })
 
-        verify(exactly = 1) { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) }
+        verify(exactly = 1) { pedidoRepository.buscarPedidos() }
     }
 
     @Test
     fun `deve propagar erro quando ocorrer falha ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
-        val buscarPedidosRequest = BuscarPedidosRequest(status, dataInicial, dataFinal)
-
         val errorMessage = "Erro na base de dados"
 
-        every { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) } throws RuntimeException(errorMessage)
+        every { pedidoRepository.buscarPedidos() } throws RuntimeException(errorMessage)
 
         // when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            buscarUseCaseImpl.executar(buscarPedidosRequest)
+            buscarUseCaseImpl.executar()
         }
 
         Assertions.assertEquals(errorMessage, exception.message)
 
-        verify(exactly = 1) { pedidoRepository.buscarPedidos(status, dataInicial, dataFinal) }
+        verify(exactly = 1) { pedidoRepository.buscarPedidos() }
     }
 
 }
