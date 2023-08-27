@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 
 interface PagamentoService {
-    fun gerarPagamento(pedido: models): Pagamento
+    fun gerarPagamento(pedido: Pedido): Pagamento
 }

@@ -5,25 +5,16 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class Pedido(
+    val numero: String?,
     val id: Long? = null,
-    val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    val status: PedidoStatus = PedidoStatus.RECEBIDO,
+    var status: PedidoStatus = PedidoStatus.RECEBIDO,
     var cliente: Cliente? = null,
     var items: List<Item> = listOf(),
     var pagamento: Pagamento? = null,
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null
 ) {
-    init {
-        //require(items.isEmpty().not()) { "Ao menos um produto deve ser informado" }
-        //require(PagamentoStatus.APROVADO == pagamento?.status) { "O pagamento deve estar aprovado para concluir o pedido" }
-        //calcularTempoEspera()
-        require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
-        //calcularTempoEspera()
-        //calculateValorTotal()
-    }
-
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
     }
@@ -32,8 +23,14 @@ data class Pedido(
         this.cliente = cliente
     }
 
+    fun adicionarItem(item: Item) {
+        items = items.plus(item)
+        calcularTempoEspera()
+        calculateValorTotal()
+    }
+
     fun adicionarItem(produto: Produto, quantidade: Long, comentario: String? = null) {
-        items = items.plus(
+        adicionarItem(
             Item(
                 quantidade = quantidade,
                 comentario = comentario,
@@ -41,14 +38,17 @@ data class Pedido(
                 valorPago = produto.valor
             )
         )
-        calcularTempoEspera()
-        calculateValorTotal()
     }
 
     private fun calculateValorTotal() {
-        valorTotal = produtos
-            .map { it.valorPago }
-            .fold(BigDecimal.ZERO, BigDecimal::add)
+        valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
+    fun atribuirPagamento(pagamento: Pagamento) {
+        this.pagamento = pagamento
+    }
+
+    fun alterarStatus(status: PedidoStatus) {
+        this.status = status
+    }
 }

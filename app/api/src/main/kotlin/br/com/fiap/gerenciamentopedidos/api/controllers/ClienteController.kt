@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/clientes")
-class ClienteController(private val clienteController: ClienteFacade) {
+class ClienteController(private val clienteFacade: ClienteFacade) {
     companion object {
         const val CPF_URI = "/cpf"
     }
@@ -64,7 +64,7 @@ class ClienteController(private val clienteController: ClienteFacade) {
     )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody request: CadastrarClienteRequest) =
-        ResponseEntity.status(HttpStatus.CREATED).body(clienteController.cadastrarCliente(request))
+        ResponseEntity.status(HttpStatus.CREATED).body(clienteFacade.cadastrarCliente(request))
 
     @Operation(summary = "Responsável por buscar um cliente")
     @ApiResponses(
@@ -104,5 +104,5 @@ class ClienteController(private val clienteController: ClienteFacade) {
         @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
         cpf: String
     ) = ResponseEntity.status(HttpStatus.OK)
-        .body(clienteController.buscarClientePorCpf(cpf))
+        .body(clienteFacade.buscarClientePorCpf(cpf))
 }

@@ -1,13 +1,13 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.EfetuarPagamentoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.EfetuarPagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.*
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -74,18 +74,15 @@ class CadastrarPedidoUseCaseImplTest {
         verify(exactly = 1) { pedidoRepository.salvar(any()) }
     }
 
-    private fun criarPedido() = Pedido(
-        1,
-        "1",
-        OffsetDateTime.now(),
-        PedidoStatus.RECEBIDO,
-        Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")),
-        listOf(criarItem()),
-        Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-        10
-    )
+    private fun criarPedido(): Pedido {
+        val pedido = Pedido("1")
+        pedido.atribuirPagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
+        pedido.atribuirCliente(Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")))
+        pedido.adicionarItem(criarItem())
+        return pedido
+    }
 
-    fun criarItem() = Item(
+    private fun criarItem() = Item(
         id = 1,
         quantidade = 1,
         comentario = "Sem mostarda",
@@ -93,7 +90,7 @@ class CadastrarPedidoUseCaseImplTest {
         produto = criarProduto()
     )
 
-    fun criarProduto() = Produto(
+    private fun criarProduto() = Produto(
         id = 1,
         nome = "Produto 1",
         descricao = "descricao",

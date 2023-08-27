@@ -69,7 +69,7 @@ data class PedidoEntity(
                 cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) },
                 produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it) }
             )
-            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromModel(it, entity) }
+            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromModel(it, entity.toModel()) }
             entity.produtos = pedido.items.map {
                 PedidoProdutoEntity(
                     pedido = entity,

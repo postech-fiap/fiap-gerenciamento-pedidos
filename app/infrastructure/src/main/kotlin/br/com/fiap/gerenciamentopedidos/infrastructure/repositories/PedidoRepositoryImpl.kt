@@ -19,7 +19,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         try {
             return pedidoJpaRepository
                 .buscarPedidos()
-                .map { it.toMo() }
+                .map { it.toModel() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)
@@ -29,7 +29,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
 
     override fun buscarPedidoPorId(id: Long): Pedido {
         try {
-            return pedidoJpaRepository.findById(id).get().toMotoModel()
+            return pedidoJpaRepository.findById(id).get().toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)

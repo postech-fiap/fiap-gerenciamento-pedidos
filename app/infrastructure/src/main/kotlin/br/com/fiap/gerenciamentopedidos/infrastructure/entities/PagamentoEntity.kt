@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.OffsetDateTime
@@ -31,14 +32,14 @@ data class PagamentoEntity(
     @Column(name = "valor_total", nullable = false)
     val valorTotal: BigDecimal? = null
 ) {
-    fun toDto() = Pagamento(id, dataHora!!, status!!, qrCode, valorTotal)
+    fun toModel() = Pagamento(id, dataHora!!, status!!, qrCode!!, valorTotal!!)
 
     companion object {
-        fun fromDto(pagamento: Pagamento, pedido: PedidoEntity) = PagamentoEntity(
+        fun fromModel(pagamento: Pagamento, pedido: Pedido) = PagamentoEntity(
             id = pagamento.id,
             dataHora = pagamento.dataHora,
             status = pagamento.status,
-            pedido = pedido,
+            pedido = PedidoEntity.fromModel(pedido),
             qrCode = pagamento.qrCode,
             valorTotal = pagamento.valorTotal
         )

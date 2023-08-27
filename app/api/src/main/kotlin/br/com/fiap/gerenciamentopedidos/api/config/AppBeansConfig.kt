@@ -1,16 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.AlterarDisponibilidadeProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.CadastrarProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.EditarProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.ListarProdutosPorCategoriaUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.ObterProdutoPorIdUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.application.usecases.produto.RemoverProdutoPorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ClienteFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.PedidoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
