@@ -64,7 +64,7 @@ class ClienteController(private val clienteFacade: ClienteFacade) {
     )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody request: CadastrarClienteRequest) =
-        ResponseEntity.status(HttpStatus.CREATED).body(clienteFacade.cadastrarCliente(request))
+        ResponseEntity.status(HttpStatus.CREATED).body(cadastrarClienteUseCase.executar(request))
 
     @Operation(summary = "Responsável por buscar um cliente")
     @ApiResponses(
