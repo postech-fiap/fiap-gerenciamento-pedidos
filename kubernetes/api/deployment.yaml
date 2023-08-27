@@ -32,14 +32,14 @@ spec:
                   key: mysql.database
             - name: MYSQL_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db
-                  key: mysql.root.username
+                  key: username
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: db
-                  key: mysql.root.password
+                  key: password
           readinessProbe:
             httpGet:
               path: /ping

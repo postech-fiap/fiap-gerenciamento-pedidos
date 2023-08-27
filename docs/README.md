@@ -37,6 +37,9 @@ curl --location 'http://localhost:8080/swagger-ui/index.html'
 Com o `kubectl` instalado, execute os seguintes comandos:
 
 ```bash
+# Criar Secrets
+kubectl create secret generic db --from-literal=username=CHANGE_HERE --from-literal=password=CHANGE_HERE
+
 # Criar Config Map
 kubectl apply -f kubernetes/config/db.yaml
 
