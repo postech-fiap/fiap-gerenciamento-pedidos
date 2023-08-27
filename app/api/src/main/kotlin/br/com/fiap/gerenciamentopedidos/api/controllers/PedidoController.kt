@@ -5,6 +5,12 @@ import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.BuscarPedidosRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.AlterarStatusPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedidosUseCase
+import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarPedidoUseCase
+import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
+import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
+import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
@@ -38,8 +44,7 @@ class PedidoController(private val pedidoController: PedidoFacade) {
         )]
     )
     @GetMapping
-    fun buscarPedidos(buscarPedidosRequest: BuscarPedidosRequest) =
-        ResponseEntity.ok().body(pedidoController.buscarPedidos(buscarPedidosRequest))
+    fun buscarPedidos() = ResponseEntity.ok().body(buscarPedidosUseCase.executar())
 
     @Operation(summary = "Cadastrar um pedido")
     @ApiResponses(

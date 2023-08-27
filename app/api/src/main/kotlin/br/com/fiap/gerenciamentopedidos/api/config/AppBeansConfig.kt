@@ -1,5 +1,16 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
+import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.BuscarClientePorCpfUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.AlterarDisponibilidadeProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.CadastrarProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.EditarProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.ListarProdutosPorCategoriaUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.ObterProdutoPorIdUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.RemoverProdutoPorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ClienteFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.PedidoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
@@ -36,11 +47,17 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.web.client.RestTemplate
+
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
-class AppBeansConfig {
+class AppBeansConfig(
+    val mercadoPagoConfig: MercadoPagoConfig,
+    val restTemplate: RestTemplate
+) {
+
     @Bean
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoRepositoryImpl(repository)
 
@@ -110,7 +127,11 @@ class AppBeansConfig {
     )
 
     @Bean
-    fun pagamentoService() = PagamentoServiceImpl()
+    fun pagamentoService() = PagamentoServiceImpl(
+        restTemplate,
+        mercadoPagoConfig.generateQrcodeEndpoint,
+        mercadoPagoConfig.token
+    )
 
     @Bean
     fun clienteFacade(

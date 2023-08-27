@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 
 interface PedidoRepository {
 
-    fun buscarPedidos(status: PedidoStatus, dataInicial: OffsetDateTime, dataFinal: OffsetDateTime): List<Pedido>
+    fun buscarPedidos(): List<Pedido>
     fun obterUltimoNumeroPedidoDoDia(): String
     fun salvar(pedido: Pedido): Pedido
     fun buscarPedidoPorId(id: Long): Pedido

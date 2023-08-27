@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
 class PedidoRepositoryImplTest {
@@ -38,8 +39,9 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            items = listOf(
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()),
+            produtos = listOf(
                 Item(
                     produto = Produto(
                         id = 1L,
@@ -53,72 +55,52 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
-                )
+                    valorPago = Random.nextLong().toBigDecimal()
+                ),
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido)
         val pedidoList = listOf(dto)
 
-        val pedidoEntity = PedidoEntity.fromModel(dto)
+        val pedidoEntity = PedidoEntity.fromDto(dto)
         val pedidoEntityList = listOf(pedidoEntity)
 
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
-
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         } returns pedidoEntityList
 
         // when
-        val result = pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
+        val result = pedidoRepository.buscarPedidos()
 
         // then
         assertEquals(pedidoList, result)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         }
     }
 
     @Test
     fun `deve propagar erro ao buscar pedidos`() {
         // given
-        val status = PedidoStatus.RECEBIDO
-        val dataInicial = OffsetDateTime.now().minusHours(24)
-        val dataFinal = OffsetDateTime.now()
         val errorMessage = "Erro ao listar pedidos por categoria. Detalhes: Error"
 
         every {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos()
         } throws Exception("Error")
 
         // when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            pedidoRepository.buscarPedidos(status, dataInicial, dataFinal)
+            pedidoRepository.buscarPedidos()
         }
 
         // then
         assertEquals(errorMessage, exception.message)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                status,
-                dataInicial,
-                dataFinal
-            )
+            pedidoJpaRepository.buscarPedidos( )
         }
     }
 
@@ -128,8 +110,9 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            items = listOf(
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
+            produtos = listOf(
                 Item(
                     produto = Produto(
                         id = 1L,
@@ -143,11 +126,14 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido)
-        val entity = PedidoEntity.fromModel(dto)
+        val entity = PedidoEntity.fromDto(dto)
 
         every { pedidoJpaRepository.save(any()) } returns entity
 
@@ -166,9 +152,10 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            items = listOf(
-                Item(
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
+            produtos = listOf(
+                PedidoProduto(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -181,6 +168,7 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
@@ -225,8 +213,9 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO),
-            items = listOf(
+            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
+            produtos = listOf(
                 Item(
                     produto = Produto(
                         id = 1L,
@@ -240,9 +229,12 @@ class PedidoRepositoryImplTest {
                         imagem = null
                     ),
                     quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
                 )
             ),
         )
+
+        pedido.valorTotal = null
         val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
 
         every {

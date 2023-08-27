@@ -5,15 +5,19 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import java.time.OffsetDateTime
 
 interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
 
-    fun findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-        status: PedidoStatus,
-        dataInicial: OffsetDateTime,
-        dataFinal: OffsetDateTime
-    ): List<PedidoEntity>
+    @Query("SELECT pedido " +
+            "FROM PedidoEntity pedido " +
+            "JOIN FETCH pedido.cliente cliente " +
+            "JOIN FETCH pedido.produtos pedido_produto " +
+            "JOIN FETCH pedido_produto.produto produto " +
+            "JOIN FETCH produto.imagem produto_imagem " +
+            "JOIN FETCH pedido.pagamento pagamento " +
+            "WHERE pedido.status <> 'FINALIZADO' " +
+            "ORDER BY FIELD (pedido.status, 'PRONTO', 'EM_PREPARACAO', 'RECEBIDO')")
+    fun buscarPedidos(): List<PedidoEntity>
 
     @Modifying
     @Query("UPDATE PedidoEntity p SET p.status = :status WHERE p.id = :id")

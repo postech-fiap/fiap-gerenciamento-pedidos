@@ -6,7 +6,6 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
-import java.time.OffsetDateTime
 
 private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar pedidos por categoria. Detalhes: %s"
 private const val ERROR_MESSAGE_GET_NEXT_NUMBER = "Erro ao obter próximo número pedido. Detalhes: %s"
@@ -16,19 +15,11 @@ private const val ERROR_MESSAGE_UPDATE_STATUS = "Erro ao realizar a atualizaçã
 
 class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository) : PedidoRepository {
 
-    override fun buscarPedidos(
-        status: PedidoStatus,
-        dataInicial: OffsetDateTime,
-        dataFinal: OffsetDateTime
-    ): List<Pedido> {
+    override fun buscarPedidos(): List<Pedido> {
         try {
             return pedidoJpaRepository
-                .findByStatusAndDataHoraGreaterThanEqualAndDataHoraLessThanEqualOrderByDataHoraDesc(
-                    status,
-                    dataInicial,
-                    dataFinal
-                )
-                .map { it.toModel() }
+                .buscarPedidos()
+                .map { it.toMo() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)
@@ -38,7 +29,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
 
     override fun buscarPedidoPorId(id: Long): Pedido {
         try {
-            return pedidoJpaRepository.findById(id).get().toModel()
+            return pedidoJpaRepository.findById(id).get().toMotoModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
