@@ -43,7 +43,7 @@ class PagamentoServiceImplTest {
     }
 
     @Test
-    fun `deve gerar o pagamento com qrcode`() {
+    fun `deve gerar o pagamento pendente com qrcode`() {
         //given
         val pedido = Pedido(
             id = 1,
@@ -93,7 +93,7 @@ class PagamentoServiceImplTest {
         Assertions.assertNotNull(pagamentoComQrCode.qrCode)
         Assertions.assertNotNull(pagamentoComQrCode.valorTotal)
         Assertions.assertNotNull(pagamentoComQrCode.dataHora)
-        Assertions.assertEquals(PagamentoStatus.APROVADO, pagamentoComQrCode.status)
+        Assertions.assertEquals(PagamentoStatus.PENDENTE, pagamentoComQrCode.status)
 
         verify(exactly = 1) {
             restTemplate.postForEntity(
@@ -105,7 +105,7 @@ class PagamentoServiceImplTest {
     }
 
     @Test
-    fun `deve lançar um erro quando a integração de pagamento falhar`() {
+    fun `deve lançar um erro quando a integração de gerar o pagamento falhar`() {
         //given
         val pedido = Pedido(
             id = 1,
