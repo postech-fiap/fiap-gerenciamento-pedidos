@@ -10,21 +10,33 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorCpfUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.CadastrarClienteUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.EfetuarPagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.GerarQrCodePagamentoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.AlterarDisponibilidadeProdutoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.CadastrarProdutoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.EditarProdutoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ListarProdutosPorCategoriaUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutoPorIdUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.RemoverProdutoPorIdUseCase
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.EfetuarPagamentoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.GerarQrCodePagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.AlterarDisponibilidadeProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.CadastrarProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.EditarProdutoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ListarProdutosPorCategoriaUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutoPorIdUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutosPorIdsUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.RemoverProdutoPorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
@@ -98,7 +110,7 @@ class AppBeansConfig(
     fun obterProdutosPorIdsUseCase(repository: ProdutoRepository) = ObterProdutosPorIdsUseCaseImpl(repository)
 
     @Bean
-    fun efetuarPagamentoUseCase(service: PagamentoService) = EfetuarPagamentoUseCaseImpl(service)
+    fun gerarQrCodePagamentoUseCase(service: PagamentoService) = GerarQrCodePagamentoUseCaseImpl(service)
 
     @Bean
     fun cadastrarPedidoUseCase(
@@ -106,13 +118,13 @@ class AppBeansConfig(
         buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
         gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
-        efetuarPagamentoUseCase: EfetuarPagamentoUseCase
+        gerarQrCodePagamentoUseCase: GerarQrCodePagamentoUseCase
     ) = CadastrarPedidoUseCaseImpl(
         pedidoRepository,
         buscarClientePorIdUseCase,
         gerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase,
-        efetuarPagamentoUseCase
+        gerarQrCodePagamentoUseCase
     )
 
     @Bean

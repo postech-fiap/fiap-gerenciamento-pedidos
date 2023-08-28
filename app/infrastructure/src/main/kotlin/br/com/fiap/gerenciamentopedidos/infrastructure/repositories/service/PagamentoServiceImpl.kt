@@ -22,7 +22,7 @@ class PagamentoServiceImpl(
     private val mercadoPagoToken: String
 ) : PagamentoService {
 
-    override fun gerarPagamento(pedido: Pedido): Pagamento {
+    override fun gerarQrCodePagamento(pedido: Pedido): Pagamento {
         val url = mercadoPagoApiGenerateQrcodeEndpoint
 
         val entity = HttpEntity(MercadoPagoOrdemDto.fromDto(pedido), buildHeaders())
@@ -38,7 +38,7 @@ class PagamentoServiceImpl(
 
             return Pagamento(
                 dataHora = OffsetDateTime.now(),
-                status = PagamentoStatus.APROVADO,
+                status = PagamentoStatus.PENDENTE,
                 qrCode = response.body!!.qrData,
                 valorTotal = pedido.valorTotal!!
             )
