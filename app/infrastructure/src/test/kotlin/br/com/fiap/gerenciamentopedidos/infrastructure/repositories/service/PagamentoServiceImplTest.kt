@@ -87,7 +87,7 @@ class PagamentoServiceImplTest {
         )
 
         //when
-        val pagamentoComQrCode = service.gerarPagamento(pedido)
+        val pagamentoComQrCode = service.gerarQrCodePagamento(pedido)
 
         //then
         Assertions.assertNotNull(pagamentoComQrCode.qrCode)
@@ -146,7 +146,7 @@ class PagamentoServiceImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            service.gerarPagamento(pedido)
+            service.gerarQrCodePagamento(pedido)
         }
 
         //then
@@ -203,7 +203,7 @@ class PagamentoServiceImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            service.gerarPagamento(pedido)
+            service.gerarQrCodePagamento(pedido)
         }
 
         //then

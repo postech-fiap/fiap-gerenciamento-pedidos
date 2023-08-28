@@ -9,7 +9,7 @@ data class Pedido(
     val numero: String?,
     val id: Long? = null,
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    var status: PedidoStatus = PedidoStatus.RECEBIDO,
+    var status: PedidoStatus = PedidoStatus.PENDENTE,
     var cliente: Cliente? = null,
     var items: List<Item> = listOf(),
     var pagamento: Pagamento? = null,
@@ -45,7 +45,7 @@ data class Pedido(
         valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
-    fun atribuirPagamento(pagamento: Pagamento) {
+    fun gerarQrCodePagamento(pagamento: Pagamento) {
         this.pagamento = pagamento
     }
 

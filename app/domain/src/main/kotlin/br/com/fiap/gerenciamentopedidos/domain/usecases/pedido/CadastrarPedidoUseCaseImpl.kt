@@ -15,7 +15,7 @@ class CadastrarPedidoUseCaseImpl(
     private val buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
     private val gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
-    private val efetuarPagamentoUseCase: EfetuarPagamentoUseCase
+    private val gerarQrCodePagamento: GerarQrCodePagamentoUseCase
 ) : CadastrarPedidoUseCase {
     override fun executar(clienteId: Long?, itens: List<Item>): Pedido {
         val pedido = Pedido(gerarNumeroPedidoUseCase.executar())
@@ -32,7 +32,7 @@ class CadastrarPedidoUseCaseImpl(
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        pedido.atribuirPagamento(efetuarPagamentoUseCase.executar(pedido))
+        pedido.gerarQrCodePagamento(gerarQrCodePagamento.executar(pedido))
 
         return pedidoRepository.salvar(pedido.valid())
     }
