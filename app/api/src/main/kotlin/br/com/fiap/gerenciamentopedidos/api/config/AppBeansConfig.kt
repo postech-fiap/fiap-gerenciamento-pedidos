@@ -1,15 +1,17 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
 import br.com.fiap.gerenciamentopedidos.api.facades.ClienteFacadeImpl
+import br.com.fiap.gerenciamentopedidos.api.facades.PagamentoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.PedidoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.GerarQrCodePagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorCpfUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.CadastrarClienteUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.FinalizarPagamentoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.GerarQrCodePagamentoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
@@ -38,12 +40,12 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutoPorI
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutosPorIdsUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.RemoverProdutoPorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.GerarQrCodePagamentoHttpGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.service.PagamentoServiceImpl
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -110,9 +112,6 @@ class AppBeansConfig(
     fun obterProdutosPorIdsUseCase(repository: ProdutoRepository) = ObterProdutosPorIdsUseCaseImpl(repository)
 
     @Bean
-    fun gerarQrCodePagamentoUseCase(service: PagamentoService) = GerarQrCodePagamentoUseCaseImpl(service)
-
-    @Bean
     fun cadastrarPedidoUseCase(
         pedidoRepository: PedidoRepository,
         buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
@@ -128,11 +127,14 @@ class AppBeansConfig(
     )
 
     @Bean
-    fun pagamentoService() = PagamentoServiceImpl(
+    fun gerarQrCodePagamentoGateway() = GerarQrCodePagamentoHttpGatewayImpl(
         restTemplate,
         mercadoPagoConfig.generateQrcodeEndpoint,
         mercadoPagoConfig.token
     )
+
+    @Bean
+    fun gerarQrCodePagamentoUseCase(gerarQrCodePagamentoGateway: GerarQrCodePagamentoGateway) = GerarQrCodePagamentoUseCaseImpl(gerarQrCodePagamentoGateway)
 
     @Bean
     fun clienteFacade(
