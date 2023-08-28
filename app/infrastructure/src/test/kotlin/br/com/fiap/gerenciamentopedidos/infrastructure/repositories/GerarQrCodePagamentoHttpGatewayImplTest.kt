@@ -7,6 +7,7 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.GerarQrCodePagamentoHttpGatewayImpl
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
