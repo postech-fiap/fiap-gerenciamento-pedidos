@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.GerarQrCodePagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.models.*
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -22,7 +22,7 @@ import kotlin.random.Random
 class GerarQrCodePagamentoUseCaseImplTest {
 
     @MockK
-    lateinit var pagamentoService: PagamentoService
+    lateinit var gerarQrCodePagamentoGateway: GerarQrCodePagamentoGateway
 
     @InjectMockKs
     lateinit var gerarPagamentoQrCodeUseCaseImpl: GerarQrCodePagamentoUseCaseImpl
@@ -33,13 +33,13 @@ class GerarQrCodePagamentoUseCaseImplTest {
         val pedido = criarPedido()
         val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.PENDENTE, Random.nextLong().toString(), BigDecimal(10))
 
-        every { pagamentoService.gerarQrCodePagamento(pedido) } returns pagamento
+        every { gerarQrCodePagamentoGateway.executar(pedido) } returns pagamento
 
         //when
         val result = gerarPagamentoQrCodeUseCaseImpl.executar(pedido)
 
         //then
-        verify(exactly = 1) { pagamentoService.gerarQrCodePagamento(pedido) }
+        verify(exactly = 1) { gerarQrCodePagamentoGateway.executar(pedido) }
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(PagamentoStatus.PENDENTE, result.status)
