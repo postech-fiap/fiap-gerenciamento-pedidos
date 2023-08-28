@@ -27,7 +27,7 @@ data class Pedido(
     fun adicionarItem(item: Item) {
         items = items.plus(item.valid())
         calcularTempoEspera()
-        calculateValorTotal()
+        calcularValorTotal()
     }
 
     fun adicionarItem(produto: Produto, quantidade: Long, comentario: String? = null) {
@@ -41,7 +41,7 @@ data class Pedido(
         )
     }
 
-    private fun calculateValorTotal() {
+    private fun calcularValorTotal() {
         valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
