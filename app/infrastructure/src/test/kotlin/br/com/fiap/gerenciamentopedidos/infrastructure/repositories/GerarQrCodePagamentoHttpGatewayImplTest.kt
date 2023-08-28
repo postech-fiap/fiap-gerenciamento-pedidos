@@ -105,7 +105,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
     }
 
     @Test
-    fun `deve lançar um erro quando a integração de gerar o pagamento falhar`() {
+    fun `deve lancar um erro quando a integracao de gerar o pagamento falhar`() {
         //given
         val pedido = Pedido(
             id = 1,
@@ -163,7 +163,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
     }
 
     @Test
-    fun `deve lançar um erro quando o retorno da integração for diferente de 201`() {
+    fun `deve lancar um erro quando o retorno da integracao for diferente de 201`() {
         //given
         val pedido = Pedido(
             id = 1,
