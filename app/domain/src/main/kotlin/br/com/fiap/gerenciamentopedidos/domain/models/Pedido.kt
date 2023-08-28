@@ -36,7 +36,7 @@ data class Pedido(
                 quantidade = quantidade,
                 comentario = comentario,
                 produto = produto,
-                valorPago = produto.valor
+                valorPago = produto.valor * quantidade.toBigDecimal()
             )
         )
     }
