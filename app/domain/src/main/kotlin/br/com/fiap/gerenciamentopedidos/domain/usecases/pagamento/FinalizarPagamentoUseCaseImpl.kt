@@ -31,6 +31,7 @@ class FinalizarPagamentoUseCaseImpl(
         pedidoRepository.alterarStatusPedido(pagamentoAndPedidoStatus.second, pagamento.externalReference.toLong())
 
         return pagamento
+                .copy(status = pagamentoAndPedidoStatus.first.toString())
     }
 
 }
