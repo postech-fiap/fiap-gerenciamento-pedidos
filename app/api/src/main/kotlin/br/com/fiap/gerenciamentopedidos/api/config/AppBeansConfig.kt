@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.api.facades.PagamentoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.PedidoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.BuscarPagamentoPorIdGateway
@@ -18,13 +19,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.Altera
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.AlterarDisponibilidadeProdutoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.CadastrarProdutoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.EditarProdutoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ListarProdutosPorCategoriaUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutoPorIdUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.RemoverProdutoPorIdUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
@@ -34,19 +29,15 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedi
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.AlterarDisponibilidadeProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.CadastrarProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.EditarProdutoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ListarProdutosPorCategoriaUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutoPorIdUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutosPorIdsUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.RemoverProdutoPorIdUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.BuscarPagamentoPorIdHttpGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.GerarQrCodePagamentoHttpGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PagamentoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
+import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PagamentoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -103,6 +94,9 @@ class AppBeansConfig(
     fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
+    fun pagamentoRepository(pagamentoJpaRepository: PagamentoJpaRepository) = PagamentoRepositoryImpl(pagamentoJpaRepository)
+
+    @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
 
     @Bean
@@ -147,7 +141,11 @@ class AppBeansConfig(
     fun gerarQrCodePagamentoUseCase(gerarQrCodePagamentoGateway: GerarQrCodePagamentoGateway) = GerarQrCodePagamentoUseCaseImpl(gerarQrCodePagamentoGateway)
 
     @Bean
-    fun finalizarPagamentoUseCase(buscarPagamentoPorIdGateway: BuscarPagamentoPorIdGateway) = FinalizarPagamentoUseCaseImpl(buscarPagamentoPorIdGateway)
+    fun finalizarPagamentoUseCase(
+        buscarPagamentoPorIdGateway: BuscarPagamentoPorIdGateway,
+        pagamentoRepository: PagamentoRepository,
+        pedidoRepository: PedidoRepository
+    ) = FinalizarPagamentoUseCaseImpl(buscarPagamentoPorIdGateway, pagamentoRepository, pedidoRepository)
 
     @Bean
     fun clienteFacade(
