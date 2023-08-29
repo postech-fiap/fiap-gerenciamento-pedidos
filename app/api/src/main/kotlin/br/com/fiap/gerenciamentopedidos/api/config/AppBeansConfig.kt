@@ -7,6 +7,7 @@ import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.BuscarPagamentoPorIdGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.GerarQrCodePagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorCpfUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
@@ -27,6 +28,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.Remov
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.FinalizarPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.GerarQrCodePagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
@@ -39,8 +41,9 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ListarProdutosPo
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutoPorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.ObterProdutosPorIdsUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.RemoverProdutoPorIdUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.BuscarPagamentoPorIdHttpGatewayImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.GerarQrCodePagamentoHttpGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.GerarQrCodePagamentoHttpGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
@@ -134,7 +137,17 @@ class AppBeansConfig(
     )
 
     @Bean
+    fun buscarPagamentoPorIdGateway() = BuscarPagamentoPorIdHttpGatewayImpl(
+        restTemplate,
+        mercadoPagoConfig.pagamentoEndpoint,
+        mercadoPagoConfig.token
+    )
+
+    @Bean
     fun gerarQrCodePagamentoUseCase(gerarQrCodePagamentoGateway: GerarQrCodePagamentoGateway) = GerarQrCodePagamentoUseCaseImpl(gerarQrCodePagamentoGateway)
+
+    @Bean
+    fun finalizarPagamentoUseCase(buscarPagamentoPorIdGateway: BuscarPagamentoPorIdGateway) = FinalizarPagamentoUseCaseImpl(buscarPagamentoPorIdGateway)
 
     @Bean
     fun clienteFacade(
@@ -171,5 +184,12 @@ class AppBeansConfig(
         obterProdutoPorIdUseCase,
         removerProdutoPorIdUseCase,
         alterarDisponibilidadeProdutoUseCase
+    )
+
+    @Bean
+    fun pagamentoFacade(
+        finalizarPagamentoUseCase: FinalizarPagamentoUseCase
+    ) = PagamentoFacadeImpl(
+        finalizarPagamentoUseCase
     )
 }
