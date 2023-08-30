@@ -44,7 +44,7 @@ class GerarQrCodePagamentoHttpGatewayImpl(
         } catch (ex: IntegracaoAPIException) {
             throw ex
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, ex.message))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, "${ex.message} - ${ex.cause}"))
         }
     }
 
