@@ -39,6 +39,7 @@ class PagamentoController(private val pagamentoController: PagamentoFacade) {
         @RequestBody pagamentoCriadoRequest: PagamentoCriadoRequest
     ): StatusPagamentoResponse {
         require("payment".equals(type, true)) { "O type deve ser payment "}
+        require(dataId.equals(pagamentoCriadoRequest.data.id, true)) { "O data.id param deve ser o mesmo da request"}
 
         return pagamentoController.finalizarPagamento(pagamentoCriadoRequest)
     }
