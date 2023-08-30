@@ -12,6 +12,6 @@ class CadastrarClienteUseCaseImpl(private val clienteRepository: ClienteReposito
                 throw RecursoJaExisteException(String.format("CPF %s já está cadastrado", cliente.cpf))
             }
 
-        return clienteRepository.salvar(cliente)
+        return clienteRepository.salvar(cliente.valid())
     }
 }

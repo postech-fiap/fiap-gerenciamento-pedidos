@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 
 interface CadastrarClienteUseCase {
 
-    fun executar(request: Cliente): Cliente
+    fun executar(cliente: Cliente): Cliente
 }

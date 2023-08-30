@@ -1,6 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.api.requests
 
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import java.math.BigDecimal
 
 data class CadastrarPedidoProdutoRequest(
     val produtoId: Long,
@@ -15,5 +17,7 @@ data class CadastrarPedidoProdutoRequest(
     fun toModel() = Item(
         quantidade = quantidade,
         comentario = comentario,
+        valorPago = BigDecimal.ZERO,
+        produto = Produto(id = produtoId)
     )
 }

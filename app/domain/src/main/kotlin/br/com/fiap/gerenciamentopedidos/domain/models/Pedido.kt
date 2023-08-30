@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -14,7 +15,7 @@ data class Pedido(
     var pagamento: Pagamento? = null,
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null
-) {
+) : Model {
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
     }
@@ -24,7 +25,7 @@ data class Pedido(
     }
 
     fun adicionarItem(item: Item) {
-        items = items.plus(item)
+        items = items.plus(item.valid())
         calcularTempoEspera()
         calculateValorTotal()
     }
@@ -50,5 +51,11 @@ data class Pedido(
 
     fun alterarStatus(status: PedidoStatus) {
         this.status = status
+    }
+
+    override fun valid(): Pedido {
+        require(items.isEmpty().not()) { "Ao menos um produto deve ser informado" }
+        require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
+        return this
     }
 }

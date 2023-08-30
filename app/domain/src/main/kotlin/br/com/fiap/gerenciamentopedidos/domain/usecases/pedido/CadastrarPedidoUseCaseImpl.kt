@@ -34,6 +34,6 @@ class CadastrarPedidoUseCaseImpl(
 
         pedido.atribuirPagamento(efetuarPagamentoUseCase.executar(pedido))
 
-        return pedidoRepository.salvar(pedido)
+        return pedidoRepository.salvar(pedido.valid())
     }
 }
