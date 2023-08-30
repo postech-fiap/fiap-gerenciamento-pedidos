@@ -12,20 +12,19 @@ data class MerchantOrders(
     data class Elements(
             val id: Long,
             val status: String,
-            val externalReferences: String,
-            val payments: List<Payments>? = emptyList()
+            val externalReference: String,
+            val payments: List<Payment>? = emptyList()
     ) {
-        data class Payments(
+        data class Payment(
                 val id: Long,
                 val transactionAmount: BigDecimal,
                 val totalPaidAmount: BigDecimal,
                 val status: String,
                 val statusDetail: String,
-                val operationType: String,
                 val dateApproved: String,
                 val dateCreated: String,
                 val lastModified: String,
-                val amountRefunded: String
+                val amountRefunded: BigDecimal
         ) {
 
             fun calcularStatusPagamentoPedido() =
@@ -43,5 +42,5 @@ data class MerchantOrders(
 
     fun obterIdDoPedido() =
             this.elements?.get(0)
-                    ?.externalReferences
+                    ?.externalReference
 }

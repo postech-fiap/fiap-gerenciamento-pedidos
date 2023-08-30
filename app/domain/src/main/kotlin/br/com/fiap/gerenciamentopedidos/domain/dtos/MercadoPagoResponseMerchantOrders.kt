@@ -2,38 +2,36 @@ package br.com.fiap.gerenciamentopedidos.domain.dtos
 
 import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders
 import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders.Elements
-import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders.Elements.Payments
+import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders.Elements.Payment
 import java.math.BigDecimal
 
 data class MercadoPagoResponseMerchantOrders(
-        private val elementsResponses: List<ElementsResponse>? = emptyList()
+        val elements: List<ElementResponse>? = emptyList()
 ) {
-    data class ElementsResponse(
-            private val id: Long,
-            private val status: String,
-            private val externalReferences: String,
-            private val paymentsResponses: List<PaymentsResponse>? = emptyList(),
+    data class ElementResponse(
+            val id: Long,
+            val status: String,
+            val externalReference: String,
+            val payments: List<PaymentResponse>? = emptyList(),
     ) {
-        data class PaymentsResponse(
-                private val id: Long,
-                private val transactionAmount: BigDecimal,
-                private val totalPaidAmount: BigDecimal,
-                private val status: String,
-                private val statusDetail: String,
-                private val operationType: String,
-                private val dateApproved: String,
-                private val dateCreated: String,
-                private val lastModified: String,
-                private val amountRefunded: String,
+        data class PaymentResponse(
+                val id: Long,
+                val transactionAmount: BigDecimal,
+                val totalPaidAmount: BigDecimal,
+                val status: String,
+                val statusDetail: String,
+                val dateApproved: String,
+                val dateCreated: String,
+                val lastModified: String,
+                val amountRefunded: BigDecimal,
         ) {
 
-            fun toModel() = Payments(
+            fun toModel() = Payment(
                     id = id,
                     transactionAmount = transactionAmount,
                     totalPaidAmount = totalPaidAmount,
                     status = status,
                     statusDetail = statusDetail,
-                    operationType = operationType,
                     dateApproved = dateApproved,
                     dateCreated = dateCreated,
                     lastModified = lastModified,
@@ -44,13 +42,13 @@ data class MercadoPagoResponseMerchantOrders(
         fun toModel() = Elements(
                 id = id,
                 status = status,
-                externalReferences = externalReferences,
-                payments = paymentsResponses?.map { paymentResponse -> paymentResponse.toModel() }
+                externalReference = externalReference,
+                payments = payments?.map { paymentResponse -> paymentResponse.toModel() }
         )
     }
 
     fun toModel() = MerchantOrders(
-            elements = elementsResponses?.map { elementResponse -> elementResponse.toModel() }
+            elements = elements?.map { elementResponse -> elementResponse.toModel() }
     )
 
 }

@@ -4,7 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.BuscarPagamentoPorIdGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.FinalizarPagamentoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders.Elements.Payments
+import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders.Elements.Payment
 import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.PagamentoCriado
 
 class FinalizarPagamentoUseCaseImpl(
@@ -13,7 +13,7 @@ class FinalizarPagamentoUseCaseImpl(
         private val pedidoRepository: PedidoRepository
 ) : FinalizarPagamentoUseCase {
 
-    override fun executar(pagamentoCriado: PagamentoCriado): Payments {
+    override fun executar(pagamentoCriado: PagamentoCriado): Payment {
         val ordemComPagamento = buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id)
         val pagamento = ordemComPagamento.obterUltimoPagamento()
 
