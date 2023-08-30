@@ -46,7 +46,7 @@ class BuscarPagamentoPorIdHttpGatewayImpl(
         } catch (ex: IntegracaoAPIException) {
             throw ex
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, ex.message))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message} - ${ex.cause}"))
         }
     }
 

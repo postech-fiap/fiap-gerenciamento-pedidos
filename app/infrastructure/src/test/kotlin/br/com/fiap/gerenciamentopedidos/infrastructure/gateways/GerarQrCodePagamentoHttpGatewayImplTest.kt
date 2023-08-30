@@ -142,7 +142,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
             )
         } throws Exception("Error")
 
-        val errorMessageExpected = "Erro de integração para gerar o pagamento. Detalhes: Error"
+        val errorMessageExpected = "Erro de integração para gerar o pagamento. Detalhes: Error - null"
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {

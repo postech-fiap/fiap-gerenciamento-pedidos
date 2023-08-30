@@ -50,7 +50,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
             )
         } returns ResponseEntity(
             MercadoPagoResponseMerchantOrders(
-                elementsResponses = listOf()
+                elements = listOf()
             ),
             HttpStatus.OK
         )
@@ -86,7 +86,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
             )
         } throws Exception("Error")
 
-        val errorMessageExpected = "Erro de integração para buscar o pagamento. Detalhes: Error"
+        val errorMessageExpected = "Erro de integração para buscar o pagamento. Detalhes: Error - null"
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
@@ -122,7 +122,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
             )
         } returns ResponseEntity(
             MercadoPagoResponseMerchantOrders(
-                elementsResponses = listOf()
+                elements = listOf()
             ),
             HttpStatus.CONFLICT
         )
