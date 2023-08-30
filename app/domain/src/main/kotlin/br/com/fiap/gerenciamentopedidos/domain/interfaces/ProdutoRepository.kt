@@ -1,14 +1,14 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import java.util.*
 
 interface ProdutoRepository {
-    fun get(id: Long): Optional<ProdutoDto>
-    fun get(ids: List<Long>): List<ProdutoDto>
-    fun get(categoria: Categoria): List<ProdutoDto>
-    fun create(produto: ProdutoDto): ProdutoDto
-    fun update(produto: ProdutoDto): ProdutoDto
+    fun get(id: Long): Optional<Produto>
+    fun get(ids: List<Long>): List<Produto>
+    fun get(categoria: Categoria): List<Produto>
+    fun create(produto: Produto): Produto
+    fun update(produto: Produto): Produto
     fun remove(id: Long)
 }

@@ -1,35 +1,61 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class Pedido(
+    val numero: String?,
     val id: Long? = null,
-    val numero: String? = "1",
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    val status: PedidoStatus = PedidoStatus.RECEBIDO,
+    var status: PedidoStatus = PedidoStatus.RECEBIDO,
     var cliente: Cliente? = null,
-    var produtos: List<PedidoProduto> = listOf(),
+    var items: List<Item> = listOf(),
     var pagamento: Pagamento? = null,
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null
-) {
-    init {
-        require(produtos.isEmpty().not()) { "Ao menos um produto deve ser informado" }
-        require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
+) : Model {
+    private fun calcularTempoEspera() {
+        tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
+    }
+
+    fun atribuirCliente(cliente: Cliente) {
+        this.cliente = cliente
+    }
+
+    fun adicionarItem(item: Item) {
+        items = items.plus(item.valid())
         calcularTempoEspera()
         calculateValorTotal()
     }
 
-    private fun calcularTempoEspera() {
-        tempoEsperaMinutos = produtos.map { it.produto?.tempoPreparo }.maxBy { it!! }
+    fun adicionarItem(produto: Produto, quantidade: Long, comentario: String? = null) {
+        adicionarItem(
+            Item(
+                quantidade = quantidade,
+                comentario = comentario,
+                produto = produto,
+                valorPago = produto.valor
+            )
+        )
     }
 
     private fun calculateValorTotal() {
-        valorTotal = produtos
-            .map { it.valorPago }
-            .fold(BigDecimal.ZERO, BigDecimal::add)
+        valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
+    fun atribuirPagamento(pagamento: Pagamento) {
+        this.pagamento = pagamento
+    }
+
+    fun alterarStatus(status: PedidoStatus) {
+        this.status = status
+    }
+
+    override fun valid(): Pedido {
+        require(items.isEmpty().not()) { "Ao menos um produto deve ser informado" }
+        require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
+        return this
+    }
 }

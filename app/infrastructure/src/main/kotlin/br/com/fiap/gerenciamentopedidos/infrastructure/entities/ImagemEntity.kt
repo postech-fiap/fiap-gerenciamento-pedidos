@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ImagemDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import jakarta.persistence.*
 
 @Entity
@@ -16,5 +16,5 @@ class ImagemEntity(
     @OneToOne(fetch = FetchType.LAZY)
     val produto: ProdutoEntity? = null
 ) {
-    fun toDto() = ImagemDto(id, caminho)
+    fun toModel() = Imagem(id, caminho)
 }

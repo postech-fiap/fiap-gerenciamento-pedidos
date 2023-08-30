@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
@@ -15,11 +15,11 @@ private const val ERROR_MESSAGE_UPDATE_STATUS = "Erro ao realizar a atualizaçã
 
 class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository) : PedidoRepository {
 
-    override fun buscarPedidos(): List<PedidoDto> {
+    override fun buscarPedidos(): List<Pedido> {
         try {
             return pedidoJpaRepository
                 .buscarPedidos()
-                .map { it.toDto() }
+                .map { it.toModel() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)
@@ -27,9 +27,9 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun buscarPedidoPorId(id: Long): PedidoDto {
+    override fun buscarPedidoPorId(id: Long): Pedido {
         try {
-            return pedidoJpaRepository.findById(id).get().toDto()
+            return pedidoJpaRepository.findById(id).get().toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
@@ -55,10 +55,10 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
         }
     }
 
-    override fun salvar(pedido: PedidoDto): PedidoDto {
+    override fun salvar(pedido: Pedido): Pedido {
         try {
-            val entity = PedidoEntity.fromDto(pedido)
-            return pedidoJpaRepository.save(entity).toDto()
+            val entity = PedidoEntity.fromModel(pedido)
+            return pedidoJpaRepository.save(entity).toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_CREATE, ex.message)

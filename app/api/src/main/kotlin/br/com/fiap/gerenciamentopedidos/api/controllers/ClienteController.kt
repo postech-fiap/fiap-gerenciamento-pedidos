@@ -1,9 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.cliente.CadastrarClienteUseCase
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarClienteRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ClienteResponse
+import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.ClienteFacade
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarClienteRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -19,10 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/clientes")
-class ClienteController(
-    private val cadastrarClienteUseCase: CadastrarClienteUseCase,
-    private val buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
-) {
+class ClienteController(private val clienteFacade: ClienteFacade) {
     companion object {
         const val CPF_URI = "/cpf"
     }
@@ -68,7 +64,7 @@ class ClienteController(
     )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody request: CadastrarClienteRequest) =
-        ResponseEntity.status(HttpStatus.CREATED).body(cadastrarClienteUseCase.executar(request))
+        ResponseEntity.status(HttpStatus.CREATED).body(clienteFacade.cadastrarCliente(request))
 
     @Operation(summary = "Responsável por buscar um cliente")
     @ApiResponses(
@@ -108,5 +104,5 @@ class ClienteController(
         @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
         cpf: String
     ) = ResponseEntity.status(HttpStatus.OK)
-        .body(buscarClientePorCpfUseCase.executar(cpf))
+        .body(clienteFacade.buscarClientePorCpf(cpf))
 }

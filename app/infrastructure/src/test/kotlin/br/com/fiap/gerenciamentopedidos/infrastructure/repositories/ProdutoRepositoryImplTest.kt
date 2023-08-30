@@ -1,6 +1,5 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
@@ -41,15 +40,18 @@ class ProdutoRepositoryImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
 
-        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(ProdutoEntity.fromDto(dto))
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(
+            ProdutoEntity.fromModel(
+                produto
+            )
+        )
 
         //when
         val result = produtoRepository.get(id)
 
         //then
-        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.get())
+        Assertions.assertEquals(produto, result.get())
         verify(exactly = 1) { produtoJpaRepository.findByIdAndExcluidoFalse(any()) }
     }
 
@@ -68,16 +70,16 @@ class ProdutoRepositoryImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
+
         every { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) } returns listOf(
-            ProdutoEntity.fromDto(dto)
+            ProdutoEntity.fromModel(produto)
         )
 
         //when
         val result = produtoRepository.get(categoria)
 
         //then
-        Assertions.assertEquals(ProdutoDto.fromModel(produto), result.first())
+        Assertions.assertEquals(produto, result.first())
         verify(exactly = 1) { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) }
     }
 
@@ -95,16 +97,15 @@ class ProdutoRepositoryImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
-        val entity = ProdutoEntity.fromDto(dto)
+        val entity = ProdutoEntity.fromModel(produto)
 
         every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = produtoRepository.create(ProdutoDto.fromModel(produto))
+        val result = produtoRepository.create(produto)
 
         //then
-        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
+        Assertions.assertEquals(produto, result)
         verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 
@@ -122,17 +123,16 @@ class ProdutoRepositoryImplTest {
             excluido = false,
             imagem = null
         )
-        val dto = ProdutoDto.fromModel(produto)
-        val entity = ProdutoEntity.fromDto(dto)
+        val entity = ProdutoEntity.fromModel(produto)
 
         every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
         every { produtoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = produtoRepository.update(ProdutoDto.fromModel(produto))
+        val result = produtoRepository.update(produto)
 
         //then
-        Assertions.assertEquals(ProdutoDto.fromModel(produto), result)
+        Assertions.assertEquals(produto, result)
         verify(exactly = 1) { produtoJpaRepository.save(entity) }
     }
 

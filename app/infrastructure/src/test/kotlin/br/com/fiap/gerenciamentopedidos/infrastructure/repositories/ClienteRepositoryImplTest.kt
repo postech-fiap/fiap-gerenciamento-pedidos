@@ -1,11 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
 import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -38,15 +36,14 @@ class ClienteRepositoryImplTest {
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val clienteDto = ClienteDto.fromModel(cliente)
 
-        every { clienteJpaRepository.save(any()) } returns ClienteEntity.fromDto(clienteDto)
+        every { clienteJpaRepository.save(any()) } returns ClienteEntity.fromModel(cliente)
 
         //when
-        val result = clienteRepository.salvar(ClienteDto.fromModel(cliente))
+        val result = clienteRepository.salvar(cliente)
 
         //then
-        assertEquals(clienteDto, result)
+        assertEquals(cliente, result)
 
         verify(exactly = 1) { clienteJpaRepository.save(any()) }
     }
@@ -58,16 +55,15 @@ class ClienteRepositoryImplTest {
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val clienteDto = ClienteDto.fromModel(cliente)
         val cpfSemMascara = Cpf.removeMascara(cpf)
 
-        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(ClienteEntity.fromDto(clienteDto))
+        every { clienteJpaRepository.findByCpf(any()) } returns Optional.of(ClienteEntity.fromModel(cliente))
 
         //when
         val result = clienteRepository.buscarPorCpf(cpf)
 
         //then
-        assertEquals(clienteDto, result.get())
+        assertEquals(cliente, result.get())
 
         verify(exactly = 1) { clienteJpaRepository.findByCpf(cpfSemMascara) }
     }
@@ -100,15 +96,14 @@ class ClienteRepositoryImplTest {
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val errorMessage = "Erro ao salvar o cliente na base de dados. Detalhes: Error"
-        val clienteDomain = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
-        val dto = ClienteDto.fromModel(clienteDomain)
-        val clienteEntity = ClienteEntity.fromDto(dto)
+        val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
+        val clienteEntity = ClienteEntity.fromModel(cliente)
 
         every { clienteJpaRepository.save(any()) } throws Exception("Error")
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            clienteRepository.salvar(dto)
+            clienteRepository.salvar(cliente)
         }
 
         //then
