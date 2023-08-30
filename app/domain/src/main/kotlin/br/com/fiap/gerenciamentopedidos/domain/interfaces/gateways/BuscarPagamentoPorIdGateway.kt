@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways
 
-import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.DetalhePagamento
+import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders
 
 interface BuscarPagamentoPorIdGateway {
-    fun executar(id: String): DetalhePagamento
+    fun executar(id: String): MerchantOrders
 }

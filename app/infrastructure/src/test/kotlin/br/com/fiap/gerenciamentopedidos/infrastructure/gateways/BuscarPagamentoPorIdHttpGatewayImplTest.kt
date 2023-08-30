@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.gateways
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponsePagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponseMerchantOrders
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -36,7 +36,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
     }
 
     @Test
-    fun `deve buscar detalhe do pagamento com sucesso`() {
+    fun `deve buscar ordem de pagamento com sucesso`() {
         //given
         val random = Random.nextLong()
         val id = random.toString()
@@ -46,16 +46,11 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         } returns ResponseEntity(
-            MercadoPagoResponsePagamentoDto(
-                random,
-                random.toString(),
-                random.toString(),
-                random.toString(),
-                random.toString(),
-                random.toString()
+            MercadoPagoResponseMerchantOrders(
+                elementsResponses = listOf()
             ),
             HttpStatus.OK
         )
@@ -71,13 +66,13 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         }
     }
 
     @Test
-    fun `deve lancar um erro quando a integracao de buscar o pagamento falhar`() {
+    fun `deve lancar um erro quando a integracao de buscar a ordem de pagamento falhar`() {
         //given
         val random = Random.nextLong()
         val id = random.toString()
@@ -87,7 +82,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         } throws Exception("Error")
 
@@ -106,7 +101,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         }
 
@@ -123,16 +118,11 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         } returns ResponseEntity(
-            MercadoPagoResponsePagamentoDto(
-                random,
-                random.toString(),
-                random.toString(),
-                random.toString(),
-                random.toString(),
-                random.toString()
+            MercadoPagoResponseMerchantOrders(
+                elementsResponses = listOf()
             ),
             HttpStatus.CONFLICT
         )
@@ -152,7 +142,7 @@ class BuscarPagamentoPorIdHttpGatewayImplTest {
                 eq(MERCADO_PAGO_PAGAMENTO_ENDPOINT),
                 eq(HttpMethod.GET),
                 any(),
-                eq(MercadoPagoResponsePagamentoDto::class.java)
+                eq(MercadoPagoResponseMerchantOrders::class.java)
             )
         }
     }

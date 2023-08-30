@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.gateways
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponsePagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponseMerchantOrders
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.BuscarPagamentoPorIdGateway
-import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.DetalhePagamento
+import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.IntegracaoAPIException
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -15,20 +15,20 @@ private const val HEADER_NAME_AUTH = "Authorization"
 private const val ERROR_MESSAGE = "Erro de integração para buscar o pagamento. Detalhes: %s"
 
 class BuscarPagamentoPorIdHttpGatewayImpl(
-    private val restTemplate: RestTemplate,
-    private val mercadoPagoApiPagamento: String,
-    private val mercadoPagoToken: String
+        private val restTemplate: RestTemplate,
+        private val mercadoPagoApiMerchantOrdersPagamento: String,
+        private val mercadoPagoToken: String
 ) : BuscarPagamentoPorIdGateway {
 
-    override fun executar(id: String): DetalhePagamento {
-        val url = UriComponentsBuilder.fromUriString(mercadoPagoApiPagamento)
+    override fun executar(id: String): MerchantOrders {
+        val url = UriComponentsBuilder.fromUriString(mercadoPagoApiMerchantOrdersPagamento)
             .buildAndExpand(id)
             .toUriString()
 
         val entity = HttpEntity<Void>(buildHeaders())
 
         try {
-            val response = restTemplate.exchange(url, HttpMethod.GET, entity, MercadoPagoResponsePagamentoDto::class.java)
+            val response = restTemplate.exchange(url, HttpMethod.GET, entity, MercadoPagoResponseMerchantOrders::class.java)
 
             if (response.statusCode != HttpStatus.OK) {
                 throw IntegracaoAPIException(

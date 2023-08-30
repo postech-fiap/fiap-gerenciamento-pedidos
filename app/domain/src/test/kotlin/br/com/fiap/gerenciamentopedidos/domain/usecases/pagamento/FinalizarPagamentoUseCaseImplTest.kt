@@ -7,7 +7,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.BuscarPagamentoPorIdGateway
 import br.com.fiap.gerenciamentopedidos.domain.models.*
-import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.DetalhePagamento
+import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.MerchantOrders
 import br.com.fiap.gerenciamentopedidos.domain.models.mercadoPago.PagamentoCriado
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -17,6 +17,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.math.BigDecimal
 import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
@@ -39,19 +40,20 @@ class FinalizarPagamentoUseCaseImplTest {
         //given
         val random = Random.nextLong()
         val pagamentoCriado = criarPagamento()
-        val detalhePagamento = criarDetalhePagamento(random, "approved")
+        val ordemDePagamento = criarOrdemDePagamento(random, "approved")
+        val idDoPedido = ordemDePagamento.obterIdDoPedido()!!.toLong()
 
-        every { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) } returns detalhePagamento
-        every { pagamentoRepository.alterarStatusPagamento(APROVADO, detalhePagamento.externalReference.toLong()) } returns Unit
-        every { pedidoRepository.alterarStatusPedido(PedidoStatus.RECEBIDO, detalhePagamento.externalReference.toLong()) } returns Unit
+        every { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) } returns ordemDePagamento
+        every { pagamentoRepository.alterarStatusPagamento(APROVADO, idDoPedido) } returns Unit
+        every { pedidoRepository.alterarStatusPedido(PedidoStatus.RECEBIDO, idDoPedido) } returns Unit
 
         //when
         val result = finalizarPagamentoUseCaseImpl.executar(pagamentoCriado)
 
         //then
         verify(exactly = 1) { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) }
-        verify(exactly = 1) { pagamentoRepository.alterarStatusPagamento(APROVADO, detalhePagamento.externalReference.toLong()) }
-        verify(exactly = 1) { pedidoRepository.alterarStatusPedido(PedidoStatus.RECEBIDO, detalhePagamento.externalReference.toLong()) }
+        verify(exactly = 1) { pagamentoRepository.alterarStatusPagamento(APROVADO, idDoPedido) }
+        verify(exactly = 1) { pedidoRepository.alterarStatusPedido(PedidoStatus.RECEBIDO, idDoPedido) }
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(APROVADO.toString(), result.status)
@@ -62,32 +64,52 @@ class FinalizarPagamentoUseCaseImplTest {
         //given
         val random = Random.nextLong()
         val pagamentoCriado = criarPagamento()
-        val detalhePagamento = criarDetalhePagamento(random, "rejected")
+        val ordemDePagamento = criarOrdemDePagamento(random, "REJECTED")
+        val idDoPedido = ordemDePagamento.obterIdDoPedido()!!.toLong()
 
-        every { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) } returns detalhePagamento
-        every { pagamentoRepository.alterarStatusPagamento(REPROVADO, detalhePagamento.externalReference.toLong()) } returns Unit
-        every { pedidoRepository.alterarStatusPedido(PedidoStatus.PENDENTE, detalhePagamento.externalReference.toLong()) } returns Unit
+        every { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) } returns ordemDePagamento
+        every { pagamentoRepository.alterarStatusPagamento(REPROVADO, idDoPedido) } returns Unit
+        every { pedidoRepository.alterarStatusPedido(PedidoStatus.PENDENTE, idDoPedido) } returns Unit
 
         //when
         val result = finalizarPagamentoUseCaseImpl.executar(pagamentoCriado)
 
         //then
         verify(exactly = 1) { buscarPagamentoPorIdGateway.executar(pagamentoCriado.data.id) }
-        verify(exactly = 1) { pagamentoRepository.alterarStatusPagamento(REPROVADO, detalhePagamento.externalReference.toLong()) }
-        verify(exactly = 1) { pedidoRepository.alterarStatusPedido(PedidoStatus.PENDENTE, detalhePagamento.externalReference.toLong()) }
+        verify(exactly = 1) { pagamentoRepository.alterarStatusPagamento(REPROVADO, idDoPedido) }
+        verify(exactly = 1) { pedidoRepository.alterarStatusPedido(PedidoStatus.PENDENTE, idDoPedido) }
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(REPROVADO.toString(), result.status)
     }
 
-    private fun criarDetalhePagamento(random: Long, status: String) = DetalhePagamento(
-            id = random,
-            dateCreated = random.toString(),
-            dateApproved = random.toString(),
-            dateLastUpdated = random.toString(),
-            status = status,
-            externalReference = random.toString()
-    )
+    private fun criarOrdemDePagamento(random: Long, statusPagamento: String) : MerchantOrders {
+        val payments = listOf(
+                MerchantOrders.Elements.Payments(
+                        id = random,
+                        transactionAmount = BigDecimal.TEN,
+                        totalPaidAmount = BigDecimal.TEN,
+                        status = statusPagamento,
+                        statusDetail = random.toString(),
+                        operationType = random.toString(),
+                        dateApproved = random.toString(),
+                        dateCreated = random.toString(),
+                        lastModified = random.toString(),
+                        amountRefunded = random.toString()
+                )
+        )
+
+        val elements = listOf(
+                MerchantOrders.Elements(
+                        random,
+                        random.toString(),
+                        random.toString(),
+                        payments
+                )
+        )
+
+        return MerchantOrders(elements = elements)
+    }
 
     private fun criarPagamento(): PagamentoCriado {
         val random = Random.nextLong()

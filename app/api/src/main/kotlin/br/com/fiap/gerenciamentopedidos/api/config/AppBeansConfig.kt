@@ -133,7 +133,7 @@ class AppBeansConfig(
     @Bean
     fun buscarPagamentoPorIdGateway() = BuscarPagamentoPorIdHttpGatewayImpl(
         restTemplate,
-        mercadoPagoConfig.pagamentoEndpoint,
+        mercadoPagoConfig.merchantOrdersPagamentoEndpoint,
         mercadoPagoConfig.token
     )
 
