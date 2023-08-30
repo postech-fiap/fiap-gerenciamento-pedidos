@@ -68,7 +68,7 @@ class CadastrarPedidoUseCaseImplTest {
         assertEquals("Sem mostarda", produtosResult[0].comentario)
         assertEquals(BigDecimal(10), produtosResult[0].valorPago)
         assertEquals(10L, result.tempoEsperaMinutos)
-        assertEquals(PedidoStatus.RECEBIDO, result.status)
+        assertEquals(PedidoStatus.PENDENTE, result.status)
         assertEquals(1, result.cliente?.id)
 
         verify(exactly = 1) { pedidoRepository.salvar(any()) }
