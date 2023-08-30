@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.application.usecases.cliente.CadastrarCl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.CadastrarPedidoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.pedido.ConsultarStatusPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.AlterarDisponibilidadeProdutoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.CadastrarProdutoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.application.usecases.produto.EditarProdutoUseCaseImpl
@@ -77,6 +78,9 @@ class AppBeansConfig(
 
     @Bean
     fun alterarStatusPedidoUseCase(repository: PedidoRepository) = AlterarStatusPedidoUseCaseImpl(repository)
+
+    @Bean
+    fun consultarStatusPagamentoUseCase(repository: PedidoRepository) = ConsultarStatusPagamentoUseCaseImpl(repository)
 
     @Bean
     fun cadastrarPedidoUseCase(
