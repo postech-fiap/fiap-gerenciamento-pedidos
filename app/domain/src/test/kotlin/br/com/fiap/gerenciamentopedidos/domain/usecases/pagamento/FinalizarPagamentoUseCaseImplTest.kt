@@ -85,17 +85,16 @@ class FinalizarPagamentoUseCaseImplTest {
 
     private fun criarOrdemDePagamento(random: Long, statusPagamento: String) : MerchantOrders {
         val payments = listOf(
-                MerchantOrders.Elements.Payments(
+                MerchantOrders.Elements.Payment(
                         id = random,
                         transactionAmount = BigDecimal.TEN,
                         totalPaidAmount = BigDecimal.TEN,
                         status = statusPagamento,
                         statusDetail = random.toString(),
-                        operationType = random.toString(),
                         dateApproved = random.toString(),
                         dateCreated = random.toString(),
                         lastModified = random.toString(),
-                        amountRefunded = random.toString()
+                        amountRefunded = BigDecimal.ZERO
                 )
         )
 
