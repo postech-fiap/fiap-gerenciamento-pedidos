@@ -1,12 +1,11 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories.service
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponseOrdemDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -49,12 +48,16 @@ class PagamentoServiceImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
+            valorTotal = Random.nextLong().toBigDecimal(),
             pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
+                1,
+                OffsetDateTime.now(),
+                PagamentoStatus.APROVADO,
+                Random.nextLong().toString(),
+                Random.nextLong().toBigDecimal()
             ),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -84,7 +87,7 @@ class PagamentoServiceImplTest {
         )
 
         //when
-        val pagamentoComQrCode = service.gerarPagamento(PedidoDto.fromModel(pedido))
+        val pagamentoComQrCode = service.gerarPagamento(pedido)
 
         //then
         Assertions.assertNotNull(pagamentoComQrCode.qrCode)
@@ -107,12 +110,13 @@ class PagamentoServiceImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
+            valorTotal = Random.nextLong().toBigDecimal(),
             pagamento = Pagamento(
                 1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
                 qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
             ),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -142,7 +146,7 @@ class PagamentoServiceImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            service.gerarPagamento(PedidoDto.fromModel(pedido))
+            service.gerarPagamento(pedido)
         }
 
         //then
@@ -164,12 +168,13 @@ class PagamentoServiceImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
+            valorTotal = Random.nextLong().toBigDecimal(),
             pagamento = Pagamento(
                 1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
                 qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
             ),
-            produtos = listOf(
-                PedidoProduto(
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -188,11 +193,7 @@ class PagamentoServiceImplTest {
         )
 
         every {
-            restTemplate.postForEntity(
-                eq(MERCADO_PAGO_ENDPOINT),
-                any(),
-                eq(MercadoPagoResponseOrdemDto::class.java)
-            )
+            restTemplate.postForEntity(eq(MERCADO_PAGO_ENDPOINT), any(), eq(MercadoPagoResponseOrdemDto::class.java))
         } returns ResponseEntity(
             MercadoPagoResponseOrdemDto(Random.nextLong().toString(), Random.nextLong().toString()),
             HttpStatus.CONFLICT
@@ -202,7 +203,7 @@ class PagamentoServiceImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            service.gerarPagamento(PedidoDto.fromModel(pedido))
+            service.gerarPagamento(pedido)
         }
 
         //then
@@ -215,7 +216,5 @@ class PagamentoServiceImplTest {
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
         }
-
     }
-
 }

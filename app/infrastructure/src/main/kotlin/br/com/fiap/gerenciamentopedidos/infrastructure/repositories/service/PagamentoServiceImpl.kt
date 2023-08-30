@@ -2,10 +2,10 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.repositories.service
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoOrdemDto
 import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponseOrdemDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
+import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.IntegracaoAPIException
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -22,7 +22,7 @@ class PagamentoServiceImpl(
     private val mercadoPagoToken: String
 ) : PagamentoService {
 
-    override fun gerarPagamento(pedido: PedidoDto): PagamentoDto {
+    override fun gerarPagamento(pedido: Pedido): Pagamento {
         val url = mercadoPagoApiGenerateQrcodeEndpoint
 
         val entity = HttpEntity(MercadoPagoOrdemDto.fromDto(pedido), buildHeaders())
@@ -36,18 +36,16 @@ class PagamentoServiceImpl(
 
             requireNotNull(response.body) { "A resposta não deve ser nula " }
 
-            return PagamentoDto(
+            return Pagamento(
                 dataHora = OffsetDateTime.now(),
                 status = PagamentoStatus.APROVADO,
                 qrCode = response.body!!.qrData,
-                valorTotal = pedido.valorTotal
+                valorTotal = pedido.valorTotal!!
             )
-
         } catch (ex: IntegracaoAPIException) {
             throw ex
         } catch (ex: Exception) {
             throw IntegracaoAPIException(String.format(ERROR_MESSAGE, ex.message))
-
         }
     }
 

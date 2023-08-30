@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.produto.*
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.requests.EditarProdutoRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.ProdutoResponse
+import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.ProdutoFacade
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.api.requests.EditarProdutoRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -19,14 +19,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/produtos")
-class ProdutoController(
-    private val cadastrarProdutoUseCase: CadastrarProdutoUseCase,
-    private val editarProdutoUseCase: EditarProdutoUseCase,
-    private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoriaUseCase,
-    private val obterProdutoPorIdUseCase: ObterProdutoPorIdUseCase,
-    private val removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
-    private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
-) {
+class ProdutoController(private val produtoFacade: ProdutoFacade) {
     @Operation(summary = "Cadastrar um produto")
     @ApiResponses(
         value = [
@@ -47,7 +40,7 @@ class ProdutoController(
     )
     @PostMapping
     fun post(@RequestBody request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
-        val produto = cadastrarProdutoUseCase.executar(request)
+        val produto = produtoFacade.cadastrarProduto(request)
         return ResponseEntity.created(URI.create("/produtos/${produto.id}")).body(produto)
     }
 
@@ -71,7 +64,7 @@ class ProdutoController(
     )
     @PutMapping
     fun put(@RequestBody request: EditarProdutoRequest) =
-        ResponseEntity.ok(editarProdutoUseCase.executar(request))
+        ResponseEntity.ok(produtoFacade.editarProduto(request))
 
 
     @Operation(summary = "Editar o status de disponibilidade de um produto")
@@ -101,7 +94,7 @@ class ProdutoController(
     )
     @PatchMapping("/{id}/disponivel/{disponivel}")
     fun patch(@PathVariable id: Long, @PathVariable disponivel: Boolean) =
-        ResponseEntity.ok(alterarDisponibilidadeProdutoUseCase.executar(id, disponivel))
+        ResponseEntity.ok(produtoFacade.alterarDisponibilidadeProduto(id, disponivel))
 
     @Operation(summary = "Buscar produtos filtrando por categoria")
     @ApiResponses(
@@ -124,7 +117,7 @@ class ProdutoController(
     )
     @GetMapping("/categoria/{categoria}")
     fun get(@PathVariable categoria: Categoria) =
-        ResponseEntity.ok(listarProdutosPorCategoriaUseCase.executar(categoria))
+        ResponseEntity.ok(produtoFacade.listarProdutosPorCategoria(categoria))
 
     @Operation(summary = "Buscar produtos por Id")
     @ApiResponses(
@@ -153,7 +146,7 @@ class ProdutoController(
     )
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long) =
-        ResponseEntity.ok(obterProdutoPorIdUseCase.executar(id))
+        ResponseEntity.ok(produtoFacade.obterProdutoPorId(id))
 
     @Operation(summary = "Remover um produto por Id")
     @ApiResponses(
@@ -179,7 +172,7 @@ class ProdutoController(
     )
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
-        removerProdutoPorIdUseCase.executar(id)
+        produtoFacade.removerProdutoPorId(id)
         return ResponseEntity.noContent().build()
     }
 }

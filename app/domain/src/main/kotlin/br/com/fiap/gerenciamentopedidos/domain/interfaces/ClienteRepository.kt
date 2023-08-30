@@ -1,11 +1,11 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ClienteDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import java.util.*
 
 interface ClienteRepository {
 
-    fun salvar(cliente: ClienteDto): ClienteDto
-    fun buscarPorCpf(cpf: String): Optional<ClienteDto>
-    fun buscarPorId(id: Long): Optional<ClienteDto>
+    fun salvar(cliente: Cliente): Cliente
+    fun buscarPorCpf(cpf: String): Optional<Cliente>
+    fun buscarPorId(id: Long): Optional<Cliente>
 }

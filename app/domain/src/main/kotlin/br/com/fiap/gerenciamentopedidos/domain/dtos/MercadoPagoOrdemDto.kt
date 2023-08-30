@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.domain.dtos
 
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
@@ -29,19 +30,19 @@ data class MercadoPagoOrdemDto(
     )
 
     companion object {
-        fun fromDto(pedido: PedidoDto) =
+        fun fromDto(pedido: Pedido) =
             MercadoPagoOrdemDto(
                 externalReference = pedido.numero.toString(),
                 totalAmount = pedido.valorTotal!!,
-                items = pedido.produtos!!.map {
+                items = pedido.items.map {
                     MercadoPagoItensDto(
-                        skuNumber = it.produto.id.toString(),
-                        category = it.produto.categoria.toString(),
-                        title = it.produto.nome!!,
+                        skuNumber = it.produto?.id.toString(),
+                        category = it.produto?.categoria.toString(),
+                        title = it.produto?.nome!!,
                         description = it.produto.descricao!!,
                         quantity = it.quantidade,
                         unitMeasure = UNIT_MEASURE,
-                        unitPrice = it.produto.valor!!,
+                        unitPrice = it.produto.valor,
                         totalAmount = it.valorPago!!
                     )
                 }.toList(),
