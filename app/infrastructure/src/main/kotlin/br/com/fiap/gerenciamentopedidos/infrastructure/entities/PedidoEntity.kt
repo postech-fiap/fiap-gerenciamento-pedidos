@@ -38,7 +38,12 @@ data class PedidoEntity(
     )
     var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST], optional = true)
+    @OneToOne(
+        mappedBy = "pedido",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
     var pagamento: PagamentoEntity? = null
 ) {
     fun toModel(): Pedido {
@@ -66,19 +71,10 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) },
-                produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it) }
+                cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) }
             )
-            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromModel(it, entity.toModel()) }
-            entity.produtos = pedido.items.map {
-                PedidoProdutoEntity(
-                    pedido = entity,
-                    produto = ProdutoEntity.fromModel(it.produto!!),
-                    valorPago = it.valorPago,
-                    quantidade = it.quantidade,
-                    comentario = it.comentario
-                )
-            }
+            entity.pagamento = pedido.pagamento.let { PagamentoEntity.fromModel(it!!, entity) }
+            entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity
         }
     }

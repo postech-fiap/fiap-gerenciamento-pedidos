@@ -38,11 +38,12 @@ data class PedidoProdutoEntity(
     )
 
     companion object {
-        fun fromModel(pedidoProduto: Item) = PedidoProdutoEntity(
+        fun fromModel(pedidoProduto: Item, pedido: PedidoEntity) = PedidoProdutoEntity(
             produto = ProdutoEntity.fromModel(pedidoProduto.produto!!),
             valorPago = pedidoProduto.valorPago,
             quantidade = pedidoProduto.quantidade,
-            comentario = pedidoProduto.comentario
+            comentario = pedidoProduto.comentario,
+            pedido = pedido
         )
     }
 }

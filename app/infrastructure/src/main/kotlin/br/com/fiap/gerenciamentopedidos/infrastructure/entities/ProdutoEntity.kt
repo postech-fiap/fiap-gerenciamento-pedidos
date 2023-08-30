@@ -49,7 +49,7 @@ data class ProdutoEntity(
                 valor = produto.valor,
                 tempoPreparo = produto.tempoPreparo,
                 disponivel = produto.disponivel,
-                excluido = produto.excluido
+                excluido = produto.excluido,
             )
 
             entity.imagem = produto.imagem?.let {
