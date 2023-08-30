@@ -53,17 +53,17 @@ class AlterarStatusPedidoUseCaseImplTest {
     fun `nao deve alterar o status do pedido para RECEBIDO porque o ja possui esse status`() {
         //given
         val pedidoId = 1L
-        val errorMessage = "O status do pedido ja está igual à RECEBIDO"
+        val errorMessage = "O status do pedido ja está igual à PENDENTE"
         val pedido = criarPedido()
         val copyPedido = pedido.copy()
-        copyPedido.alterarStatus(PedidoStatus.RECEBIDO)
+        copyPedido.alterarStatus(PedidoStatus.PENDENTE)
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
 
         //when
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(pedidoId, PedidoStatus.RECEBIDO)
+            useCase.executar(pedidoId, PedidoStatus.PENDENTE)
         }
 
         //then
