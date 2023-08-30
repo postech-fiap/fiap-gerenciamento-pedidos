@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.api.controllers
 
 import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PagamentoFacade
 import br.com.fiap.gerenciamentopedidos.api.requests.PagamentoCriadoRequest
-import br.com.fiap.gerenciamentopedidos.api.responses.DetalhePagamentoResponse
+import br.com.fiap.gerenciamentopedidos.api.responses.StatusPagamentoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -37,7 +37,7 @@ class PagamentoController(private val pagamentoController: PagamentoFacade) {
         @RequestParam("data.id") dataId: String,
         @RequestParam("type") type: String,
         @RequestBody pagamentoCriadoRequest: PagamentoCriadoRequest
-    ): DetalhePagamentoResponse {
+    ): StatusPagamentoResponse {
         require("payment".equals(type, true)) { "O type deve ser payment "}
 
         return pagamentoController.finalizarPagamento(pagamentoCriadoRequest)
