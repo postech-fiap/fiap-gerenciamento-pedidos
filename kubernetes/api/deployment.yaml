@@ -40,6 +40,21 @@ spec:
                 secretKeyRef:
                   name: db
                   key: password
+            - name: MERCADO_PAGO_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: user-id
+            - name: MERCADO_PAGO_EXTERNAL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: external-id
+            - name: MERCADO_PAGO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: token
           readinessProbe:
             httpGet:
               path: /ping
