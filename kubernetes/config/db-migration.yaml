@@ -6,7 +6,7 @@ data:
   initdb.sql: |
     create database if not exists gerenciamento_pedidos_db;
     use gerenciamento_pedidos_db;
-  
+    
     create table if not exists cliente (
       id bigint auto_increment,
       cpf char(11) not null,
@@ -39,7 +39,7 @@ data:
     create table if not exists pedido (
       id bigint auto_increment,
       data_hora timestamp not null default now(),
-      status enum('RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
+      status enum('PENDENTE', 'RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
       cliente_id bigint,
       tempo_espera_minutos int not null,
       numero char(4) not null,
@@ -60,13 +60,16 @@ data:
     );
     
     create table if not exists pagamento (
-      pedido_id bigint not null,
+      id bigint auto_increment,
       data_hora timestamp not null default now(),
-      status enum('APROVADO', 'REPROVADO') not null,
-      constraint pk_pagamento primary key (pedido_id),
+      status enum('PENDENTE', 'APROVADO', 'REPROVADO') not null,
+      qr_code varchar(255) not null,
+      valor_total decimal(10,2) not null,
+      pedido_id bigint not null,
+      constraint pk_pagamento primary key (id),
       constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
     );
-  
+    
     insert into cliente (id, cpf, nome, email)
     values (1, '56378816425', 'Fulano', 'fulano@gmail.com');
     
@@ -97,9 +100,8 @@ data:
     (6, 3, 4, 15.9, 1, null),
     (7, 4, 4, 15.9, 1, null);
     
-    insert into pagamento (pedido_id, data_hora, status)
-    values (1, now(), 'REPROVADO'),
-    (2, now(), 'APROVADO'),
-    (3, now(), 'APROVADO'),
-    (4, now(), 'APROVADO');
-    
+    insert into pagamento (pedido_id, data_hora, status, qr_code, valor_total)
+    values (1, now(), 'REPROVADO', '', 0),
+    (2, now(), 'APROVADO', '', 0),
+    (3, now(), 'APROVADO', '', 0),
+    (4, now(), 'APROVADO', '', 0);
