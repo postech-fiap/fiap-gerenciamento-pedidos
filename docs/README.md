@@ -115,9 +115,10 @@ curl --location 'http://localhost:8080/pedidos' \
 Ao passar o id do pagamento, é realizada uma busca para validar o status do pagamento e atualizar na nossa base de dados.
 
 **Regra de status:**
+```
 Pagamento: PENDENTE -> APROVADO ou REPROVADO
-Pedido: PENDENTE -> RECEBIDO ou PENDENTE, caso o pagamento não tenha sido aprovado.
-
+Pedido: PENDENTE -> RECEBIDO ou PENDENTE, caso o pagamento não tenha sido aprovado
+```
 Exemplo:
 ```sh
 curl --location 'http://localhost:8080/pagamentos/finalizar?data.id=62849377001&type=payment' \
