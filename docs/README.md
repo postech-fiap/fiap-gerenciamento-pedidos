@@ -74,6 +74,7 @@ Para criar um pedido e obter o qr_code de pagamento, você precisará gerar uma 
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/7d6ea464-9dbd-489c-9165-ee017e7c49ac)
 
 2. Crie um pedido com qr code, conforme exemplo abaixo:
+
 ```sh
 curl --location 'http://localhost:8080/pedidos' \
 --header 'accept: application/json' \
@@ -91,7 +92,6 @@ curl --location 'http://localhost:8080/pedidos' \
 ```
 
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/e20c41da-6340-4418-b845-fce61fc873a1)
-&nbsp;&nbsp;
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/ca306308-953c-4c2a-84f9-aaa4663bfa5a)
 
 3. Copie e cole o código qr em um site gerador da imagem, como o [qr-code-generator](https://br.qr-code-generator.com/?gclid=Cj0KCQjw9MCnBhCYARIsAB1WQVWcR0NBJ1ae95E9Tt6s80ivJgKft-fVGP3lRg2gGB2joLjIX1avA84aAsq3EALw_wcB&campaignid=11082198394&adgroupid=108043714225&cpid=77ac2822-3c22-44e6-8a6d-96789d7204a4&gad=1)
@@ -103,10 +103,9 @@ curl --location 'http://localhost:8080/pedidos' \
 **Obs.:** Os acessos estarão no documento em anexo compartilhado
 
 5. Você poderá acompanhar o status do pagamento no próprio site do webhook, como na imagem de exemplo abaixo, onde ao realizar o pagamento, o Mercado Pago enviou a notificação tanto de criação do pedido quanto de pagamento:
+
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/cdc13aa8-bd08-48ee-bd43-95ae463f2952)
-&nbsp; &nbsp;
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/c1049604-4981-4c81-8f1c-543a2818230c)
-&nbsp; &nbsp;
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/25de04bd-742d-4d4c-a115-7255f33735f7)
 
 6. Com o id do pagamento (data.id), que foi gerado pelo Mercado Pago, você poderá chamar o endpoint que criamos para finalizar o pagamento / pedido
@@ -132,7 +131,9 @@ curl --location 'http://localhost:8080/pagamentos/finalizar?data.id=62849377001&
 "user_id": "1443012156"
 }'
 ```
+
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/eecf10bf-d8fb-494c-8340-487cd428f7f0)
 
 Você também pode consultar mais detalhes na api do Mercado Pago pelo id do pagamento
+
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/c0366b90-0497-4e8f-a39b-64722296af42)
