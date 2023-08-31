@@ -2,7 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.GerarQrCodePagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.models.*
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
@@ -16,37 +16,39 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
-class EfetuarPagamentoUseCaseImplTest {
+class GerarQrCodePagamentoUseCaseImplTest {
 
     @MockK
-    lateinit var pagamentoService: PagamentoService
+    lateinit var gerarQrCodePagamentoGateway: GerarQrCodePagamentoGateway
 
     @InjectMockKs
-    lateinit var efetuarPagamentoUseCaseImpl: EfetuarPagamentoUseCaseImpl
+    lateinit var gerarPagamentoQrCodeUseCaseImpl: GerarQrCodePagamentoUseCaseImpl
 
     @Test
-    fun `deve efetuar pagamento com sucesso`() {
+    fun `deve gerar o qr code do pagamento com sucesso`() {
         //given
         val pedido = criarPedido()
-        val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10))
+        val pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.PENDENTE, Random.nextLong().toString(), BigDecimal(10))
 
-        every { pagamentoService.gerarPagamento(pedido) } returns pagamento
+        every { gerarQrCodePagamentoGateway.executar(pedido) } returns pagamento
 
         //when
-        val result = efetuarPagamentoUseCaseImpl.executar(pedido)
+        val result = gerarPagamentoQrCodeUseCaseImpl.executar(pedido)
 
         //then
-        verify(exactly = 1) { pagamentoService.gerarPagamento(pedido) }
+        verify(exactly = 1) { gerarQrCodePagamentoGateway.executar(pedido) }
 
         Assertions.assertNotNull(result)
-        Assertions.assertEquals(PagamentoStatus.APROVADO, result.status)
+        Assertions.assertEquals(PagamentoStatus.PENDENTE, result.status)
+        Assertions.assertEquals(pagamento.qrCode, result.qrCode)
     }
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido("1")
-        pedido.atribuirPagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
+        pedido.gerarQrCodePagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.PENDENTE, "", BigDecimal(10)))
         pedido.atribuirCliente(Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido

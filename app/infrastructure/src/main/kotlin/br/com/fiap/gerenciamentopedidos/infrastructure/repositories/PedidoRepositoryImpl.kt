@@ -49,7 +49,7 @@ class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository)
 
     override fun obterUltimoNumeroPedidoDoDia(): String {
         try {
-            return pedidoJpaRepository.obterUtimoNumeroPedidoDoDia()
+            return pedidoJpaRepository.obterUltimoNumeroPedidoDoDia()
         } catch (ex: Exception) {
             throw BaseDeDadosException(String.format(ERROR_MESSAGE_GET_NEXT_NUMBER, ex.message))
         }
