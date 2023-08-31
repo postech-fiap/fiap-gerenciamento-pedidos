@@ -24,6 +24,11 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedi
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.application.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoService
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl

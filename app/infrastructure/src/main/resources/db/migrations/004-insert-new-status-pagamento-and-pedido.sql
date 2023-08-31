@@ -1,0 +1,2 @@
+alter table pedido modify column status enum('PENDENTE', 'RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null;
+alter table pagamento modify column status enum('PENDENTE', 'APROVADO', 'REPROVADO') not null;

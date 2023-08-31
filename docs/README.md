@@ -7,7 +7,7 @@ Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos 
 
 No terminal executar o comando:
 ```sh
-MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=your_password docker-compose up --build
+MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=your_password MERCADO_PAGO_USER_ID=user_id_mercado_pago MERCADO_PAGO_EXTERNAL_ID=external_id_mercado_pago MERCADO_PAGO_TOKEN=mercado_pago_token docker-compose up --build
 ```
 **Observações:**
 Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.

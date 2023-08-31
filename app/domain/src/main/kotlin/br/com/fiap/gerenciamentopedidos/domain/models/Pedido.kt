@@ -9,7 +9,7 @@ data class Pedido(
     val numero: String?,
     val id: Long? = null,
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
-    var status: PedidoStatus = PedidoStatus.RECEBIDO,
+    var status: PedidoStatus = PedidoStatus.PENDENTE,
     var cliente: Cliente? = null,
     var items: List<Item> = listOf(),
     var pagamento: Pagamento? = null,
@@ -27,7 +27,7 @@ data class Pedido(
     fun adicionarItem(item: Item) {
         items = items.plus(item.valid())
         calcularTempoEspera()
-        calculateValorTotal()
+        calcularValorTotal()
     }
 
     fun adicionarItem(produto: Produto, quantidade: Long, comentario: String? = null) {
@@ -36,16 +36,16 @@ data class Pedido(
                 quantidade = quantidade,
                 comentario = comentario,
                 produto = produto,
-                valorPago = produto.valor
+                valorPago = produto.valor * quantidade.toBigDecimal()
             )
         )
     }
 
-    private fun calculateValorTotal() {
+    private fun calcularValorTotal() {
         valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
-    fun atribuirPagamento(pagamento: Pagamento) {
+    fun gerarQrCodePagamento(pagamento: Pagamento) {
         this.pagamento = pagamento
     }
 
