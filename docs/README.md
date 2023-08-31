@@ -7,7 +7,7 @@ Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos 
 
 No terminal executar o comando:
 ```sh
-MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=your_password MERCADO_PAGO_USER_ID=user_id_mercado_pago MERCADO_PAGO_EXTERNAL_ID=external_id_mercado_pago MERCADO_PAGO_TOKEN=mercado_pago_token docker-compose up --build
+MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=your_password MERCADO_PAGO_USER_ID=user_id_mercado_pago MERCADO_PAGO_EXTERNAL_ID=external_id_mercado_pago MERCADO_PAGO_TOKEN=mercado_pago_token MERCADO_PAGO_WEBHOOK_URL=webhook_url docker-compose up --build
 ```
 **Observações:**
 Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.
@@ -61,3 +61,75 @@ kubectl apply -f kubernetes/api/deployment.yaml
 # Criar Service Nodeport da api
 kubectl apply -f kubernetes/api/service.yaml
 ```
+
+## Integração com Mercado Pago Api
+
+Para criar um pedido e obter o qr_code de pagamento, você precisará gerar uma webhook de testes.
+
+**Obs.:** 
+- O endpoint que deve ser chamado na notification_url (webhook) foi desenvolvido nessa api, porém como não o temos produtivo, iremos usar um site gerador de webhooks para acompanhar as notificações.
+- As credenciais de acesso do Mercado Pago estarão presentes no documento que será enviado por anexo.
+
+1. Crie uma webhook de teste, usando o https://webhook.site/, inclua a url como valor da variável de ambiente: $MERCADO_PAGO_WEBHOOK_URL
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_webhook_url.png?raw=true)
+
+2. Crie um pedido com qr code, conforme exemplo abaixo:
+```sh
+curl --location 'http://localhost:8080/pedidos' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+"cliente_id": 1,
+"produtos": [
+{
+"produto_id": 1,
+"quantidade": 1,
+"comentario": "Sem salada"
+}
+]
+}'
+```
+
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_criar_pedido_endpoint_pt1.png?raw=true)
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_criar_pedido_endpoint_pt2.png?raw=true)
+
+3. Copie e cole o código qr em um site gerador da imagem, como o [qr-code-generator](https://br.qr-code-generator.com/?gclid=Cj0KCQjw9MCnBhCYARIsAB1WQVWcR0NBJ1ae95E9Tt6s80ivJgKft-fVGP3lRg2gGB2joLjIX1avA84aAsq3EALw_wcB&campaignid=11082198394&adgroupid=108043714225&cpid=77ac2822-3c22-44e6-8a6d-96789d7204a4&gad=1)
+
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_imagem_gerada_qr_code.png?raw=true)
+**Lembre-se: O qr code expira em 1 hora.**
+
+4. Faça o login com usuário e senha de teste do Mercado Pago e realize o pagamento
+**Obs.:** Os acessos estarão no documento em anexo compartilhado
+
+5. Você poderá acompanhar o status do pagamento no próprio site do webhook, como na imagem de exemplo abaixo, onde ao realizar o pagamento, o Mercado Pago enviou a notificação tanto de criação do pedido quanto de pagamento:
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_webhook_notificacao_pagamento_mercado_pago_pt1.png?raw=true)
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_webhook_notificacao_pagamento_mercado_pago_pt2.png?raw=true)
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_webhook_notificacao_pagamento_mercado_pago_pt3.png?raw=true)
+
+6. Com o id do pagamento (data.id), que foi gerado pelo Mercado Pago, você poderá chamar o endpoint que criamos para finalizar o pagamento / pedido
+**Obs.:** Como mecionado no início, este endpoint é o que seria o configurável como webhook para o próprio Mercado Pago chamar nossa aplicação e atualizar o pagamento / pedido automaticamente.
+Ao passar o id do pagamento, é realizada uma busca para validar o status do pagamento e atualizar na nossa base de dados.
+
+**Regra de status:**
+Pagamento: PENDENTE -> APROVADO ou REPROVADO
+Pedido: PENDENTE -> RECEBIDO ou PENDENTE, caso o pagamento não tenha sido aprovado.
+
+Exemplo:
+```sh
+curl --location 'http://localhost:8080/pagamentos/finalizar?data.id=62849377001&type=payment' \
+--header 'Content-Type: application/json' \
+--data '{
+"action": "payment.created",
+"api_version": "v1",
+"data": { "id":"62849377001" },
+"date_created": "2023-08-28T18:11:04Z",
+"id": 107281993234,
+"live_mode": true,
+"type": "payment",
+"user_id": "1443012156"
+}'
+```
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_finalizar_pagamento_endpoint.png?raw=true)
+
+Você também pode consultar mais detalhes na api do Mercado Pago pelo id do pagamento
+![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/blob/develop/docs/assets/Exemplo_detalhes_pagamento_endpoint_mercado_pago.png?raw=true)
