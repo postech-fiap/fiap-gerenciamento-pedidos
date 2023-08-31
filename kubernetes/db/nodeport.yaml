@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-temp
+spec:
+  type: NodePort
+  selector:
+    app: fiap-gerenciamento-pedidos-db
+  ports:
+    - port: 80
+      targetPort: 3306
+      nodePort: 30001

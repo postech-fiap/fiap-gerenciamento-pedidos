@@ -31,3 +31,33 @@ curl --location 'http://localhost:8080/clientes/cpf/111.111.111-11'
 ```sh
 curl --location 'http://localhost:8080/swagger-ui/index.html'
 ```
+
+## Kubernetes
+
+Com o `kubectl` instalado, execute os seguintes comandos:
+
+```bash
+# Criar Secrets
+kubectl create secret generic db --from-literal=username=CHANGE_HERE --from-literal=password=CHANGE_HERE
+kubectl create secret generic mp --from-literal=user-id=CHANGE_HERE --from-literal=external-id=CHANGE_HERE --from-literal=token=CHANGE_HERE
+
+# Criar Config Maps
+kubectl apply -f kubernetes/config/db.yaml
+kubectl apply -f kubernetes/config/db-migration.yaml
+
+# Criar Pod com Banco de dados
+kubectl apply -f kubernetes/db/pod.yaml
+
+# Criar Service ClusterIP do Banco de dados
+kubectl apply -f kubernetes/db/service.yaml
+
+# [Opcional] Criar Service Nodeport do banco de dados
+# Caso queira acessar o banco de dados fora do Cluster
+kubectl apply -f kubernetes/db/nodeport.yaml
+
+# Criar Deployment da api
+kubectl apply -f kubernetes/api/deployment.yaml
+
+# Criar Service Nodeport da api
+kubectl apply -f kubernetes/api/service.yaml
+```
