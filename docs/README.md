@@ -97,9 +97,10 @@ curl --location 'http://localhost:8080/pedidos' \
 3. Copie e cole o código qr em um site gerador da imagem, como o [qr-code-generator](https://br.qr-code-generator.com/?gclid=Cj0KCQjw9MCnBhCYARIsAB1WQVWcR0NBJ1ae95E9Tt6s80ivJgKft-fVGP3lRg2gGB2joLjIX1avA84aAsq3EALw_wcB&campaignid=11082198394&adgroupid=108043714225&cpid=77ac2822-3c22-44e6-8a6d-96789d7204a4&gad=1)
 
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/d326d98b-47e3-4e65-9b97-42fa8c92116a)
-**Lembre-se: O qr code expira em 1 hora.**
+**Lembre-se: O qr code expira em 1 hora**
 
 4. Faça o login com usuário e senha de teste do Mercado Pago e realize o pagamento
+
 **Obs.:** Os acessos estarão no documento em anexo compartilhado
 
 5. Você poderá acompanhar o status do pagamento no próprio site do webhook, como na imagem de exemplo abaixo, onde ao realizar o pagamento, o Mercado Pago enviou a notificação tanto de criação do pedido quanto de pagamento:
