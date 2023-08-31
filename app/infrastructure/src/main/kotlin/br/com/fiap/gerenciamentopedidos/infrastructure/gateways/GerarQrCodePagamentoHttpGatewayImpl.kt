@@ -17,13 +17,14 @@ private const val ERROR_MESSAGE_QRCODE = "Erro de integração para gerar o paga
 class GerarQrCodePagamentoHttpGatewayImpl(
     private val restTemplate: RestTemplate,
     private val mercadoPagoApiGenerateQrcodeEndpoint: String,
-    private val mercadoPagoToken: String
+    private val mercadoPagoToken: String,
+    private val mercadoPagoWebhookUrl: String
 ) : GerarQrCodePagamentoGateway {
 
     override fun executar(pedido: Pedido): Pagamento {
         val url = mercadoPagoApiGenerateQrcodeEndpoint
 
-        val entity = HttpEntity(MercadoPagoOrdemDto.fromDto(pedido), buildHeaders())
+        val entity = HttpEntity(MercadoPagoOrdemDto.fromDto(pedido, mercadoPagoWebhookUrl), buildHeaders())
 
         try {
             val response = restTemplate.postForEntity(url, entity, MercadoPagoResponseOrdemDto::class.java)

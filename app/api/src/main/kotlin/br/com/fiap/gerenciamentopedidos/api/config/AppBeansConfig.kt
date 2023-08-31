@@ -127,7 +127,8 @@ class AppBeansConfig(
     fun gerarQrCodePagamentoGateway() = GerarQrCodePagamentoHttpGatewayImpl(
         restTemplate,
         mercadoPagoConfig.generateQrcodeEndpoint,
-        mercadoPagoConfig.token
+        mercadoPagoConfig.token,
+        mercadoPagoConfig.webhookUrl
     )
 
     @Bean
