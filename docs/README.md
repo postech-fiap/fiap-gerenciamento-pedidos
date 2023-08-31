@@ -40,14 +40,9 @@ Com o `kubectl` instalado, execute os seguintes comandos:
 # Criar Secrets
 kubectl create secret generic db --from-literal=username=CHANGE_HERE --from-literal=password=CHANGE_HERE
 
-# Criar Config Map
+# Criar Config Maps
 kubectl apply -f kubernetes/config/db.yaml
-
-# Criar Persistent Volume
-kubectl apply -f kubernetes/volume/persistent-volume.yaml
-
-# Criar Persistent Volume Claim
-kubectl apply -f kubernetes/volume/persistent-volume-claim.yaml
+kubectl apply -f kubernetes/config/db-migration.yaml
 
 # Criar Pod com Banco de dados
 kubectl apply -f kubernetes/db/pod.yaml

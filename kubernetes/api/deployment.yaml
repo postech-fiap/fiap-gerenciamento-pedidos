@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: gabrielgarciasp/gerenciamento-pedidos-app:1.0.3
+          image: gabrielgarciasp/gerenciamento-pedidos-app:latest
           ports:
             - containerPort: 80
           env:

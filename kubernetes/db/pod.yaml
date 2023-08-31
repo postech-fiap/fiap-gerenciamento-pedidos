@@ -23,8 +23,8 @@ spec:
               key: mysql.database
       volumeMounts:
         - mountPath: /docker-entrypoint-initdb.d/
-          name: shared
+          name: migration
   volumes:
-    - name: shared
-      persistentVolumeClaim:
-        claimName: db-script
+    - name: migration
+      configMap:
+        name: db-migration
