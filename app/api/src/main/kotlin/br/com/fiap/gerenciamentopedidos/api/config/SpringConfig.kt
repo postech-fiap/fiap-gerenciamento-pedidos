@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
@@ -25,6 +26,7 @@ class SpringConfig {
             .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
             .propertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .build()
     }
 
