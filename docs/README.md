@@ -110,6 +110,7 @@ curl --location 'http://localhost:8080/pedidos' \
 ![Alt text](https://github.com/Everton91Almeida/fiap-gerenciamento-pedidos/assets/42806807/25de04bd-742d-4d4c-a115-7255f33735f7)
 
 6. Com o id do pagamento (data.id), que foi gerado pelo Mercado Pago, você poderá chamar o endpoint que criamos para finalizar o pagamento / pedido
+
 **Obs.:** Como mecionado no início, este endpoint é o que seria o configurável como webhook para o próprio Mercado Pago chamar nossa aplicação e atualizar o pagamento / pedido automaticamente.
 Ao passar o id do pagamento, é realizada uma busca para validar o status do pagamento e atualizar na nossa base de dados.
 
