@@ -188,7 +188,7 @@ class PedidoRepositoryImplTest {
 
     @Test
     fun `deve obter ultimo pedido do dia com sucesso`() {
-        every { pedidoJpaRepository.obterUltimoNumeroPedidoDoDia() } returns "10"
+        every { pedidoJpaRepository.obterUtimoNumeroPedidoDoDia() } returns "10"
 
         val result = pedidoRepository.obterUltimoNumeroPedidoDoDia()
 
@@ -199,7 +199,7 @@ class PedidoRepositoryImplTest {
     fun `deve propagar erro ao obter ultimo pedido do dia`() {
         val errorMessage = "Erro ao obter próximo número pedido. Detalhes: Error"
 
-        every { pedidoJpaRepository.obterUltimoNumeroPedidoDoDia() } throws Exception("Error")
+        every { pedidoJpaRepository.obterUtimoNumeroPedidoDoDia() } throws Exception("Error")
 
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
             pedidoRepository.obterUltimoNumeroPedidoDoDia()

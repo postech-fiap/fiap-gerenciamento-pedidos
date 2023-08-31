@@ -53,17 +53,17 @@ class AlterarStatusPedidoUseCaseImplTest {
     fun `nao deve alterar o status do pedido para RECEBIDO porque o ja possui esse status`() {
         //given
         val pedidoId = 1L
-        val errorMessage = "O status do pedido ja está igual à PENDENTE"
+        val errorMessage = "O status do pedido ja está igual à RECEBIDO"
         val pedido = criarPedido()
         val copyPedido = pedido.copy()
-        copyPedido.alterarStatus(PedidoStatus.PENDENTE)
+        copyPedido.alterarStatus(PedidoStatus.RECEBIDO)
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
 
         //when
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(pedidoId, PedidoStatus.PENDENTE)
+            useCase.executar(pedidoId, PedidoStatus.RECEBIDO)
         }
 
         //then
@@ -75,7 +75,7 @@ class AlterarStatusPedidoUseCaseImplTest {
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido("1")
-        pedido.gerarQrCodePagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
+        pedido.atribuirPagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
         pedido.atribuirCliente(Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido

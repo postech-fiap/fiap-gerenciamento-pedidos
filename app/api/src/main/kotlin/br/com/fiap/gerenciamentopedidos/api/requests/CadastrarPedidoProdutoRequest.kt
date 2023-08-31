@@ -15,7 +15,6 @@ data class CadastrarPedidoProdutoRequest(
     }
 
     fun toModel() = Item(
-        id = produtoId,
         quantidade = quantidade,
         comentario = comentario,
         valorPago = BigDecimal.ZERO,

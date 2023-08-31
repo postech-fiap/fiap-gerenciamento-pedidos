@@ -5,7 +5,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.GerarQrCodePagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.EfetuarPagamentoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.*
@@ -41,7 +41,7 @@ class CadastrarPedidoUseCaseImplTest {
     lateinit var obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
 
     @MockK
-    lateinit var gerarQrCodePagamentoUseCase: GerarQrCodePagamentoUseCase
+    lateinit var efetuarPagamentoUseCase: EfetuarPagamentoUseCase
 
     @Test
     fun `deve cadastrar um pedido com sucesso`() {
@@ -52,7 +52,7 @@ class CadastrarPedidoUseCaseImplTest {
 
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
         every { gerarNumeroPedidoUseCase.executar() } returns "1"
-        every { gerarQrCodePagamentoUseCase.executar(any()) } returns pedido.pagamento!!
+        every { efetuarPagamentoUseCase.executar(any()) } returns pedido.pagamento!!
         every { buscarClientePorIdUseCase.executar(any()) } returns pedido.cliente!!
         every { pedidoRepository.salvar(any()) } returns pedido
 
@@ -68,7 +68,7 @@ class CadastrarPedidoUseCaseImplTest {
         assertEquals("Sem mostarda", produtosResult[0].comentario)
         assertEquals(BigDecimal(10), produtosResult[0].valorPago)
         assertEquals(10L, result.tempoEsperaMinutos)
-        assertEquals(PedidoStatus.PENDENTE, result.status)
+        assertEquals(PedidoStatus.RECEBIDO, result.status)
         assertEquals(1, result.cliente?.id)
 
         verify(exactly = 1) { pedidoRepository.salvar(any()) }
@@ -76,7 +76,7 @@ class CadastrarPedidoUseCaseImplTest {
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido("1")
-        pedido.gerarQrCodePagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
+        pedido.atribuirPagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
         pedido.atribuirCliente(Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido

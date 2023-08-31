@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.infrastructure.gateways
+package br.com.fiap.gerenciamentopedidos.infrastructure.repositories.service
 
 import br.com.fiap.gerenciamentopedidos.domain.dtos.MercadoPagoResponseOrdemDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
@@ -22,28 +22,28 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 import kotlin.random.Random
 
-private const val MERCADO_PAGO_QR_CODE_ENDPOINT = "mercadoPagoApiGenerateQrcodeEndpoint"
+private const val MERCADO_PAGO_ENDPOINT = "mercadoPagoApiGenerateQrcodeEndpoint"
 private const val MERCADO_PAGO_TOKEN = "mercadoPagoToken"
 
 @ExtendWith(MockKExtension::class)
-class GerarQrCodePagamentoHttpGatewayImplTest {
+class PagamentoServiceImplTest {
 
-    lateinit var gerarQrCodePagamentoGateway: GerarQrCodePagamentoHttpGatewayImpl
+    lateinit var service: PagamentoServiceImpl
 
     @MockK
     lateinit var restTemplate: RestTemplate
 
     @BeforeEach
     fun init() {
-        gerarQrCodePagamentoGateway = GerarQrCodePagamentoHttpGatewayImpl(
+        service = PagamentoServiceImpl(
             restTemplate,
-            MERCADO_PAGO_QR_CODE_ENDPOINT,
+            MERCADO_PAGO_ENDPOINT,
             MERCADO_PAGO_TOKEN
         )
     }
 
     @Test
-    fun `deve gerar o pagamento pendente com qrcode`() {
+    fun `deve gerar o pagamento com qrcode`() {
         //given
         val pedido = Pedido(
             id = 1,
@@ -52,7 +52,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
             pagamento = Pagamento(
                 1,
                 OffsetDateTime.now(),
-                PagamentoStatus.PENDENTE,
+                PagamentoStatus.APROVADO,
                 Random.nextLong().toString(),
                 Random.nextLong().toBigDecimal()
             ),
@@ -77,7 +77,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
 
         every {
             restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
+                eq(MERCADO_PAGO_ENDPOINT),
                 any(),
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
@@ -87,17 +87,17 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
         )
 
         //when
-        val pagamentoComQrCode = gerarQrCodePagamentoGateway.executar(pedido)
+        val pagamentoComQrCode = service.gerarPagamento(pedido)
 
         //then
         Assertions.assertNotNull(pagamentoComQrCode.qrCode)
         Assertions.assertNotNull(pagamentoComQrCode.valorTotal)
         Assertions.assertNotNull(pagamentoComQrCode.dataHora)
-        Assertions.assertEquals(PagamentoStatus.PENDENTE, pagamentoComQrCode.status)
+        Assertions.assertEquals(PagamentoStatus.APROVADO, pagamentoComQrCode.status)
 
         verify(exactly = 1) {
             restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
+                eq(MERCADO_PAGO_ENDPOINT),
                 any(),
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
@@ -105,14 +105,14 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
     }
 
     @Test
-    fun `deve lancar um erro quando a integracao de gerar o pagamento falhar`() {
+    fun `deve lançar um erro quando a integração de pagamento falhar`() {
         //given
         val pedido = Pedido(
             id = 1,
             numero = "1",
             valorTotal = Random.nextLong().toBigDecimal(),
             pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.PENDENTE,
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
                 qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
             ),
             items = listOf(
@@ -136,17 +136,17 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
 
         every {
             restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
+                eq(MERCADO_PAGO_ENDPOINT),
                 any(),
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
         } throws Exception("Error")
 
-        val errorMessageExpected = "Erro de integração para gerar o pagamento. Detalhes: Error - null"
+        val errorMessageExpected = "Erro de integração para gerar o pagamento. Detalhes: Error"
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            gerarQrCodePagamentoGateway.executar(pedido)
+            service.gerarPagamento(pedido)
         }
 
         //then
@@ -154,7 +154,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
 
         verify(exactly = 1) {
             restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
+                eq(MERCADO_PAGO_ENDPOINT),
                 any(),
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
@@ -163,14 +163,14 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
     }
 
     @Test
-    fun `deve lancar um erro quando o retorno da integracao for diferente de 201`() {
+    fun `deve lançar um erro quando o retorno da integração for diferente de 201`() {
         //given
         val pedido = Pedido(
             id = 1,
             numero = "1",
             valorTotal = Random.nextLong().toBigDecimal(),
             pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.PENDENTE,
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
                 qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
             ),
             items = listOf(
@@ -193,11 +193,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
         )
 
         every {
-            restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
-                any(),
-                eq(MercadoPagoResponseOrdemDto::class.java)
-            )
+            restTemplate.postForEntity(eq(MERCADO_PAGO_ENDPOINT), any(), eq(MercadoPagoResponseOrdemDto::class.java))
         } returns ResponseEntity(
             MercadoPagoResponseOrdemDto(Random.nextLong().toString(), Random.nextLong().toString()),
             HttpStatus.CONFLICT
@@ -207,7 +203,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
 
         //when-then
         val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            gerarQrCodePagamentoGateway.executar(pedido)
+            service.gerarPagamento(pedido)
         }
 
         //then
@@ -215,7 +211,7 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
 
         verify(exactly = 1) {
             restTemplate.postForEntity(
-                eq(MERCADO_PAGO_QR_CODE_ENDPOINT),
+                eq(MERCADO_PAGO_ENDPOINT),
                 any(),
                 eq(MercadoPagoResponseOrdemDto::class.java)
             )
