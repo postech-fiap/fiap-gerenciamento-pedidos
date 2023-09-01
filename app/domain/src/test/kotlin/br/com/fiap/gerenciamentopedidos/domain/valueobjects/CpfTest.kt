@@ -80,6 +80,6 @@ class CpfTest {
         }
 
         //then
-        Assertions.assertEquals("O Cpf informado é invalido!", exception.message)
+        Assertions.assertEquals("O CPF informado é inválido!", exception.message)
     }
 }
