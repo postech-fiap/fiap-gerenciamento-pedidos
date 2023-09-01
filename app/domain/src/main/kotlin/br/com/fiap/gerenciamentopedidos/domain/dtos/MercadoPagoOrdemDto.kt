@@ -6,7 +6,6 @@ import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 
 private const val COMPRA_LANCHONETE_DESCRIPTION = "Compra lanchonete"
-private const val WEBHOOK_URL = "http://localhost:8080/pagamentos/finalizar"
 private const val UNIT_MEASURE = "unit"
 
 data class MercadoPagoOrdemDto(
@@ -30,9 +29,9 @@ data class MercadoPagoOrdemDto(
     )
 
     companion object {
-        fun fromDto(pedido: Pedido) =
+        fun fromDto(pedido: Pedido, webhookUrl: String) =
             MercadoPagoOrdemDto(
-                externalReference = pedido.id.toString(),
+                externalReference = pedido.numero.toString(),
                 totalAmount = pedido.valorTotal!!,
                 items = pedido.items.map {
                     MercadoPagoItensDto(
@@ -49,7 +48,7 @@ data class MercadoPagoOrdemDto(
                 title = COMPRA_LANCHONETE_DESCRIPTION,
                 description = COMPRA_LANCHONETE_DESCRIPTION,
                 expirationDate = OffsetDateTime.now().plusHours(1).truncatedTo(ChronoUnit.MILLIS).toString(),
-                notificationUrl = WEBHOOK_URL
+                notificationUrl = webhookUrl
             )
     }
 }
