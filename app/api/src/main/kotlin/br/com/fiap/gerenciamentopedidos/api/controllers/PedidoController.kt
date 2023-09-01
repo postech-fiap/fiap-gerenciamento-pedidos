@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PedidoFacade
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.PedidoAdapter
 import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
@@ -17,7 +17,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/pedidos")
-class PedidoController(private val pedidoFacade: PedidoFacade) {
+class PedidoController(private val pedidoAdapter: PedidoAdapter) {
     @Operation(summary = "Busca pedidos por status")
     @ApiResponses(
         value = [ApiResponse(
@@ -37,7 +37,7 @@ class PedidoController(private val pedidoFacade: PedidoFacade) {
         )]
     )
     @GetMapping
-    fun buscarPedidos() = ResponseEntity.ok().body(pedidoFacade.buscarPedidos())
+    fun buscarPedidos() = ResponseEntity.ok().body(pedidoAdapter.buscarPedidos())
 
     @Operation(summary = "Cadastrar um pedido")
     @ApiResponses(
@@ -59,7 +59,7 @@ class PedidoController(private val pedidoFacade: PedidoFacade) {
     )
     @PostMapping
     fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
-        val pedido = pedidoFacade.cadastrarPedido(request)
+        val pedido = pedidoAdapter.cadastrarPedido(request)
         return ResponseEntity.created(URI.create("/pedidos/${pedido.id}")).body(pedido)
     }
 
@@ -82,5 +82,5 @@ class PedidoController(private val pedidoFacade: PedidoFacade) {
     )
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
-        pedidoFacade.alterarStatusPedido(alterarStatusPedidoRequest)
+        pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest)
 }

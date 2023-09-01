@@ -1,10 +1,10 @@
-package br.com.fiap.gerenciamentopedidos.api.facades.interfaces
+package br.com.fiap.gerenciamentopedidos.api.adapters.interfaces
 
 import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 
-interface PedidoFacade {
+interface PedidoAdapter {
     fun buscarPedidos(): List<PedidoResponse>
 
     fun cadastrarPedido(request: CadastrarPedidoRequest): PedidoResponse
