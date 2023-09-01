@@ -38,6 +38,8 @@ Com o `kubectl` instalado, execute os seguintes comandos:
 
 ```bash
 # Criar Secrets
+# AWS via CLI
+kubectl create secret generic aws-configu --from-literal=access-key-id=CHANGE_HERE --from-literal=secret-access-key=CHANGE_HERE --from-literal=region=CHANGE_HERE --from-literal=output=CHANGE_HERE
 kubectl create secret generic db --from-literal=username=CHANGE_HERE --from-literal=password=CHANGE_HERE
 kubectl create secret generic mp --from-literal=user-id=CHANGE_HERE --from-literal=external-id=CHANGE_HERE --from-literal=token=CHANGE_HERE
 
