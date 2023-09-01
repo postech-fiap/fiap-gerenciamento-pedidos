@@ -5,7 +5,6 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Cliente
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ClienteEntity
-import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -19,7 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 import kotlin.random.Random
 
-private const val CPF = "111.111.111-11"
+private const val VALID_CPF = "287.081.130-68"
 private const val EMAIL = "test@test.com"
 
 @ExtendWith(MockKExtension::class)
@@ -34,7 +33,7 @@ class ClienteRepositoryImplTest {
     @Test
     fun `deve salvar um cliente com sucesso`() {
         //given
-        val cpf = CPF
+        val cpf = VALID_CPF
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
@@ -54,7 +53,7 @@ class ClienteRepositoryImplTest {
     @Test
     fun `deve buscar um cliente com sucesso`() {
         //given
-        val cpf = CPF
+        val cpf = VALID_CPF
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val cliente = Cliente(cpf = Cpf(cpf), email = Email(email), nome = nome)
@@ -76,7 +75,7 @@ class ClienteRepositoryImplTest {
     @Test
     fun `deve propagar BaseDeDadosException quando ocorrer uma falha ao buscar um cliente`() {
         //given
-        val cpf = CPF
+        val cpf = VALID_CPF
         val cpfSemMascara = Cpf.removeMascara(cpf)
         val errorMessage = "Erro ao buscar o cliente na base de dados. Detalhes: Error"
 
@@ -96,7 +95,7 @@ class ClienteRepositoryImplTest {
     @Test
     fun `deve propagar BaseDeDadosException quando ocorrer uma falha ao salvar um cliente`() {
         //given
-        val cpf = CPF
+        val cpf = VALID_CPF
         val email = EMAIL
         val nome = Random.nextLong().toString()
         val errorMessage = "Erro ao salvar o cliente na base de dados. Detalhes: Error"
@@ -116,4 +115,5 @@ class ClienteRepositoryImplTest {
 
         verify(exactly = 1) { clienteJpaRepository.save(clienteEntity) }
     }
+
 }

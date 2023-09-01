@@ -68,4 +68,18 @@ class CpfTest {
         //then
         Assertions.assertEquals("CPF com tamanho inválido!", exception.message)
     }
+
+    @Test
+    fun `deve jogar um erro quando o cpf possuir número invalidos tamanho inválido`() {
+        //given
+        val cpf = "111.111.111-11"
+
+        //when-then
+        val exception = Assertions.assertThrows(IllegalArgumentException::class.java) {
+            Cpf(cpf)
+        }
+
+        //then
+        Assertions.assertEquals("O Cpf informado é invalido!", exception.message)
+    }
 }
