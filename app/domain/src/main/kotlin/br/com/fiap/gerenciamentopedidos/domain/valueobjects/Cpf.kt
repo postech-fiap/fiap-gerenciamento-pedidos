@@ -5,7 +5,7 @@ data class Cpf(val numero: String) {
     init {
         require(numero.isNotBlank()) { "CPF não pode ser vazio" }
         require(numero.matches(Regex("(\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2})|\\d{11}"))) { "Formato do CPF é inválido!" }
-        require(isValidCpf(numero)) { "O Cpf informado é invalido!"}
+        require(isValidCpf(numero)) { "O CPF informado é inválido!"}
     }
 
     private fun isValidCpf(document: String): Boolean {
