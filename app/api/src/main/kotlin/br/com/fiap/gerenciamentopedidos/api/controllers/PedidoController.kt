@@ -3,6 +3,7 @@ package br.com.fiap.gerenciamentopedidos.api.controllers
 import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PedidoFacade
 import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.PagamentoStatusResponse
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.Operation
@@ -83,4 +84,25 @@ class PedidoController(private val pedidoFacade: PedidoFacade) {
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
         pedidoFacade.alterarStatusPedido(alterarStatusPedidoRequest)
+
+    @Operation(summary = "Consultar status do pagamento de um pedido")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "Ok",
+                content = [(Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = PagamentoStatusResponse::class)
+                ))]
+            ),
+            ApiResponse(
+                responseCode = "500", description = "Internal Server Error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = BaseDeDadosException::class)
+                )]
+            )]
+    )
+    @GetMapping("/{id}/pagamento/status")
+    fun consultarStatusPagamento(@PathVariable id: Long) = pedidoFacade.consultarStatusPagamento(id)
 }
