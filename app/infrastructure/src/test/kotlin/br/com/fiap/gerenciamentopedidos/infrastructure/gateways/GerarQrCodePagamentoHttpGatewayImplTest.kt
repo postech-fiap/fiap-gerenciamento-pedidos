@@ -24,6 +24,7 @@ import kotlin.random.Random
 
 private const val MERCADO_PAGO_QR_CODE_ENDPOINT = "mercadoPagoApiGenerateQrcodeEndpoint"
 private const val MERCADO_PAGO_TOKEN = "mercadoPagoToken"
+private const val MERCADO_PAGO_WEBHOOK_URL = "mercadoPagoWebhookUrl"
 
 @ExtendWith(MockKExtension::class)
 class GerarQrCodePagamentoHttpGatewayImplTest {
@@ -38,7 +39,8 @@ class GerarQrCodePagamentoHttpGatewayImplTest {
         gerarQrCodePagamentoGateway = GerarQrCodePagamentoHttpGatewayImpl(
             restTemplate,
             MERCADO_PAGO_QR_CODE_ENDPOINT,
-            MERCADO_PAGO_TOKEN
+            MERCADO_PAGO_TOKEN,
+            MERCADO_PAGO_WEBHOOK_URL
         )
     }
 

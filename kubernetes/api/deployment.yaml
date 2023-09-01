@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: mp
                   key: token
+            - name: MERCADO_PAGO_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: webhook-url
           readinessProbe:
             httpGet:
               path: /ping

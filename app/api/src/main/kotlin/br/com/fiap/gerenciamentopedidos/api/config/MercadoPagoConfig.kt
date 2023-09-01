@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class MercadoPagoConfig(
-        @Value("\${mercado-pago-api.generate-qrcode}")
+    @Value("\${mercado-pago-api.generate-qrcode}")
     val generateQrcodeEndpoint: String,
-        @Value("\${mercado-pago-api.merchant-orders-pagamento}")
+    @Value("\${mercado-pago-api.merchant-orders-pagamento}")
     val merchantOrdersPagamentoEndpoint: String,
-        @Value("\${secrets.mercado-pago.token}")
+    @Value("\${secrets.mercado-pago.token}")
     val token: String,
+    @Value("\${secrets.mercado-pago.webhook-url}")
+    val webhookUrl: String,
 )
