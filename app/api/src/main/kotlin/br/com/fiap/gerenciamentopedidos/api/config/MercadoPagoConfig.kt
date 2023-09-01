@@ -11,6 +11,6 @@ class MercadoPagoConfig(
     val merchantOrdersPagamentoEndpoint: String,
     @Value("\${secrets.mercado-pago.token}")
     val token: String,
-    @Value("\${mercado-pago.webhook-url}")
+    @Value("\${secrets.mercado-pago.webhook-url}")
     val webhookUrl: String,
 )

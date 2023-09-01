@@ -39,7 +39,7 @@ Com o `kubectl` instalado, execute os seguintes comandos:
 ```bash
 # Criar Secrets
 kubectl create secret generic db --from-literal=username=CHANGE_HERE --from-literal=password=CHANGE_HERE
-kubectl create secret generic mp --from-literal=user-id=CHANGE_HERE --from-literal=external-id=CHANGE_HERE --from-literal=token=CHANGE_HERE
+kubectl create secret generic mp --from-literal=user-id=CHANGE_HERE --from-literal=external-id=CHANGE_HERE --from-literal=token=CHANGE_HERE --from-literal=webhook-url=CHANGE_HERE
 
 # Criar Config Maps
 kubectl apply -f kubernetes/config/db.yaml
