@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoProdutoDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import jakarta.persistence.*
 import java.math.BigDecimal
 
@@ -29,20 +29,21 @@ data class PedidoProdutoEntity(
     @Column(name = "comentario", nullable = true, length = 1000)
     val comentario: String? = null
 ) {
-    fun toDto() = PedidoProdutoDto(
+    fun toModel() = Item(
         id = id,
-        produto = produto?.toDto()!!,
+        produto = produto?.toModel()!!,
         valorPago = valorPago,
         quantidade = quantidade!!,
         comentario = comentario,
     )
 
     companion object {
-        fun fromDto(pedidoProduto: PedidoProdutoDto) = PedidoProdutoEntity(
-            produto = ProdutoEntity.fromDto(pedidoProduto.produto),
+        fun fromModel(pedidoProduto: Item, pedido: PedidoEntity) = PedidoProdutoEntity(
+            produto = ProdutoEntity.fromModel(pedidoProduto.produto!!),
             valorPago = pedidoProduto.valorPago,
             quantidade = pedidoProduto.quantidade,
-            comentario = pedidoProduto.comentario
+            comentario = pedidoProduto.comentario,
+            pedido = pedido
         )
     }
 }

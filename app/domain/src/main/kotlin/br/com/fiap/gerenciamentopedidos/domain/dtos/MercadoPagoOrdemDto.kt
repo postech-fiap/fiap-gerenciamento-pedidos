@@ -1,11 +1,12 @@
 package br.com.fiap.gerenciamentopedidos.domain.dtos
 
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
 
 private const val COMPRA_LANCHONETE_DESCRIPTION = "Compra lanchonete"
-private const val WEBHOOK_URL = "https://webhook.site/3b0a96df-97b2-4081-9fb2-a7ed1f252ea9"
+private const val WEBHOOK_URL = "http://localhost:8080/pagamentos/finalizar"
 private const val UNIT_MEASURE = "unit"
 
 data class MercadoPagoOrdemDto(
@@ -29,19 +30,19 @@ data class MercadoPagoOrdemDto(
     )
 
     companion object {
-        fun fromDto(pedido: PedidoDto) =
+        fun fromDto(pedido: Pedido) =
             MercadoPagoOrdemDto(
-                externalReference = pedido.numero.toString(),
+                externalReference = pedido.id.toString(),
                 totalAmount = pedido.valorTotal!!,
-                items = pedido.produtos!!.map {
+                items = pedido.items.map {
                     MercadoPagoItensDto(
-                        skuNumber = it.produto.id.toString(),
-                        category = it.produto.categoria.toString(),
-                        title = it.produto.nome!!,
+                        skuNumber = it.produto?.id.toString(),
+                        category = it.produto?.categoria.toString(),
+                        title = it.produto?.nome!!,
                         description = it.produto.descricao!!,
                         quantity = it.quantidade,
                         unitMeasure = UNIT_MEASURE,
-                        unitPrice = it.produto.valor!!,
+                        unitPrice = it.produto.valor,
                         totalAmount = it.valorPago!!
                     )
                 }.toList(),

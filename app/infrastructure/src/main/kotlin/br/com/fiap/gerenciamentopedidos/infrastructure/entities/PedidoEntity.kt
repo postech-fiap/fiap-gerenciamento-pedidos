@@ -1,7 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import jakarta.persistence.*
 import java.time.OffsetDateTime
 
@@ -38,47 +38,43 @@ data class PedidoEntity(
     )
     var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST], optional = true)
+    @OneToOne(
+        mappedBy = "pedido",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
     var pagamento: PagamentoEntity? = null
 ) {
-    fun toDto(): PedidoDto {
-        val cliente = cliente?.toDto()
+    fun toModel(): Pedido {
+        val cliente = cliente?.toModel()
 
-        val produtos = produtos?.map { it.toDto() }
+        val produtos = produtos?.map { it.toModel() }
 
-        return PedidoDto(
+        return Pedido(
             id = id,
             dataHora = dataHora!!,
             status = status!!,
             tempoEsperaMinutos = tempoEsperaMinutos!!,
             numero = numero!!,
             cliente = cliente,
-            produtos = produtos,
-            pagamento = pagamento?.toDto()
+            items = produtos!!,
+            pagamento = pagamento?.toModel()
         )
     }
 
     companion object {
-        fun fromDto(pedido: PedidoDto): PedidoEntity {
+        fun fromModel(pedido: Pedido): PedidoEntity {
             val entity = PedidoEntity(
                 id = pedido.id,
                 dataHora = pedido.dataHora,
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                cliente = pedido.cliente?.let { ClienteEntity.fromDto(it) },
-                produtos = pedido.produtos?.map { PedidoProdutoEntity.fromDto(it) }
+                cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) }
             )
-            entity.pagamento = pedido.pagamento?.let { PagamentoEntity.fromDto(it, entity) }
-            entity.produtos = pedido.produtos?.map {
-                PedidoProdutoEntity(
-                    pedido = entity,
-                    produto = ProdutoEntity.fromDto(it.produto),
-                    valorPago = it.valorPago,
-                    quantidade = it.quantidade,
-                    comentario = it.comentario
-                )
-            }
+            entity.pagamento = pedido.pagamento.let { PagamentoEntity.fromModel(it!!, entity) }
+            entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity
         }
     }

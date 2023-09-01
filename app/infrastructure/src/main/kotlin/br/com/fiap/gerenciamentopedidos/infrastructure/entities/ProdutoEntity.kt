@@ -1,10 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.Where
 import java.math.BigDecimal
 
 @Entity
@@ -41,7 +40,7 @@ data class ProdutoEntity(
     var imagem: ImagemEntity? = null
 ) {
     companion object {
-        fun fromDto(produto: ProdutoDto): ProdutoEntity {
+        fun fromModel(produto: Produto): ProdutoEntity {
             val entity = ProdutoEntity(
                 id = produto.id,
                 nome = produto.nome,
@@ -50,7 +49,7 @@ data class ProdutoEntity(
                 valor = produto.valor,
                 tempoPreparo = produto.tempoPreparo,
                 disponivel = produto.disponivel,
-                excluido = produto.excluido
+                excluido = produto.excluido,
             )
 
             entity.imagem = produto.imagem?.let {
@@ -65,6 +64,6 @@ data class ProdutoEntity(
         }
     }
 
-    fun toDto() =
-        ProdutoDto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toDto())
+    fun toModel() =
+        Produto(id, nome, descricao, categoria, valor!!, tempoPreparo!!, disponivel!!, excluido!!, imagem?.toModel())
 }

@@ -1,11 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.AlterarStatusPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.BuscarPedidosUseCase
-import br.com.fiap.gerenciamentopedidos.application.interfaces.pedido.CadastrarPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.application.requests.AlterarStatusPedidoRequest
-import br.com.fiap.gerenciamentopedidos.application.requests.CadastrarPedidoRequest
-import br.com.fiap.gerenciamentopedidos.application.responses.PedidoResponse
+import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PedidoFacade
+import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
@@ -14,21 +12,12 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
 @RequestMapping("/pedidos")
-class PedidoController(
-    private val buscarPedidosUseCase: BuscarPedidosUseCase,
-    private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
-    private val alterarStatusPedido: AlterarStatusPedidoUseCase
-) {
+class PedidoController(private val pedidoFacade: PedidoFacade) {
     @Operation(summary = "Busca pedidos por status")
     @ApiResponses(
         value = [ApiResponse(
@@ -48,7 +37,7 @@ class PedidoController(
         )]
     )
     @GetMapping
-    fun buscarPedidos() = ResponseEntity.ok().body(buscarPedidosUseCase.executar())
+    fun buscarPedidos() = ResponseEntity.ok().body(pedidoFacade.buscarPedidos())
 
     @Operation(summary = "Cadastrar um pedido")
     @ApiResponses(
@@ -70,7 +59,7 @@ class PedidoController(
     )
     @PostMapping
     fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
-        val pedido = cadastrarPedidoUseCase.executar(request)
+        val pedido = pedidoFacade.cadastrarPedido(request)
         return ResponseEntity.created(URI.create("/pedidos/${pedido.id}")).body(pedido)
     }
 
@@ -92,7 +81,6 @@ class PedidoController(
             )]
     )
     @PatchMapping("/status")
-    fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) {
-        return alterarStatusPedido.executar(alterarStatusPedidoRequest)
-    }
+    fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
+        pedidoFacade.alterarStatusPedido(alterarStatusPedidoRequest)
 }

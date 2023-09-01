@@ -1,12 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
-import br.com.fiap.gerenciamentopedidos.domain.models.PedidoProduto
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -39,10 +37,12 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()),
-            produtos = listOf(
-                PedidoProduto(
+            pagamento = Pagamento(
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
+            ),
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -61,10 +61,9 @@ class PedidoRepositoryImplTest {
         )
 
         pedido.valorTotal = null
-        val dto = PedidoDto.fromModel(pedido)
-        val pedidoList = listOf(dto)
+        val pedidoList = listOf(pedido)
 
-        val pedidoEntity = PedidoEntity.fromDto(dto)
+        val pedidoEntity = PedidoEntity.fromModel(pedido)
         val pedidoEntityList = listOf(pedidoEntity)
 
         every {
@@ -100,7 +99,7 @@ class PedidoRepositoryImplTest {
         assertEquals(errorMessage, exception.message)
 
         verify(exactly = 1) {
-            pedidoJpaRepository.buscarPedidos( )
+            pedidoJpaRepository.buscarPedidos()
         }
     }
 
@@ -110,10 +109,12 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
-            produtos = listOf(
-                PedidoProduto(
+            pagamento = Pagamento(
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
+            ),
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -132,16 +133,15 @@ class PedidoRepositoryImplTest {
         )
 
         pedido.valorTotal = null
-        val dto = PedidoDto.fromModel(pedido)
-        val entity = PedidoEntity.fromDto(dto)
+        val entity = PedidoEntity.fromModel(pedido)
 
         every { pedidoJpaRepository.save(any()) } returns entity
 
         //when
-        val result = pedidoRepository.salvar(dto)
+        val result = pedidoRepository.salvar(pedido)
 
         //then
-        assertEquals(dto, result)
+        assertEquals(pedido, result)
         verify(exactly = 1) { pedidoJpaRepository.save(any()) }
     }
 
@@ -152,10 +152,12 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
-            produtos = listOf(
-                PedidoProduto(
+            pagamento = Pagamento(
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
+            ),
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -177,7 +179,7 @@ class PedidoRepositoryImplTest {
 
         //when
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            pedidoRepository.salvar(PedidoDto.fromModel(pedido))
+            pedidoRepository.salvar(pedido)
         }
 
         //then
@@ -186,7 +188,7 @@ class PedidoRepositoryImplTest {
 
     @Test
     fun `deve obter ultimo pedido do dia com sucesso`() {
-        every { pedidoJpaRepository.obterUtimoNumeroPedidoDoDia() } returns "10"
+        every { pedidoJpaRepository.obterUltimoNumeroPedidoDoDia() } returns "10"
 
         val result = pedidoRepository.obterUltimoNumeroPedidoDoDia()
 
@@ -197,7 +199,7 @@ class PedidoRepositoryImplTest {
     fun `deve propagar erro ao obter ultimo pedido do dia`() {
         val errorMessage = "Erro ao obter próximo número pedido. Detalhes: Error"
 
-        every { pedidoJpaRepository.obterUtimoNumeroPedidoDoDia() } throws Exception("Error")
+        every { pedidoJpaRepository.obterUltimoNumeroPedidoDoDia() } throws Exception("Error")
 
         val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
             pedidoRepository.obterUltimoNumeroPedidoDoDia()
@@ -213,10 +215,12 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)),
-            produtos = listOf(
-                PedidoProduto(
+            pagamento = Pagamento(
+                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
+                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
+            ),
+            items = listOf(
+                Item(
                     produto = Produto(
                         id = 1L,
                         nome = "Nome",
@@ -235,19 +239,17 @@ class PedidoRepositoryImplTest {
         )
 
         pedido.valorTotal = null
-        val dto = PedidoDto.fromModel(pedido).copy(status = PedidoStatus.EM_PREPARACAO)
 
         every {
-            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
+            pedidoJpaRepository.updateStatusById(pedido.status, pedido.id!!)
         } returns Unit
 
         // when
-        val result = pedidoRepository.alterarStatusPedido(dto.status!!, dto.id!!)
+        pedidoRepository.alterarStatusPedido(pedido.status, pedido.id!!)
 
         // then
-
         verify(exactly = 1) {
-            pedidoJpaRepository.updateStatusById(dto.status!!, dto.id!!)
+            pedidoJpaRepository.updateStatusById(pedido.status, pedido.id!!)
         }
     }
 

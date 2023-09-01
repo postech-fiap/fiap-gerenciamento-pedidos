@@ -1,8 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ImagemEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -16,9 +16,9 @@ private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produto. Detalhes: %
 private const val ERROR_MESSAGE_DELETE = "Erro ao excluir produto. Detalhes: %s"
 
 class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : ProdutoRepository {
-    override fun get(id: Long): Optional<ProdutoDto> {
+    override fun get(id: Long): Optional<Produto> {
         try {
-            return repository.findByIdAndExcluidoFalse(id).map { it.toDto() }
+            return repository.findByIdAndExcluidoFalse(id).map { it.toModel() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
@@ -26,9 +26,9 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         }
     }
 
-    override fun get(ids: List<Long>): List<ProdutoDto> {
+    override fun get(ids: List<Long>): List<Produto> {
         try {
-            return repository.findByIdInAndExcluidoFalseAndDisponivelTrue(ids).map { it.toDto() }
+            return repository.findByIdInAndExcluidoFalseAndDisponivelTrue(ids).map { it.toModel() }
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_ID, ex.message)
@@ -36,13 +36,13 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         }
     }
 
-    override fun get(categoria: Categoria): List<ProdutoDto> {
+    override fun get(categoria: Categoria): List<Produto> {
         try {
             return repository.findByCategoriaAndExcluidoAndDisponivel(
                 categoria,
                 excluido = false,
                 disponivel = true
-            ).map { it.toDto() }.toList()
+            ).map { it.toModel() }.toList()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_GET_BY_CATEGORIA, ex.message)
@@ -50,9 +50,9 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         }
     }
 
-    override fun create(produto: ProdutoDto): ProdutoDto {
+    override fun create(produto: Produto): Produto {
         try {
-            return repository.save(ProdutoEntity.fromDto(produto)).toDto()
+            return repository.save(ProdutoEntity.fromModel(produto)).toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_CREATE, ex.message)
@@ -60,7 +60,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
         }
     }
 
-    override fun update(produto: ProdutoDto): ProdutoDto {
+    override fun update(produto: Produto): Produto {
         try {
             val entity = repository.findByIdAndExcluidoFalse(produto.id!!)
                 .orElseThrow { BaseDeDadosException("Produto não encontrado") }
@@ -79,7 +79,7 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
             } else if (entity.imagem?.caminho != produto.imagem?.caminho) {
                 entity.imagem?.caminho = produto.imagem?.caminho
             }
-            return repository.save(entity).toDto()
+            return repository.save(entity).toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
                 String.format(ERROR_MESSAGE_UPDATE, ex.message)

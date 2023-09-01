@@ -54,9 +54,12 @@ create table if not exists pedido_produto (
 );
 
 create table if not exists pagamento (
-    pedido_id bigint not null,
+    id bigint auto_increment,
     data_hora timestamp not null default now(),
     status enum('APROVADO', 'REPROVADO') not null,
-    constraint pk_pagamento primary key (pedido_id),
+    qr_code varchar(255) not null,
+    valor_total decimal(10,2) not null,
+    pedido_id bigint not null,
+    constraint pk_pagamento primary key (id),
     constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
 );
