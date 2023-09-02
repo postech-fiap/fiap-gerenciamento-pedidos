@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class AlterarStatusPedidoUseCaseImpl(private val pedidoRepository: PedidoRepository) : AlterarStatusPedidoUseCase {
     override fun executar(pedidoId: Long, status: PedidoStatus) {
         val pedidoResult = pedidoRepository.buscarPedidoPorId(pedidoId)
-        return when (pedidoResult.status) {
+        return when (pedidoResult.get().status) {
             status -> throw BusinessException("O status do pedido ja está igual à $status")
             else -> pedidoRepository.alterarStatusPedido(status, pedidoId)
         }
