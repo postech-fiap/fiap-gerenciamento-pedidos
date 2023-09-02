@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class AlterarStatusPedidoUseCaseImplTest {
@@ -37,7 +38,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         val copyPedido = pedido.copy()
         copyPedido.alterarStatus(PedidoStatus.EM_PREPARACAO)
 
-        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
+        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
 
         //when
@@ -58,7 +59,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         val copyPedido = pedido.copy()
         copyPedido.alterarStatus(PedidoStatus.PENDENTE)
 
-        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
+        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
 
         //when

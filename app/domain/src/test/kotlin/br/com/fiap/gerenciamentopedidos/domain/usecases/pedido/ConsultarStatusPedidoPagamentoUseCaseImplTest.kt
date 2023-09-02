@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.*
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.ConsultarStatusPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class ConsultarStatusPedidoPagamentoUseCaseImplTest {
@@ -35,7 +37,7 @@ class ConsultarStatusPedidoPagamentoUseCaseImplTest {
         val copyPedido = pedido.copy()
         copyPedido.alterarStatus(PedidoStatus.EM_PREPARACAO)
 
-        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns pedido
+        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
 
         //when
         val result = useCase.executar(pedidoId)
