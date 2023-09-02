@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.models.*
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.ConsultarStatusPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
 import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
 import io.mockk.every
