@@ -11,6 +11,9 @@ Com o `kubectl` instalado, execute os seguintes comandos:
 kubectl create secret generic db --from-literal=username=root --from-literal=password=<YOUR_PASSWORD>
 kubectl create secret generic mp --from-literal=user-id=<MERCADO_PAGO_USER_ID> --from-literal=external-id=<MERCADO_PAGO_EXTERNAL_ID> --from-literal=token=<MERCADO_PAGO_TOKEN> --from-literal=webhook-url=<MERCADO_PAGO_WEBHOOK_URL>
 
+# Criar Load Balancer
+kubectl apply -f kubernetes/api/load-balancer-service.yaml
+
 # Criar Config Maps
 kubectl apply -f kubernetes/config/db.yaml
 kubectl apply -f kubernetes/config/db-migration.yaml
