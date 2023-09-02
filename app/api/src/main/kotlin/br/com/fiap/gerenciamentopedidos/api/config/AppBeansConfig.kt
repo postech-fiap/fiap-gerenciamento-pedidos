@@ -1,9 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.api.facades.ClienteFacadeImpl
-import br.com.fiap.gerenciamentopedidos.api.facades.PagamentoFacadeImpl
-import br.com.fiap.gerenciamentopedidos.api.facades.PedidoFacadeImpl
-import br.com.fiap.gerenciamentopedidos.api.facades.ProdutoFacadeImpl
+import br.com.fiap.gerenciamentopedidos.api.adapters.ClienteAdapterImpl
+import br.com.fiap.gerenciamentopedidos.api.adapters.PagamentoAdapterImpl
+import br.com.fiap.gerenciamentopedidos.api.adapters.PedidoAdapterImpl
+import br.com.fiap.gerenciamentopedidos.api.adapters.ProdutoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PagamentoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
@@ -150,7 +150,7 @@ class AppBeansConfig(
     fun clienteFacade(
         cadastrarClienteUseCase: CadastrarClienteUseCase,
         buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
-    ) = ClienteFacadeImpl(
+    ) = ClienteAdapterImpl(
         cadastrarClienteUseCase,
         buscarClientePorCpfUseCase
     )
@@ -161,7 +161,7 @@ class AppBeansConfig(
         cadastrarPedidoUseCase: CadastrarPedidoUseCase,
         alterarStatusPedidoUseCase: AlterarStatusPedidoUseCase,
         consultarStatusPagamentoUseCase: ConsultarStatusPagamentoUseCase
-    ) = PedidoFacadeImpl(
+    ) = PedidoAdapterImpl(
         buscarPedidosUseCase,
         cadastrarPedidoUseCase,
         alterarStatusPedidoUseCase,
@@ -176,7 +176,7 @@ class AppBeansConfig(
         obterProdutoPorIdUseCase: ObterProdutoPorIdUseCase,
         removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
         alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
-    ) = ProdutoFacadeImpl(
+    ) = ProdutoAdapterImpl(
         cadastrarProdutoUseCase,
         editarProdutoUseCase,
         listarProdutosPorCategoriaUseCase,
@@ -187,5 +187,5 @@ class AppBeansConfig(
 
     @Bean
     fun pagamentoFacade(finalizarPagamentoUseCase: FinalizarPagamentoUseCase) =
-        PagamentoFacadeImpl(finalizarPagamentoUseCase)
+        PagamentoAdapterImpl(finalizarPagamentoUseCase)
 }
