@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.ClienteFacade
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.ClienteAdapter
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarClienteRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.ClienteResponse
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoJaExisteException
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/clientes")
-class ClienteController(private val clienteFacade: ClienteFacade) {
+class ClienteController(private val clienteAdapter: ClienteAdapter) {
     companion object {
         const val CPF_URI = "/cpf"
     }
@@ -64,7 +64,7 @@ class ClienteController(private val clienteFacade: ClienteFacade) {
     )
     @PostMapping(CPF_URI)
     fun cadastrarCliente(@RequestBody request: CadastrarClienteRequest) =
-        ResponseEntity.status(HttpStatus.CREATED).body(clienteFacade.cadastrarCliente(request))
+        ResponseEntity.status(HttpStatus.CREATED).body(clienteAdapter.cadastrarCliente(request))
 
     @Operation(summary = "Responsável por buscar um cliente")
     @ApiResponses(
@@ -104,5 +104,5 @@ class ClienteController(private val clienteFacade: ClienteFacade) {
         @Parameter(name = "cpf", description = "CPF do cliente", example = "43253353425")
         cpf: String
     ) = ResponseEntity.status(HttpStatus.OK)
-        .body(clienteFacade.buscarClientePorCpf(cpf))
+        .body(clienteAdapter.buscarClientePorCpf(cpf))
 }

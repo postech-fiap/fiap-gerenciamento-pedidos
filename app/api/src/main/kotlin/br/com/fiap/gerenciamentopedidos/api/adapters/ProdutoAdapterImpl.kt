@@ -1,20 +1,20 @@
-package br.com.fiap.gerenciamentopedidos.api.facades
+package br.com.fiap.gerenciamentopedidos.api.adapters
 
-import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.ProdutoFacade
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.ProdutoAdapter
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.EditarProdutoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.ProdutoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
 
-class ProdutoFacadeImpl(
+class ProdutoAdapterImpl(
     private val cadastrarProdutoUseCase: CadastrarProdutoUseCase,
     private val editarProdutoUseCase: EditarProdutoUseCase,
     private val listarProdutosPorCategoriaUseCase: ListarProdutosPorCategoriaUseCase,
     private val obterProdutoPorIdUseCase: ObterProdutoPorIdUseCase,
     private val removerProdutoPorIdUseCase: RemoverProdutoPorIdUseCase,
     private val alterarDisponibilidadeProdutoUseCase: AlterarDisponibilidadeProdutoUseCase
-) : ProdutoFacade {
+) : ProdutoAdapter {
     override fun cadastrarProduto(request: CadastrarProdutoRequest) =
         ProdutoResponse(cadastrarProdutoUseCase.executar(request.toModel()))
 

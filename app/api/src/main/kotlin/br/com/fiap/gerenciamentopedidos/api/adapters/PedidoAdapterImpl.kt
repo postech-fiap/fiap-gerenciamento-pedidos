@@ -1,6 +1,6 @@
-package br.com.fiap.gerenciamentopedidos.api.facades
+package br.com.fiap.gerenciamentopedidos.api.adapters
 
-import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PedidoFacade
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.PedidoAdapter
 import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PagamentoStatusResponse
@@ -11,12 +11,12 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.Cadast
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.ConsultarStatusPagamentoUseCase
 
 
-class PedidoFacadeImpl(
+class PedidoAdapterImpl(
     private val buscarPedidosUseCase: BuscarPedidosUseCase,
     private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
     private val alterarStatusPedidoUseCase: AlterarStatusPedidoUseCase,
     private val consultarStatusPagamentoUseCase: ConsultarStatusPagamentoUseCase
-) : PedidoFacade {
+) : PedidoAdapter {
     override fun buscarPedidos() = buscarPedidosUseCase.executar().map { PedidoResponse(it) }
 
     override fun cadastrarPedido(request: CadastrarPedidoRequest) =

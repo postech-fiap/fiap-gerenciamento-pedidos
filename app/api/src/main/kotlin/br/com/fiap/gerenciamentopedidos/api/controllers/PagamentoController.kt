@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.facades.interfaces.PagamentoFacade
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.PagamentoAdapter
 import br.com.fiap.gerenciamentopedidos.api.requests.PagamentoCriadoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.StatusPagamentoResponse
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/pagamentos")
-class PagamentoController(private val pagamentoController: PagamentoFacade) {
+class PagamentoController(private val pagamentoAdapter: PagamentoAdapter) {
 
     @Operation(summary = "Finaliza o pagamento com status APROVADO ou REPROVADO")
     @ApiResponses(
@@ -41,6 +41,6 @@ class PagamentoController(private val pagamentoController: PagamentoFacade) {
         require("payment".equals(type, true)) { "O type deve ser payment "}
         require(dataId.equals(pagamentoCriadoRequest.data.id, true)) { "O data.id param deve ser o mesmo da request"}
 
-        return pagamentoController.finalizarPagamento(pagamentoCriadoRequest)
+        return pagamentoAdapter.finalizarPagamento(pagamentoCriadoRequest)
     }
 }
