@@ -35,34 +35,17 @@ kubectl apply -f kubernetes/api/deployment.yaml
 kubectl apply -f kubernetes/api/service.yaml
 ```
 
-## Variáveis de ambiente
+### Variáveis de ambiente
 
 - Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.
 - As demais variáveis estão presentes no documento que será enviado por anexo.
 
-## Executar swagger
+### Executar swagger
 ```sh
 curl --location 'http://localhost:30000/swagger-ui/index.html'
 ```
 
-## Executar swagger (load balancer)
-```sh
-curl --location 'http://localhost:8080/swagger-ui/index.html'
-```
-
-## Executando com Docker (alternativo)
-Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos abaixo.
-
-No terminal executar o comando:
-```sh
-MYSQL_ROOT_USERNAME=root MYSQL_ROOT_PASSWORD=<YOUR_PASSWORD> MERCADO_PAGO_USER_ID=<MERCADO_PAGO_USER_ID> MERCADO_PAGO_EXTERNAL_ID=<MERCADO_PAGO_EXTERNAL_ID> MERCADO_PAGO_TOKEN=<MERCADO_PAGO_TOKEN> MERCADO_PAGO_WEBHOOK_URL=<MERCADO_PAGO_WEBHOOK_URL> docker-compose up --build
-```
-
-Sobre o comando acima:
-- Cria a imagem e container da aplicação, gerando o jar atualizado.
-- Cria a imagem e container do banco de dados MYSQL.
-
-## Executar swagger
+### Executar swagger (load balancer)
 ```sh
 curl --location 'http://localhost:8080/swagger-ui/index.html'
 ```
