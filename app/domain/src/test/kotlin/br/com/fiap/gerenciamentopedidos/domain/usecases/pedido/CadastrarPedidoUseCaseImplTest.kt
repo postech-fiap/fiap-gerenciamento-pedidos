@@ -77,7 +77,7 @@ class CadastrarPedidoUseCaseImplTest {
     private fun criarPedido(): Pedido {
         val pedido = Pedido("1")
         pedido.gerarQrCodePagamento(Pagamento(1, OffsetDateTime.now(), PagamentoStatus.APROVADO, "", BigDecimal(10)))
-        pedido.atribuirCliente(Cliente(1, Cpf("22233388878"), "Derick Silva", Email("dsilva@gmail.com")))
+        pedido.atribuirCliente(Cliente(1, Cpf("73139333552"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido
     }

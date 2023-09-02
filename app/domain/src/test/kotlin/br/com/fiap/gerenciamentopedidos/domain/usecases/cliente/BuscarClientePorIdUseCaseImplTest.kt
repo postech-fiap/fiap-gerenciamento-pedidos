@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 import kotlin.random.Random
 
-private const val CPF = "111.111.111-11"
+private const val CPF = "731.393.335-52"
 private const val EMAIL = "test@test.com"
 
 @ExtendWith(MockKExtension::class)
