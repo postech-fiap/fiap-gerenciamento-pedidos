@@ -40,6 +40,16 @@ kubectl apply -f kubernetes/api/service.yaml
 - Para executar o comando você poderá incluir uma senha de sua preferência, junto ao user root.
 - As demais variáveis estão presentes no documento que será enviado por anexo.
 
+## Executar swagger
+```sh
+curl --location 'http://localhost:30000/swagger-ui/index.html'
+```
+
+## Executar swagger (load balancer)
+```sh
+curl --location 'http://localhost:8080/swagger-ui/index.html'
+```
+
 ## Executando com Docker (alternativo)
 Para subir a aplicação basta ter o Docker instalado e seguir os procedimentos abaixo.
 
