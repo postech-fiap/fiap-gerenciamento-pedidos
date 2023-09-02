@@ -20,6 +20,7 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorIdUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
+import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.ConsultarStatusPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.FinalizarPagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pagamento.GerarQrCodePagamentoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.*
