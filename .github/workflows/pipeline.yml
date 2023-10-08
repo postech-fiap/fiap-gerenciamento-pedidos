@@ -9,15 +9,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       # Esta etapa usa a configuração do java especificada
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+
       # Etapa de validação do gradle wrapper
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+
       # Etapa de geração do pacote do gradle
       - name: Run the Gradle package task
         run: ./gradlew build
