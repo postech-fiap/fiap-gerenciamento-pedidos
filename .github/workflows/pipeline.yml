@@ -24,3 +24,57 @@ jobs:
       # Etapa de geração do pacote do gradle
       - name: Run the Gradle package task
         run: ./gradlew build
+
+  deploy-Stg-Feature:
+    runs-on: ubuntu-latest
+    environment:
+      name: stg-feature
+    needs: build
+
+    if: startWith(github.ref, 'feature') == true
+    steps:
+      - name: Deploy
+        shell: bash
+        run: |
+          echo "Deploy STG (Feature)"
+
+  deploy-Stg-Develop:
+    runs-on: ubuntu-latest
+    environment:
+      name: stg-develop
+    needs: build
+
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Deploy
+        shell: bash
+        run: |
+          echo "Deploy STG (Develop)"
+
+  deploy-Pre-Release:
+    runs-on: ubuntu-latest
+
+    if: startWith(github.ref, 'release') == true
+    environment:
+      name: pre
+    needs: build
+
+    steps:
+      - name: Deploy
+        shell: bash
+        run: |
+          echo "Deploy PRE (Release)"
+
+  deploy-Prod-Main:
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: prod
+    needs: build
+
+    steps:
+      - name: Deploy
+        shell: bash
+        run: |
+          echo "Deploy PROD (Main)"
