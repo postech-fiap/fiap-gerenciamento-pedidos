@@ -31,7 +31,7 @@ jobs:
       name: stg-feature
     needs: build
 
-    if: startsWith(github.ref, 'feature') == true
+    if: startsWith(github.ref, 'refs/heads/feature/')
     steps:
       - name: Deploy
         shell: bash
@@ -54,11 +54,10 @@ jobs:
   deploy-Pre-Release:
     runs-on: ubuntu-latest
 
-    if: startsWith(github.ref, 'release') == true
+    if: startsWith(github.ref, 'refs/heads/release/')
     environment:
       name: pre
     needs: build
-
     steps:
       - name: Deploy
         shell: bash
@@ -72,7 +71,6 @@ jobs:
     environment:
       name: prod
     needs: build
-
     steps:
       - name: Deploy
         shell: bash
