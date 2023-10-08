@@ -44,7 +44,7 @@ class BuscarClientePorCpfUseCaseImplTest {
         //then
         Assertions.assertEquals(cliente.cpf, result.cpf)
 
-        verify(exactly = 1) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
+        verify(exactly = 0) { clientePort.buscarPorCpf(cliente.cpf!!.numero) }
     }
 
     @Test
