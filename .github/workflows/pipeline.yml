@@ -5,12 +5,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Validate Gradle Wrapper
-    - uses: gradle/wrapper-validation-action@v1
-    - name: Build with Gradle
-    - uses: gradle/gradle-build-action@v2
-      with:
-          arguments: build
+      # Esta etapa usa a ação `actions/checkout` para fazer download de uma cópia do repositório no executor.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Esta etapa usa a configuração do java especificada
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      # Etapa de validação do gradle wrapper
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      # Etapa de geração do pacote do gradle
+      - name: Run the Gradle package task
+        run: ./gradlew :app:api:build
