@@ -31,7 +31,7 @@ jobs:
       name: stg-feature
     needs: build
 
-    if: startWith(github.ref, 'feature') == true
+    if: startsWith(github.ref, 'feature') == true
     steps:
       - name: Deploy
         shell: bash
@@ -54,7 +54,7 @@ jobs:
   deploy-Pre-Release:
     runs-on: ubuntu-latest
 
-    if: startWith(github.ref, 'release') == true
+    if: startsWith(github.ref, 'release') == true
     environment:
       name: pre
     needs: build
