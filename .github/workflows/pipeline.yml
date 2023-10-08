@@ -25,10 +25,23 @@ jobs:
       - name: Run the Gradle package task
         run: ./gradlew build
 
-  deploy-Stg:
+  deploy-Stg-Feature:
     runs-on: ubuntu-latest
     environment:
-      name: stg
+      name: stg-feature
+    needs: build
+
+    if: startWith(github.ref, 'feature') == true
+    steps:
+      - name: Deploy
+        shell: bash
+        run: |
+          echo "Deploy STG (Feature)"
+
+  deploy-Stg-Develop:
+    runs-on: ubuntu-latest
+    environment:
+      name: stg-develop
     needs: build
 
     if: github.ref == 'refs/heads/develop'
@@ -38,10 +51,10 @@ jobs:
         run: |
           echo "Deploy STG (Develop)"
 
-  deploy-Pre:
+  deploy-Pre-Release:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/release'
+    if: startWith(github.ref, 'release') == true
     environment:
       name: pre
     needs: build
@@ -52,7 +65,7 @@ jobs:
         run: |
           echo "Deploy PRE (Release)"
 
-  deploy-Prod:
+  deploy-Prod-Main:
     runs-on: ubuntu-latest
 
     if: github.ref == 'refs/heads/main'
