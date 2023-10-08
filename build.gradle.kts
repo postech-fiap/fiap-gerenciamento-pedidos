@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.springframework.boot") version "3.1.0" apply false
@@ -16,6 +17,10 @@ allprojects {
 
     repositories {
         mavenCentral()
+    }
+
+    tasks.withType<BootJar> {
+        mainClass.set("br.com.fiap.gerenciamentopedidos.api.Application")
     }
 }
 
