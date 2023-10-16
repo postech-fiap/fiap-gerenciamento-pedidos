@@ -72,13 +72,18 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
                     tempoPreparo = produto.tempoPreparo,
                     disponivel = produto.disponivel
                 )
-            if (entity.imagem == null && produto.imagem != null) {
-                entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
-            } else if (entity.imagem != null && produto.imagem == null) {
-                entity.imagem = null
-            } else if (entity.imagem?.caminho != produto.imagem?.caminho) {
-                entity.imagem?.caminho = produto.imagem?.caminho
+
+            when {
+                entity.imagem == null && produto.imagem != null ->
+                    entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
+
+                entity.imagem?.caminho != produto.imagem?.caminho ->
+                    entity.imagem?.caminho = produto.imagem?.caminho
+
+                entity.imagem != null && produto.imagem == null ->
+                    entity.imagem = null
             }
+
             return repository.save(entity).toModel()
         } catch (ex: Exception) {
             throw BaseDeDadosException(
