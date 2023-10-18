@@ -1,6 +1,29 @@
 name: pipeline
 on: [push]
 
+env:
+  # Sonar
+  sonar_token: ${{ secrets.SONAR_TOKEN }}
+
+  # Github Token
+  github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Docker Hub
+  docker_username: ${{ secrets.DOCKER_USERNAME }}
+  docker_password: ${{ secrets.DOCKER_PASSWORD }}
+
+  # Database MYSQL
+  mysql_root_username: '${{ secrets.MYSQL_ROOT_USERNAME }}'
+  mysql_root_password: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
+  mysql_host: '${{ secrets.MYSQL_HOST }}'
+  mysql_db: '${{ secrets.MYSQL_DB }}'
+
+  # Mercado Pago API Integration
+  mercado_pago_user_id: '${{ secrets.MERCADO_PAGO_USER_ID }}'
+  mercado_pago_external_id: '${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}'
+  mercado_pago_token: '${{ secrets.MERCADO_PAGO_TOKEN }}'
+  mercado_pago_webhook_url: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
+
 jobs:
 
   unit-test:
@@ -52,8 +75,8 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{env.sonar_token}}
+          GITHUB_TOKEN: ${{env.github_token}}
         with:
           args: >
             -Dsonar.organization=postech-fiap
@@ -69,20 +92,20 @@ jobs:
           fetch-depth: 0
 
       - name: Login Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u ${{env.docker_username}} -p ${{env.docker_password}}
 
       - name: Build docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/api-0.0.1-snapshot .
+        run: docker build -t ${{env.docker_username}}/api-0.0.1-snapshot .
 
       - name: Push image docker
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/api-0.0.1-snapshot
+        run: docker push ${{env.docker_username}}/api-0.0.1-snapshot
 
   deploy-to-aws-ec2-instance:
     runs-on: aws-ec2
     needs: docker-app-image
     steps:
       - name: Docker pull image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/api-0.0.1-snapshot:latest
+        run: docker pull ${{env.docker_username}}/api-0.0.1-snapshot:latest
 
       - name: Delete old container
         run: docker rm -f fiap-container-app
@@ -90,13 +113,13 @@ jobs:
       - name: Run docker container
         run: |
           docker run -d \
-            -e MYSQL_ROOT_USERNAME='${{ secrets.MYSQL_ROOT_USERNAME }}' \
-            -e MYSQL_ROOT_PASSWORD='${{ secrets.MYSQL_ROOT_PASSWORD }}' \
-            -e MYSQL_HOST='${{ secrets.MYSQL_HOST }}' \
-            -e MYSQL_DB='${{ secrets.MYSQL_DB }}' \
-            -e MERCADO_PAGO_USER_ID='${{ secrets.MERCADO_PAGO_USER_ID }}' \
-            -e MERCADO_PAGO_EXTERNAL_ID='${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}' \
-            -e MERCADO_PAGO_TOKEN='${{ secrets.MERCADO_PAGO_TOKEN }}' \
-            -e MERCADO_PAGO_WEBHOOK_URL='${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}' \
+            -e MYSQL_ROOT_USERNAME=${{env.mysql_root_username}} \
+            -e MYSQL_ROOT_PASSWORD=${{env.mysql_root_password}} \
+            -e MYSQL_HOST=${{env.mysql_host}} \
+            -e MYSQL_DB=${{env.mysql_db}} \
+            -e MERCADO_PAGO_USER_ID=${{env.mercado_pago_user_id}} \
+            -e MERCADO_PAGO_EXTERNAL_ID=${{env.mercado_pago_external_id}} \
+            -e MERCADO_PAGO_TOKEN=${{env.mercado_pago_token}} \
+            -e MERCADO_PAGO_WEBHOOK_URL=${{env.mercado_pago_webhook_url}} \
             -p 8080:8080 \
-            --name fiap-container-app ${{ secrets.DOCKER_USERNAME }}/api-0.0.1-snapshot
+            --name fiap-container-app ${{env.docker_username}}/api-0.0.1-snapshot
