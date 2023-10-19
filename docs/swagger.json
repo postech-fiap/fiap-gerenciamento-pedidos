@@ -1,0 +1,1865 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Gerenciamento de Pedidos AAAAAAAA",
+    "description": "Desafio Tech Challange FIAP",
+    "version": "3.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/produtos": {
+      "put": {
+        "tags": [
+          "produtoController"
+        ],
+        "summary": "Editar um produtoAAAAAAAA",
+        "operationId": "put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditarProdutoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "produto-controller"
+        ],
+        "summary": "Cadastrar um produto",
+        "operationId": "post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CadastrarProdutoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos": {
+      "get": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "summary": "Busca pedidos por status",
+        "operationId": "buscarPedidos",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PedidoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "summary": "Cadastrar um pedido",
+        "operationId": "post_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CadastrarPedidoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pagamentos/finalizar": {
+      "post": {
+        "tags": [
+          "pagamento-controller"
+        ],
+        "summary": "Finaliza o pagamento com status APROVADO ou REPROVADO",
+        "operationId": "finalizarPagamento",
+        "parameters": [
+          {
+            "name": "data.id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagamentoCriadoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/clientes/cpf": {
+      "post": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "summary": "Responsável por cadastrar um cliente",
+        "operationId": "cadastrarCliente",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CadastrarClienteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursoJaExisteException"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/{id}/disponivel/{disponivel}": {
+      "patch": {
+        "tags": [
+          "produto-controller"
+        ],
+        "summary": "Editar o status de disponibilidade de um produto",
+        "operationId": "patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "disponivel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursoNaoEncontradoException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/status": {
+      "patch": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "summary": "Alterar status de um pedido",
+        "operationId": "alterarStatusPedido",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlterarStatusPedidoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/{id}": {
+      "get": {
+        "tags": [
+          "produto-controller"
+        ],
+        "summary": "Buscar produtos por Id",
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursoNaoEncontradoException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "produto-controller"
+        ],
+        "summary": "Remover um produto por Id",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursoNaoEncontradoException"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtos/categoria/{categoria}": {
+      "get": {
+        "tags": [
+          "produto-controller"
+        ],
+        "summary": "Buscar produtos filtrando por categoria",
+        "operationId": "get_1",
+        "parameters": [
+          {
+            "name": "categoria",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LANCHE",
+                "ACOMPANHAMENTO",
+                "BEBIDA",
+                "SOBREMESA"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProdutoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "ping-controller"
+        ],
+        "operationId": "ping",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/{id}/pagamento/status": {
+      "get": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "summary": "Consultar status do pagamento de um pedido",
+        "operationId": "consultarStatusPagamento",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDeDadosException"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagamentoStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clientes/cpf/{cpf}": {
+      "get": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "summary": "Responsável por buscar um cliente",
+        "operationId": "buscarClientePorCpf",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "description": "CPF do cliente",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 43253353425
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursoNaoEncontradoException"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categorias": {
+      "get": {
+        "tags": [
+          "categoria-controller"
+        ],
+        "summary": "Responsável por listar as categorias",
+        "operationId": "listarCategorias",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "LANCHE",
+                      "ACOMPANHAMENTO",
+                      "BEBIDA",
+                      "SOBREMESA"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EditarImagemRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "caminho": {
+            "type": "string"
+          }
+        }
+      },
+      "EditarProdutoRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "LANCHE",
+              "ACOMPANHAMENTO",
+              "BEBIDA",
+              "SOBREMESA"
+            ]
+          },
+          "valor": {
+            "type": "number"
+          },
+          "tempo_preparo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "imagem": {
+            "$ref": "#/components/schemas/EditarImagemRequest"
+          }
+        }
+      },
+      "BaseDeDadosException": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "cause": {
+            "type": "object",
+            "properties": {
+              "stack_trace": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "class_loader_name": {
+                      "type": "string"
+                    },
+                    "module_name": {
+                      "type": "string"
+                    },
+                    "module_version": {
+                      "type": "string"
+                    },
+                    "method_name": {
+                      "type": "string"
+                    },
+                    "file_name": {
+                      "type": "string"
+                    },
+                    "line_number": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "native_method": {
+                      "type": "boolean"
+                    },
+                    "class_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "message": {
+                "type": "string"
+              },
+              "suppressed": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "stack_trace": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "class_loader_name": {
+                            "type": "string"
+                          },
+                          "module_name": {
+                            "type": "string"
+                          },
+                          "module_version": {
+                            "type": "string"
+                          },
+                          "method_name": {
+                            "type": "string"
+                          },
+                          "file_name": {
+                            "type": "string"
+                          },
+                          "line_number": {
+                            "type": "integer",
+                            "format": "int32"
+                          },
+                          "native_method": {
+                            "type": "boolean"
+                          },
+                          "class_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "localized_message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "localized_message": {
+                "type": "string"
+              }
+            }
+          },
+          "stack_trace": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "class_loader_name": {
+                  "type": "string"
+                },
+                "module_name": {
+                  "type": "string"
+                },
+                "module_version": {
+                  "type": "string"
+                },
+                "method_name": {
+                  "type": "string"
+                },
+                "file_name": {
+                  "type": "string"
+                },
+                "line_number": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "native_method": {
+                  "type": "boolean"
+                },
+                "class_name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "suppressed": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stack_trace": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "class_loader_name": {
+                        "type": "string"
+                      },
+                      "module_name": {
+                        "type": "string"
+                      },
+                      "module_version": {
+                        "type": "string"
+                      },
+                      "method_name": {
+                        "type": "string"
+                      },
+                      "file_name": {
+                        "type": "string"
+                      },
+                      "line_number": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "native_method": {
+                        "type": "boolean"
+                      },
+                      "class_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "message": {
+                  "type": "string"
+                },
+                "localized_message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "localized_message": {
+            "type": "string"
+          }
+        }
+      },
+      "Imagem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "caminho": {
+            "type": "string"
+          }
+        }
+      },
+      "ImagemResponse": {
+        "type": "object",
+        "properties": {
+          "imagem": {
+            "$ref": "#/components/schemas/Imagem"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "caminho": {
+            "type": "string"
+          }
+        }
+      },
+      "Produto": {
+        "required": [
+          "disponivel",
+          "excluido",
+          "tempo_preparo",
+          "valor"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "LANCHE",
+              "ACOMPANHAMENTO",
+              "BEBIDA",
+              "SOBREMESA"
+            ]
+          },
+          "valor": {
+            "type": "number"
+          },
+          "tempo_preparo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "disponivel": {
+            "type": "boolean"
+          },
+          "excluido": {
+            "type": "boolean"
+          },
+          "imagem": {
+            "$ref": "#/components/schemas/Imagem"
+          }
+        }
+      },
+      "ProdutoResponse": {
+        "required": [
+          "disponivel",
+          "excluido",
+          "tempo_preparo",
+          "valor"
+        ],
+        "type": "object",
+        "properties": {
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "LANCHE",
+              "ACOMPANHAMENTO",
+              "BEBIDA",
+              "SOBREMESA"
+            ]
+          },
+          "valor": {
+            "type": "number"
+          },
+          "tempo_preparo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "disponivel": {
+            "type": "boolean"
+          },
+          "excluido": {
+            "type": "boolean"
+          },
+          "imagem": {
+            "$ref": "#/components/schemas/ImagemResponse"
+          }
+        }
+      },
+      "CadastrarProdutoRequest": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "LANCHE",
+              "ACOMPANHAMENTO",
+              "BEBIDA",
+              "SOBREMESA"
+            ]
+          },
+          "valor": {
+            "type": "number"
+          },
+          "tempo_preparo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "imagem": {
+            "type": "string"
+          }
+        }
+      },
+      "CadastrarPedidoProdutoRequest": {
+        "required": [
+          "produto_id",
+          "quantidade"
+        ],
+        "type": "object",
+        "properties": {
+          "produto_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comentario": {
+            "type": "string"
+          }
+        }
+      },
+      "CadastrarPedidoRequest": {
+        "required": [
+          "produto_ids"
+        ],
+        "type": "object",
+        "properties": {
+          "cliente_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "produtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CadastrarPedidoProdutoRequest"
+            }
+          },
+          "produto_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "Cliente": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cpf": {
+            "$ref": "#/components/schemas/Cpf"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "$ref": "#/components/schemas/Email"
+          }
+        }
+      },
+      "ClienteResponse": {
+        "type": "object",
+        "properties": {
+          "cliente": {
+            "$ref": "#/components/schemas/Cliente"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Cpf": {
+        "required": [
+          "numero"
+        ],
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "string"
+          }
+        }
+      },
+      "Email": {
+        "required": [
+          "endereco"
+        ],
+        "type": "object",
+        "properties": {
+          "endereco": {
+            "type": "string"
+          }
+        }
+      },
+      "Item": {
+        "required": [
+          "quantidade"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comentario": {
+            "type": "string"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "valor_pago": {
+            "type": "number"
+          }
+        }
+      },
+      "Pagamento": {
+        "required": [
+          "data_hora",
+          "qr_code",
+          "status",
+          "valor_total"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "APROVADO",
+              "REPROVADO"
+            ]
+          },
+          "qr_code": {
+            "type": "string"
+          },
+          "valor_total": {
+            "type": "number"
+          }
+        }
+      },
+      "PagamentoResponse": {
+        "required": [
+          "data_hora",
+          "qr_code",
+          "status",
+          "valor_total"
+        ],
+        "type": "object",
+        "properties": {
+          "pagamento": {
+            "$ref": "#/components/schemas/Pagamento"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "APROVADO",
+              "REPROVADO"
+            ]
+          },
+          "qr_code": {
+            "type": "string"
+          },
+          "valor_total": {
+            "type": "number"
+          }
+        }
+      },
+      "Pedido": {
+        "required": [
+          "data_hora",
+          "items",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "RECEBIDO",
+              "EM_PREPARACAO",
+              "PRONTO",
+              "FINALIZADO"
+            ]
+          },
+          "cliente": {
+            "$ref": "#/components/schemas/Cliente"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            }
+          },
+          "pagamento": {
+            "$ref": "#/components/schemas/Pagamento"
+          },
+          "tempo_espera_minutos": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "valor_total": {
+            "type": "number"
+          }
+        }
+      },
+      "PedidoProdutoResponse": {
+        "required": [
+          "quantidade"
+        ],
+        "type": "object",
+        "properties": {
+          "pedidoProduto": {
+            "$ref": "#/components/schemas/Item"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "valor_pago": {
+            "type": "number"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comentario": {
+            "type": "string"
+          }
+        }
+      },
+      "PedidoResponse": {
+        "required": [
+          "data_hora",
+          "produtos",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "pedido": {
+            "$ref": "#/components/schemas/Pedido"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "RECEBIDO",
+              "EM_PREPARACAO",
+              "PRONTO",
+              "FINALIZADO"
+            ]
+          },
+          "tempo_espera_minutos": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numero": {
+            "type": "string"
+          },
+          "cliente": {
+            "$ref": "#/components/schemas/ClienteResponse"
+          },
+          "produtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PedidoProdutoResponse"
+            }
+          },
+          "pagamento": {
+            "$ref": "#/components/schemas/PagamentoResponse"
+          }
+        }
+      },
+      "DataRequest": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "PagamentoCriadoRequest": {
+        "required": [
+          "action",
+          "api_version",
+          "data",
+          "date_created",
+          "id",
+          "live_mode",
+          "type",
+          "user_id"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "api_version": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataRequest"
+          },
+          "date_created": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "live_mode": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CadastrarClienteRequest": {
+        "required": [
+          "cpf",
+          "email",
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "RecursoJaExisteException": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "cause": {
+            "type": "object",
+            "properties": {
+              "stack_trace": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "class_loader_name": {
+                      "type": "string"
+                    },
+                    "module_name": {
+                      "type": "string"
+                    },
+                    "module_version": {
+                      "type": "string"
+                    },
+                    "method_name": {
+                      "type": "string"
+                    },
+                    "file_name": {
+                      "type": "string"
+                    },
+                    "line_number": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "native_method": {
+                      "type": "boolean"
+                    },
+                    "class_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "message": {
+                "type": "string"
+              },
+              "suppressed": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "stack_trace": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "class_loader_name": {
+                            "type": "string"
+                          },
+                          "module_name": {
+                            "type": "string"
+                          },
+                          "module_version": {
+                            "type": "string"
+                          },
+                          "method_name": {
+                            "type": "string"
+                          },
+                          "file_name": {
+                            "type": "string"
+                          },
+                          "line_number": {
+                            "type": "integer",
+                            "format": "int32"
+                          },
+                          "native_method": {
+                            "type": "boolean"
+                          },
+                          "class_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "localized_message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "localized_message": {
+                "type": "string"
+              }
+            }
+          },
+          "stack_trace": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "class_loader_name": {
+                  "type": "string"
+                },
+                "module_name": {
+                  "type": "string"
+                },
+                "module_version": {
+                  "type": "string"
+                },
+                "method_name": {
+                  "type": "string"
+                },
+                "file_name": {
+                  "type": "string"
+                },
+                "line_number": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "native_method": {
+                  "type": "boolean"
+                },
+                "class_name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "suppressed": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stack_trace": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "class_loader_name": {
+                        "type": "string"
+                      },
+                      "module_name": {
+                        "type": "string"
+                      },
+                      "module_version": {
+                        "type": "string"
+                      },
+                      "method_name": {
+                        "type": "string"
+                      },
+                      "file_name": {
+                        "type": "string"
+                      },
+                      "line_number": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "native_method": {
+                        "type": "boolean"
+                      },
+                      "class_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "message": {
+                  "type": "string"
+                },
+                "localized_message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "localized_message": {
+            "type": "string"
+          }
+        }
+      },
+      "RecursoNaoEncontradoException": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "cause": {
+            "type": "object",
+            "properties": {
+              "stack_trace": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "class_loader_name": {
+                      "type": "string"
+                    },
+                    "module_name": {
+                      "type": "string"
+                    },
+                    "module_version": {
+                      "type": "string"
+                    },
+                    "method_name": {
+                      "type": "string"
+                    },
+                    "file_name": {
+                      "type": "string"
+                    },
+                    "line_number": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "native_method": {
+                      "type": "boolean"
+                    },
+                    "class_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "message": {
+                "type": "string"
+              },
+              "suppressed": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "stack_trace": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "class_loader_name": {
+                            "type": "string"
+                          },
+                          "module_name": {
+                            "type": "string"
+                          },
+                          "module_version": {
+                            "type": "string"
+                          },
+                          "method_name": {
+                            "type": "string"
+                          },
+                          "file_name": {
+                            "type": "string"
+                          },
+                          "line_number": {
+                            "type": "integer",
+                            "format": "int32"
+                          },
+                          "native_method": {
+                            "type": "boolean"
+                          },
+                          "class_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "localized_message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "localized_message": {
+                "type": "string"
+              }
+            }
+          },
+          "stack_trace": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "class_loader_name": {
+                  "type": "string"
+                },
+                "module_name": {
+                  "type": "string"
+                },
+                "module_version": {
+                  "type": "string"
+                },
+                "method_name": {
+                  "type": "string"
+                },
+                "file_name": {
+                  "type": "string"
+                },
+                "line_number": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "native_method": {
+                  "type": "boolean"
+                },
+                "class_name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "suppressed": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stack_trace": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "class_loader_name": {
+                        "type": "string"
+                      },
+                      "module_name": {
+                        "type": "string"
+                      },
+                      "module_version": {
+                        "type": "string"
+                      },
+                      "method_name": {
+                        "type": "string"
+                      },
+                      "file_name": {
+                        "type": "string"
+                      },
+                      "line_number": {
+                        "type": "integer",
+                        "format": "int32"
+                      },
+                      "native_method": {
+                        "type": "boolean"
+                      },
+                      "class_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "message": {
+                  "type": "string"
+                },
+                "localized_message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "localized_message": {
+            "type": "string"
+          }
+        }
+      },
+      "AlterarStatusPedidoRequest": {
+        "required": [
+          "pedido_id",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "pedido_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "RECEBIDO",
+              "EM_PREPARACAO",
+              "PRONTO",
+              "FINALIZADO"
+            ]
+          }
+        }
+      },
+      "PagamentoStatusResponse": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "APROVADO",
+              "REPROVADO"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
