@@ -48,39 +48,40 @@ jobs:
 #          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_MEL }}
 #          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEL }}
 
-      - name: Create EKS Cluster if not exists
-#        if: steps.eks-check.outputs.cluster_exists == 'false'
-        run: |
-          eksctl create cluster \
-            --name fiap-app-eks-cluster \
-            --region us-east-1 \
-            --managed \
-            --node-type t2.micro \
-            --nodes 1
-
-      - name: Configure kubectl
-        run: |
-          aws eks update-kubeconfig --name fiap-app-eks-cluster --region us-east-1
-        if: success()
-
-      - name: Deploy Kubernetes
-        run: |
-          kubectl apply -f ./db/pod.yaml
-          kubectl apply -f ./db/service.yaml
-          kubectl apply -f ./api/deployment.yaml
-          kubectl apply -f ./api/service.yaml
-        env:
-          MYSQL_ROOT_USERNAME: '${{ secrets.MYSQL_ROOT_USERNAME }}'
-          MYSQL_ROOT_PASSWORD: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
-          MYSQL_HOST: '${{ secrets.MYSQL_HOST }}'
-          MYSQL_DB: '${{ secrets.MYSQL_DB }}'
-          MERCADO_PAGO_USER_ID: '${{ secrets.MERCADO_PAGO_USER_ID }}'
-          MERCADO_PAGO_EXTERNAL_ID: '${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}'
-          MERCADO_PAGO_TOKEN: '${{ secrets.MERCADO_PAGO_TOKEN }}'
-          MERCADO_PAGO_WEBHOOK_URL: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
-        if: success()
 #
-#      - name: Cleanup
+#      - name: Create EKS Cluster if not exists
+##        if: steps.eks-check.outputs.cluster_exists == 'false'
 #        run: |
-#          eksctl delete cluster --name fiap-app-eks-cluster --region us-east-1 --wait
-#        if: always()
+#          eksctl create cluster \
+#            --name fiap-app-eks-cluster \
+#            --region us-east-1 \
+#            --managed \
+#            --node-type t2.micro \
+#            --nodes 1
+#
+#      - name: Configure kubectl
+#        run: |
+#          aws eks update-kubeconfig --name fiap-app-eks-cluster --region us-east-1
+#        if: success()
+#
+#      - name: Deploy Kubernetes
+#        run: |
+#          kubectl apply -f ./db/pod.yaml
+#          kubectl apply -f ./db/service.yaml
+#          kubectl apply -f ./api/deployment.yaml
+#          kubectl apply -f ./api/service.yaml
+#        env:
+#          MYSQL_ROOT_USERNAME: '${{ secrets.MYSQL_ROOT_USERNAME }}'
+#          MYSQL_ROOT_PASSWORD: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
+#          MYSQL_HOST: '${{ secrets.MYSQL_HOST }}'
+#          MYSQL_DB: '${{ secrets.MYSQL_DB }}'
+#          MERCADO_PAGO_USER_ID: '${{ secrets.MERCADO_PAGO_USER_ID }}'
+#          MERCADO_PAGO_EXTERNAL_ID: '${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}'
+#          MERCADO_PAGO_TOKEN: '${{ secrets.MERCADO_PAGO_TOKEN }}'
+#          MERCADO_PAGO_WEBHOOK_URL: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
+#        if: success()
+##
+      - name: Cleanup EKS Cluster
+        run: |
+          eksctl delete cluster --name fiap-app-eks-cluster --region us-east-1 --wait
+        if: always()
