@@ -67,11 +67,11 @@ jobs:
       - name: Create secrets kubectl on first creation cluster
         if: steps.eks-check.outputs.cluster_exists == 'false'
         run: |
-          kubectl create secret generic db --from-literal=username='${{ secrets.MYSQL_ROOT_USERNAME }}' --from-literal=password='${{ secrets.MYSQL_ROOT_PASSWORD }}'
-          kubectl create secret generic mp --from-literal=user-id='${{ secrets.MERCADO_PAGO_USER_ID }}' --from-literal=external-id='${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}' --from-literal=token='${{ secrets.MERCADO_PAGO_TOKEN }}' --from-literal=webhook-url='${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
 
       - name: Deploy Kubernetes
         run: |
+          kubectl delete secret db 
+          kubectl delete secret mp
           kubectl apply -f ./kubernetes/api/load-balancer-service.yaml
           kubectl apply -f ./kubernetes/config/db.yaml
           kubectl apply -f ./kubernetes/config/db-migration.yaml
@@ -79,6 +79,13 @@ jobs:
           kubectl apply -f ./kubernetes/db/service.yaml
           kubectl apply -f ./kubernetes/api/deployment.yaml
           kubectl apply -f ./kubernetes/api/service.yaml
+        env:
+          MYSQL_ROOT_USERNAME: '${{ secrets.MYSQL_ROOT_USERNAME }}'
+          MYSQL_ROOT_PASSWORD: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
+          MERCADO_PAGO_USER_ID: '${{ secrets.MERCADO_PAGO_USER_ID }}'
+          MERCADO_PAGO_EXTERNAL_ID: '${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}'
+          MERCADO_PAGO_TOKEN: '${{ secrets.MERCADO_PAGO_TOKEN }}'
+          MERCADO_PAGO_WEBHOOK_URL: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
         if: success()
 
       - name: Test connection
