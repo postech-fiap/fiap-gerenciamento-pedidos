@@ -58,11 +58,11 @@ jobs:
             --node-type t2.micro \
             --nodes 1
 
-      - name: Configure kubectl on first creation cluster
-        if: steps.eks-check.outputs.cluster_exists == 'false'
+      - name: Configure kubectl
         run: |
           echo "Configuring EKS cluster"
           aws eks update-kubeconfig --name fiap-eks-cluster --region us-east-1
+        if: success()
 
       - name: Deploy Kubernetes
         run: |
@@ -75,6 +75,10 @@ jobs:
           kubectl apply -f ./kubernetes/db/service.yaml
           kubectl apply -f ./kubernetes/api/deployment.yaml
           kubectl apply -f ./kubernetes/api/service.yaml
+        if: success()
+
+      - name: Test connection
+        run: kubectl get svc
         if: success()
 #
 #      - name: Cleanup
