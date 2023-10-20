@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: fiap-gerenciamento-pedidos-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fiap-gerenciamento-pedidos-api
+  template:
+    metadata:
+      labels:
+        app: fiap-gerenciamento-pedidos-api
+    spec:
+      containers:
+        - name: api
+          image: melissa2019/api-0.0.1-snapshot:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: MYSQL_HOST
+            - name: MYSQL_DB
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: MYSQL_DB
+            - name: MYSQL_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: MYSQL_ROOT_USERNAME
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MERCADO_PAGO_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: MERCADO_PAGO_USER_ID
+            - name: MERCADO_PAGO_EXTERNAL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: MERCADO_PAGO_EXTERNAL_ID
+            - name: MERCADO_PAGO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: MERCADO_PAGO_TOKEN
+            - name: MERCADO_PAGO_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: MERCADO_PAGO_WEBHOOK_URL
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 2

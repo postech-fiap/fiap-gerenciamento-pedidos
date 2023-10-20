@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db
+  labels:
+    app: fiap-gerenciamento-pedidos-db
+spec:
+  containers:
+    - name: db
+      image: mysql:8.0
+      ports:
+        - containerPort: 3306
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: MYSQL_DATABASE
+      volumeMounts:
+        - mountPath: /docker-entrypoint-initdb.d/
+          name: migration
