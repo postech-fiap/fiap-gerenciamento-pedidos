@@ -70,8 +70,6 @@ jobs:
 
       - name: Deploy Kubernetes
         run: |
-          kubectl delete secret db 
-          kubectl delete secret mp
           kubectl apply -f ./kubernetes/api/load-balancer-service.yaml
           kubectl apply -f ./kubernetes/config/db.yaml
           kubectl apply -f ./kubernetes/config/db-migration.yaml
