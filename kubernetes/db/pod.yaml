@@ -14,12 +14,12 @@ spec:
         - name: MYSQL_ROOT_USERNAME
           valueFrom:
             secretKeyRef:
-              name: MYSQL_ROOT_USERNAME
+              name: mysql-root-username
               key: MYSQL_ROOT_USERNAME
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: MYSQL_ROOT_PASSWORD
+              name: mysql-root-password
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DB
           valueFrom:
