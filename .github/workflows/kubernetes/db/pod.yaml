@@ -11,16 +11,25 @@ spec:
       ports:
         - containerPort: 3306
       env:
+        - name: MYSQL_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: username
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: db
-              key: MYSQL_ROOT_PASSWORD
-        - name: MYSQL_DATABASE
+              key: password
+        - name: MYSQL_DB
           valueFrom:
-            secretKeyRef:
+            configMapKeyRef:
               name: db
-              key: MYSQL_DATABASE
+              key: mysql.database
       volumeMounts:
         - mountPath: /docker-entrypoint-initdb.d/
           name: migration
+  volumes:
+    - name: migration
+      configMap:
+        name: db-migration
