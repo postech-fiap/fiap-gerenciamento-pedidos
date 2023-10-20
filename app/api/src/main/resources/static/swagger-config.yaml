@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
-  title: Gerenciamento de Pedidos 2
-  description: Desafio Tech Challange FIAP 2
-  version: 1.0.0
+  title: Gerenciamento de Pedidos
+  description: Desafio Tech Challange FIAP
+  version: 3.0.0
 servers:
   - url: http://localhost:8080
     description: Generated server url
@@ -34,8 +34,8 @@ paths:
                 $ref: '#/components/schemas/BaseDeDadosException'
     post:
       tags:
-        - produto-controller2
-      summary: Cadastrar um produto 2
+        - produto-controller
+      summary: Cadastrar um produto
       operationId: post
       requestBody:
         content:
