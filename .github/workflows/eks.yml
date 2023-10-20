@@ -23,6 +23,13 @@ jobs:
           sudo mv kubectl /usr/local/bin/
         if: success()
 
+      - name: Install eksctl
+        run: |
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          tar -xzf eksctl_$(uname -s)_amd64.tar.gz -C /tmp && rm eksctl_$(uname -s)_amd64.tar.gz
+          sudo mv /tmp/eksctl /usr/local/bin
+        if: success()
+
 #      - name: Check if EKS Cluster Exists
 #        id: eks-check
 #        run: |
@@ -35,21 +42,7 @@ jobs:
 #          echo "::set-output name=cluster_exists::false"
 #          fi
 
-      - name: Setup eksctl
-        run: |
-          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-          tar -xzf eksctl_$(uname -s)_amd64.tar.gz -C /tmp && rm eksctl_$(uname -s)_amd64.tar.gz
-          sudo mv /tmp/eksctl /usr/local/bin
-        if: success()
-
       - name: Create EKS Cluster if not exists
 #        if: steps.eks-check.outputs.cluster_exists == 'false'
         run: |
-          echo "Creating EKS cluster"
-          eksctl create cluster \
-            --name fiap-app-eks-cluster \
-            --region us-east-1
-            --node-type t2.micro
-            --nodes 2
-            --nodes-min 1
-            --nodes-max 2
+          eksctl delete cluster --name fiap-app-eks-cluster --region us-east-1 --wait
