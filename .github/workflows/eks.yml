@@ -48,33 +48,34 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_MEL }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEL }}
 
-#      - name: Create EKS Cluster if not exists
-##        if: steps.eks-check.outputs.cluster_exists == 'false'
-#        run: |
-#          echo "Creating EKS cluster"
-#          eksctl create cluster \
-#            --name fiap-eks-cluster \
-#            --region us-east-1 \
-#            --node-type t2.micro \
-#            --nodes 1
-#
-#      - name: Configure kubectl
-#        run: |
-#          aws eks update-kubeconfig --name fiap-eks-cluster --region us-east-1
-#        if: success()
-#
-#      - name: Deploy Kubernetes
-#        run: |
-#          kubectl create secret generic db --from-literal=username='${{ secrets.MYSQL_ROOT_USERNAME }}' --from-literal=password='${{ secrets.MYSQL_ROOT_PASSWORD }}'
-#          kubectl create secret generic mp --from-literal=user-id='${{ secrets.MERCADO_PAGO_USER_ID }}' --from-literal=external-id='${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}' --from-literal=token='${{ secrets.MERCADO_PAGO_TOKEN }}' --from-literal=webhook-url='${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
-#          kubectl apply -f ./kubernetes/api/load-balancer-service.yaml
-#          kubectl apply -f ./kubernetes/config/db.yaml
-#          kubectl apply -f ./kubernetes/config/db-migration.yaml
-#          kubectl apply -f ./kubernetes/db/pod.yaml
-#          kubectl apply -f ./kubernetes/db/service.yaml
-#          kubectl apply -f ./kubernetes/api/deployment.yaml
-#          kubectl apply -f ./kubernetes/api/service.yaml
-#        if: success()
+      - name: Create EKS Cluster if not exists
+        if: steps.eks-check.outputs.cluster_exists == 'false'
+        run: |
+          echo "Creating EKS cluster"
+          eksctl create cluster \
+            --name fiap-eks-cluster \
+            --region us-east-1 \
+            --node-type t2.micro \
+            --nodes 1
+
+      - name: Configure kubectl
+        if: steps.eks-check.outputs.cluster_exists == 'false'
+        run: |
+          echo "Configuring EKS cluster"
+          aws eks update-kubeconfig --name fiap-eks-cluster --region us-east-1
+
+      - name: Deploy Kubernetes
+        run: |
+          kubectl create secret generic db --from-literal=username='${{ secrets.MYSQL_ROOT_USERNAME }}' --from-literal=password='${{ secrets.MYSQL_ROOT_PASSWORD }}'
+          kubectl create secret generic mp --from-literal=user-id='${{ secrets.MERCADO_PAGO_USER_ID }}' --from-literal=external-id='${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}' --from-literal=token='${{ secrets.MERCADO_PAGO_TOKEN }}' --from-literal=webhook-url='${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
+          kubectl apply -f ./kubernetes/api/load-balancer-service.yaml
+          kubectl apply -f ./kubernetes/config/db.yaml
+          kubectl apply -f ./kubernetes/config/db-migration.yaml
+          kubectl apply -f ./kubernetes/db/pod.yaml
+          kubectl apply -f ./kubernetes/db/service.yaml
+          kubectl apply -f ./kubernetes/api/deployment.yaml
+          kubectl apply -f ./kubernetes/api/service.yaml
+        if: success()
 #
 #      - name: Cleanup
 #        run: |
