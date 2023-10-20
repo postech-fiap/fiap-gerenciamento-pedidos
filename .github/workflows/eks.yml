@@ -74,3 +74,8 @@ jobs:
           MERCADO_PAGO_TOKEN: '${{ secrets.MERCADO_PAGO_TOKEN }}'
           MERCADO_PAGO_WEBHOOK_URL: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
         if: success()
+#
+#      - name: Cleanup
+#        run: |
+#          eksctl delete cluster --name fiap-app-eks-cluster --region us-east-1 --wait
+#        if: always()
