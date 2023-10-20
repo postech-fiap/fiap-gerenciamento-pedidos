@@ -1,0 +1,55 @@
+name: EKS (Kubernetes)
+on:
+  workflow_call:
+
+jobs:
+
+  EKS:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS CLI credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEL }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEL }}
+          aws-region: us-east-1
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+        if: success()
+
+#      - name: Check if EKS Cluster Exists
+#        id: eks-check
+#        run: |
+#          exists=$(aws eks describe-cluster --name fiap-app-eks-cluster --region us-east-1 2>&1)
+#          if [ $? -eq 0 ]; then
+#          echo "EKS cluster fiap-app-eks-cluster already exists"
+#          echo "::set-output name=cluster_exists::true"
+#          else
+#          echo "EKS cluster fiap-app-eks-cluster does not exist"
+#          echo "::set-output name=cluster_exists::false"
+#          fi
+
+      - name: Setup eksctl
+        run: |
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          tar -xzf eksctl_$(uname -s)_amd64.tar.gz -C /tmp && rm eksctl_$(uname -s)_amd64.tar.gz
+          sudo mv /tmp/eksctl /usr/local/bin
+        if: success()
+
+      - name: Create EKS Cluster if not exists
+#        if: steps.eks-check.outputs.cluster_exists == 'false'
+        run: |
+          echo "Creating EKS cluster"
+          eksctl create cluster \
+            --name fiap-app-eks-cluster \
+            --region us-east-1
+            --node-type t2.micro
+            --nodes 2
+            --nodes-min 1
+            --nodes-max 2
