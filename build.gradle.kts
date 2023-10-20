@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("jacoco")
     id("org.springframework.boot") version "3.1.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
     id("org.jetbrains.kotlin.plugin.jpa") version "1.8.21"
@@ -24,6 +25,7 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "jacoco")
 
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -31,7 +33,6 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 
@@ -44,5 +45,34 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    tasks.check {
+        dependsOn(tasks.jacocoTestCoverageVerification)
+    }
+
+    tasks.test {
+        finalizedBy(tasks.jacocoTestReport)
+    }
+
+    tasks.jacocoTestReport {
+        dependsOn(tasks.test)
+        reports {
+            xml.required.set(true)
+        }
+        classDirectories.setFrom(
+            files(classDirectories.files.map {
+                fileTree(it) {
+                    exclude(
+                        "**/models/**",
+                        "**/dtos/**",
+                        "**/valueobjects/**",
+                        "**/enums/**",
+                        "**/entities/**",
+                        "**/exceptions/**"
+                    )
+                }
+            })
+        )
     }
 }
