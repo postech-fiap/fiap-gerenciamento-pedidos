@@ -58,7 +58,7 @@ jobs:
             --node-type t2.micro \
             --nodes 1
 
-      - name: Configure kubectl
+      - name: Configure kubectl on first creation cluster
         if: steps.eks-check.outputs.cluster_exists == 'false'
         run: |
           echo "Configuring EKS cluster"
