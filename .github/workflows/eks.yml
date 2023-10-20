@@ -65,10 +65,10 @@ jobs:
 
       - name: Deploy Kubernetes
         run: |
-          kubectl apply -f ./db/pod.yaml
-          kubectl apply -f ./db/service.yaml
-          kubectl apply -f ./api/deployment.yaml
-          kubectl apply -f ./api/service.yaml
+          kubectl apply -f ./kubernetes/db/pod.yaml
+          kubectl apply -f ./kubernetes/db/service.yaml
+          kubectl apply -f ./kubernetes/api/deployment.yaml
+          kubectl apply -f ./kubernetes/api/service.yaml
         env:
           MYSQL_ROOT_USERNAME: '${{ secrets.MYSQL_ROOT_USERNAME }}'
           MYSQL_ROOT_PASSWORD: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
