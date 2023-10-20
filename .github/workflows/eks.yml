@@ -33,12 +33,12 @@ jobs:
 #      - name: Check if EKS Cluster Exists
 #        id: eks-check
 #        run: |
-#          exists=$(aws eks describe-cluster --name fiap-app-eks-cluster --region us-east-1 2>&1)
+#          exists=$(aws eks describe-cluster --name fiap-app1-eks-cluster --region us-east-1 2>&1)
 #          if [ $? -eq 0 ]; then
-#            echo "EKS cluster fiap-app-eks-cluster already exists"
+#            echo "EKS cluster fiap-app1-eks-cluster already exists"
 #            echo "::set-output name=cluster_exists::true"
 #          else
-#            echo "EKS cluster fiap-app-eks-cluster does not exist"
+#            echo "EKS cluster fiap-app1-eks-cluster does not exist"
 #            echo "::set-output name=cluster_exists::false"
 #          fi
 #        shell: bash
@@ -53,14 +53,14 @@ jobs:
         run: |
           echo "Creating EKS cluster"
           eksctl create cluster \
-            --name fiap-app-eks-cluster \
+            --name fiap-app1-eks-cluster \
             --region us-east-1 \
             --node-type t2.micro \
             --nodes 1
 
       - name: Configure kubectl
         run: |
-          aws eks update-kubeconfig --name fiap-app-eks-cluster --region us-east-1
+          aws eks update-kubeconfig --name fiap-app1-eks-cluster --region us-east-1
         if: success()
 
       - name: Deploy Kubernetes
@@ -82,5 +82,5 @@ jobs:
 #
 #      - name: Cleanup
 #        run: |
-#          eksctl delete cluster --name fiap-app-eks-cluster --region us-east-1 --wait
+#          eksctl delete cluster --name fiap-app1-eks-cluster --region us-east-1 --wait
 #        if: always()
