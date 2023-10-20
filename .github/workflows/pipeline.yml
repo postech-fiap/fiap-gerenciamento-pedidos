@@ -102,5 +102,5 @@ jobs:
 
   deploy-to-aws-eks:
 #    needs: docker-app-image
-    uses: ./.github/workflows/eks.yml
+    uses: ./.github/workflows/kubernetes/eks.yml
     secrets: inherit
