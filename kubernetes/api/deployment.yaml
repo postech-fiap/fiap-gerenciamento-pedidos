@@ -33,33 +33,33 @@ spec:
             - name: MYSQL_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: db
-                  key: username
+                  name: MYSQL_ROOT_USERNAME
+                  key: MYSQL_ROOT_USERNAME
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db
-                  key: password
+                  name: MYSQL_ROOT_PASSWORD
+                  key: MYSQL_ROOT_PASSWORD
             - name: MERCADO_PAGO_USER_ID
               valueFrom:
                 secretKeyRef:
-                  name: mp
-                  key: user-id
+                  name: MERCADO_PAGO_USER_ID
+                  key: MERCADO_PAGO_USER_ID
             - name: MERCADO_PAGO_EXTERNAL_ID
               valueFrom:
                 secretKeyRef:
-                  name: mp
-                  key: external-id
+                  name: MERCADO_PAGO_EXTERNAL_ID
+                  key: MERCADO_PAGO_EXTERNAL_ID
             - name: MERCADO_PAGO_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: mp
-                  key: token
+                  name: MERCADO_PAGO_TOKEN
+                  key: MERCADO_PAGO_TOKEN
             - name: MERCADO_PAGO_WEBHOOK_URL
               valueFrom:
                 secretKeyRef:
-                  name: mp
-                  key: webhook-url
+                  name: MERCADO_PAGO_WEBHOOK_URL
+                  key: MERCADO_PAGO_WEBHOOK_URL
           readinessProbe:
             httpGet:
               path: /ping
