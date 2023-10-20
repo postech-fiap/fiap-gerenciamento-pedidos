@@ -64,10 +64,14 @@ jobs:
           aws eks update-kubeconfig --name fiap-eks-cluster --region us-east-1
         if: success()
 
-      - name: Deploy Kubernetes
+      - name: Create secrets kubectl on first creation cluster
+        if: steps.eks-check.outputs.cluster_exists == 'false'
         run: |
           kubectl create secret generic db --from-literal=username='${{ secrets.MYSQL_ROOT_USERNAME }}' --from-literal=password='${{ secrets.MYSQL_ROOT_PASSWORD }}'
           kubectl create secret generic mp --from-literal=user-id='${{ secrets.MERCADO_PAGO_USER_ID }}' --from-literal=external-id='${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}' --from-literal=token='${{ secrets.MERCADO_PAGO_TOKEN }}' --from-literal=webhook-url='${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
+
+      - name: Deploy Kubernetes
+        run: |
           kubectl apply -f ./kubernetes/api/load-balancer-service.yaml
           kubectl apply -f ./kubernetes/config/db.yaml
           kubectl apply -f ./kubernetes/config/db-migration.yaml
