@@ -51,6 +51,7 @@ jobs:
       - name: Create EKS Cluster if not exists
 #        if: steps.eks-check.outputs.cluster_exists == 'false'
         run: |
+          echo "Creating EKS cluster"
           eksctl create cluster \
             --name fiap-app-eks-cluster \
             --region us-east-1 \
