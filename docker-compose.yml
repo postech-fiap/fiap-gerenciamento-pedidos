@@ -8,6 +8,8 @@ services:
     environment:
       MYSQL_ROOT_USERNAME: "${MYSQL_ROOT_USERNAME}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DB: gerenciamento_pedidos_db
+      MYSQL_HOST: "${MYSQL_HOST}"
       MERCADO_PAGO_USER_ID: "${MERCADO_PAGO_USER_ID}"
       MERCADO_PAGO_EXTERNAL_ID: "${MERCADO_PAGO_EXTERNAL_ID}"
       MERCADO_PAGO_TOKEN: "${MERCADO_PAGO_TOKEN}"
@@ -24,8 +26,9 @@ services:
     image: mysql:8.0
     container_name: mysqldb-container
     environment:
+      MYSQL_ROOT_USERNAME: "${MYSQL_ROOT_USERNAME}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQL_DATABASE: gerenciamento_pedidos_db
+      MYSQL_DB: gerenciamento_pedidos_db
     ports:
       - "3306:3306"
     volumes:
