@@ -1,9 +1,9 @@
 name: EKS Deploy (Kubernetes)
 on:
+  push:
   workflow_call:
 
 jobs:
-
   EKS:
     runs-on: ubuntu-latest
 
