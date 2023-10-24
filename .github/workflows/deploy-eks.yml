@@ -1,0 +1,47 @@
+name: EKS Deploy (Kubernetes)
+on:
+  workflow_call:
+
+jobs:
+
+  EKS:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS CLI credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEL }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEL }}
+          aws-region: us-east-1
+
+      - name: Configure kubeconfig with cluster aws
+        run: |
+          echo "Configuring EKS cluster"
+          aws eks update-kubeconfig --name fiap-app-eks --region us-east-1
+        if: success()
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+        if: success()
+
+      - name: Deploy Kubernetes
+        run: |
+          kubectl apply -f ./kubernetes/api/deployment.yaml
+        env:
+          MYSQL_ROOT_USERNAME: '${{ secrets.MYSQL_ROOT_USERNAME }}'
+          MYSQL_ROOT_PASSWORD: '${{ secrets.MYSQL_ROOT_PASSWORD }}'
+          MERCADO_PAGO_USER_ID: '${{ secrets.MERCADO_PAGO_USER_ID }}'
+          MERCADO_PAGO_EXTERNAL_ID: '${{ secrets.MERCADO_PAGO_EXTERNAL_ID }}'
+          MERCADO_PAGO_TOKEN: '${{ secrets.MERCADO_PAGO_TOKEN }}'
+          MERCADO_PAGO_WEBHOOK_URL: '${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}'
+        if: success()
+
+      - name: Test connection
+        run: kubectl get svc
+        if: success()
