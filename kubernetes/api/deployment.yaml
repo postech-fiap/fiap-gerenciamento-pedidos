@@ -21,21 +21,45 @@ spec:
             - containerPort: 80
           env:
             - name: MYSQL_HOST
-              value: VAL_MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.host
             - name: MYSQL_DB
-              value: VAL_MYSQL_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: db
+                  key: mysql.database
             - name: MYSQL_ROOT_USERNAME
-              value: VAL_MYSQL_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: username
             - name: MYSQL_ROOT_PASSWORD
-              value: VAL_MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: password
             - name: MERCADO_PAGO_USER_ID
-              value: VAL_MERCADO_PAGO_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: user-id
             - name: MERCADO_PAGO_EXTERNAL_ID
-              value: VAL_MERCADO_PAGO_EXTERNAL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: external-id
             - name: MERCADO_PAGO_TOKEN
-              value: VAL_MERCADO_PAGO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: token
             - name: MERCADO_PAGO_WEBHOOK_URL
-              value: VAL_MERCADO_PAGO_WEBHOOK_URLb"
+              valueFrom:
+                secretKeyRef:
+                  name: mp
+                  key: webhook-url
           readinessProbe:
             httpGet:
               path: /ping
