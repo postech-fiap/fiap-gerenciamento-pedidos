@@ -90,5 +90,6 @@ jobs:
 
   deploy-to-aws-eks:
     needs: docker-app-image
+    if: github.ref == 'refs/heads/feature/adjusts-pipeline'
     uses: ./.github/workflows/deploy-eks.yml
     secrets: inherit
