@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db
-data:
-  mysql.host: 'db:3306'
-  mysql.database: 'gerenciamento_pedidos_db'
