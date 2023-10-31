@@ -35,8 +35,8 @@ jobs:
           kubectl delete secret db --ignore-not-found
           kubectl delete secret mp --ignore-not-found
           
-          kubectl create secret generic mp --from-literal=user-id="${{secrets.MERCADO_PAGO_USER_ID}}" --from-literal=external-id="${{secrets.MERCADO_PAGO_EXTERNAL_ID}}" --from-literal=token="${{secrets.MERCADO_PAGO_TOKEN}}" --from-literal=webhook-url="${{secrets.MERCADO_PAGO_WEBHOOK_URL}}"
-          kubectl create secret generic db --from-literal=username="${{secrets.MYSQL_ROOT_USERNAME}}" --from-literal=password="${{secrets.MYSQL_ROOT_PASSWORD}}"
+          kubectl create secret generic mp --from-literal=user-id='${{secrets.MERCADO_PAGO_USER_ID}}' --from-literal=external-id='${{secrets.MERCADO_PAGO_EXTERNAL_ID}}' --from-literal=token='${{secrets.MERCADO_PAGO_TOKEN}}' --from-literal=webhook-url='${{secrets.MERCADO_PAGO_WEBHOOK_URL}}'
+          kubectl create secret generic db --from-literal=username='${{secrets.MYSQL_ROOT_USERNAME}}' --from-literal=password='${{secrets.MYSQL_ROOT_PASSWORD}}'
         if: success()
 
       - name: Deploy Kubernetes
