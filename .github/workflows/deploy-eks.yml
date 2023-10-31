@@ -2,6 +2,17 @@ name: EKS Deploy (Kubernetes)
 on:
   workflow_call:
 
+env:
+  # MYSQL
+  mysql_root_username: ${{secrets.MYSQL_ROOT_USERNAME}}
+  mysql_root_password: ${{secrets.MYSQL_ROOT_PASSWORD}}
+
+  # Mercado Pago
+  mercado_pago_user_id: ${{secrets.MERCADO_PAGO_USER_ID}}
+  mercado_pago_external_id: ${{secrets.MERCADO_PAGO_EXTERNAL_ID}}
+  mercado_pago_token: ${{secrets.MERCADO_PAGO_TOKEN}}
+  mercado_pago_webhook_url: ${{secrets.MERCADO_PAGO_WEBHOOK_URL}}
+
 jobs:
 
   EKS:
@@ -20,7 +31,7 @@ jobs:
       - name: Configure kubeconfig with cluster aws
         run: |
           echo "Configuring EKS cluster"
-          aws eks update-kubeconfig --name fiap-aws-eks3 --region us-east-1
+          aws eks update-kubeconfig --name fiap-aws-eks4 --region us-east-1
         if: success()
 
       - name: Install kubectl
@@ -35,8 +46,8 @@ jobs:
           kubectl delete secret db --ignore-not-found
           kubectl delete secret mp --ignore-not-found
           
-          kubectl create secret generic mp --from-literal=user-id='${{secrets.MERCADO_PAGO_USER_ID}}' --from-literal=external-id='${{secrets.MERCADO_PAGO_EXTERNAL_ID}}' --from-literal=token='${{secrets.MERCADO_PAGO_TOKEN}}' --from-literal=webhook-url='${{secrets.MERCADO_PAGO_WEBHOOK_URL}}'
-          kubectl create secret generic db --from-literal=username='${{secrets.MYSQL_ROOT_USERNAME}}' --from-literal=password='${{secrets.MYSQL_ROOT_PASSWORD}}'
+          kubectl create secret generic mp --from-literal=user-id=${{env.mercado_pago_user_id}} --from-literal=external-id=${{env.mercado_pago_external_id}} --from-literal=token=${{env.mercado_pago_token}} --from-literal=webhook-url=${{env.mercado_pago_webhook_url}}
+          kubectl create secret generic db --from-literal=username=${{env.mysql_root_username}} --from-literal=password=${{env.mysql_root_password}}
         if: success()
 
       - name: Deploy Kubernetes
