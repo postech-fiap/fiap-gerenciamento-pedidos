@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("jacoco")
+    id("org.sonarqube") version "3.5.0.2730"
     id("org.springframework.boot") version "3.1.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
     id("org.jetbrains.kotlin.plugin.jpa") version "1.8.21"
