@@ -5,13 +5,6 @@ Aplicação responsável pela automatização e gerenciamento de pedidos de uma 
 ## Executando com Kubernetes (recomendado)
 
 Com o `kubectl` instalado, execute os seguintes comandos:
-# Substituir Secrets no deployment.yaml e pod.yaml 
-- MYSQL_ROOT_USERNAME
-- MYSQL_ROOT_PASSWORD
-- MERCADO_PAGO_USER_ID
-- MERCADO_PAGO_EXTERNAL_ID
-- MERCADO_PAGO_TOKEN
-- MERCADO_PAGO_WEBHOOK_URL
 
 ```bash
 # Criar Secrets
