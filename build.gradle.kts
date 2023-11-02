@@ -76,5 +76,12 @@ subprojects {
             })
         )
     }
+}
 
+sonarqube {
+    properties {
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths", "app/domain/build/reports/jacoco/test/jacocoTestReport.xml"
+        )
+    }
 }
