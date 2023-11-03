@@ -60,6 +60,7 @@ subprojects {
         dependsOn(tasks.test)
         reports {
             xml.required.set(true)
+            xml.outputLocation.set(file("${rootDir}/app/api/build/reports/jacoco/jacocoTestReport.xml"))
         }
         classDirectories.setFrom(
             files(classDirectories.files.map {
@@ -77,3 +78,8 @@ subprojects {
         )
     }
 }
+//
+//jacoco {
+//    toolVersion = "0.8.9"
+//    reportsDirectory.set(layout.buildDirectory.dir("reports/jacoco"))
+//}
