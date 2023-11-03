@@ -76,14 +76,4 @@ subprojects {
             })
         )
     }
-
-    tasks.jacocoTestCoverageVerification {
-        violationRules {
-            rule {
-                limit {
-                    minimum = "0".toBigDecimal()
-                }
-            }
-        }
-    }
 }
