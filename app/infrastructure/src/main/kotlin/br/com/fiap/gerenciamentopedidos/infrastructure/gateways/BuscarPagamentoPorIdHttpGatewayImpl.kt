@@ -15,9 +15,9 @@ private const val HEADER_NAME_AUTH = "Authorization"
 private const val ERROR_MESSAGE = "Erro de integração para buscar o pagamento. Detalhes: %s"
 
 class BuscarPagamentoPorIdHttpGatewayImpl(
-        private val restTemplate: RestTemplate,
-        private val mercadoPagoApiMerchantOrdersPagamento: String,
-        private val mercadoPagoToken: String
+    private val restTemplate: RestTemplate,
+    private val mercadoPagoApiMerchantOrdersPagamento: String,
+    private val mercadoPagoToken: String
 ) : BuscarPagamentoPorIdGateway {
 
     override fun executar(id: String): MerchantOrders {
@@ -25,10 +25,11 @@ class BuscarPagamentoPorIdHttpGatewayImpl(
             .buildAndExpand(id)
             .toUriString()
 
-        val entity = HttpEntity<Void>(buildHeaders())
+        val entity = HttpEntity<Unit>(buildHeaders())
 
         try {
-            val response = restTemplate.exchange(url, HttpMethod.GET, entity, MercadoPagoResponseMerchantOrders::class.java)
+            val response =
+                restTemplate.exchange(url, HttpMethod.GET, entity, MercadoPagoResponseMerchantOrders::class.java)
 
             if (response.statusCode != HttpStatus.OK) {
                 throw IntegracaoAPIException(

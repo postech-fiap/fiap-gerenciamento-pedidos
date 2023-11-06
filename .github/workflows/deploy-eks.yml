@@ -1,0 +1,60 @@
+name: EKS Deploy (Kubernetes)
+on:
+  workflow_call:
+
+env:
+  # MYSQL
+  mysql_root_username: ${{secrets.MYSQL_ROOT_USERNAME}}
+  mysql_root_password: ${{secrets.MYSQL_ROOT_PASSWORD}}
+
+  # Mercado Pago
+  mercado_pago_user_id: ${{secrets.MERCADO_PAGO_USER_ID}}
+  mercado_pago_external_id: ${{secrets.MERCADO_PAGO_EXTERNAL_ID}}
+  mercado_pago_token: ${{secrets.MERCADO_PAGO_TOKEN}}
+  mercado_pago_webhook_url: ${{secrets.MERCADO_PAGO_WEBHOOK_URL}}
+
+jobs:
+
+  EKS:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS CLI credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_MEL }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_MEL }}
+          aws-region: us-east-1
+
+      - name: Configure kubeconfig with cluster aws
+        run: |
+          echo "Configuring EKS cluster"
+          aws eks update-kubeconfig --name fiap-pedidos-eks --region us-east-1
+        if: success()
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+        if: success()
+
+      - name: Configuring Secrets on Kubernetes
+        run: |
+          kubectl delete secret db --ignore-not-found
+          kubectl delete secret mp --ignore-not-found
+          
+          kubectl create secret generic mp --from-literal=user-id=${{env.mercado_pago_user_id}} --from-literal=external-id=${{env.mercado_pago_external_id}} --from-literal=token=${{env.mercado_pago_token}} --from-literal=webhook-url=${{env.mercado_pago_webhook_url}}
+          kubectl create secret generic db --from-literal=username=${{env.mysql_root_username}} --from-literal=password=${{env.mysql_root_password}}
+        if: success()
+
+      - name: Deploy Kubernetes
+        run: |
+          kubectl apply -f ./kubernetes/api/deployment.yaml
+        if: success()
+
+      - name: Test connection
+        run: kubectl get svc
+        if: success()
