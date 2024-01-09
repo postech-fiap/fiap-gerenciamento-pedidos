@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import jakarta.persistence.*
@@ -8,7 +9,6 @@ import java.time.OffsetDateTime
 @Entity
 @Table(name = "pedido")
 data class PedidoEntity(
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -38,30 +38,20 @@ data class PedidoEntity(
     )
     var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(
-        mappedBy = "pedido",
-        fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true
-    )
-    var pagamento: PagamentoEntity? = null
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento", nullable = false)
+    var statusPagamento: PagamentoStatus
 ) {
-    fun toModel(): Pedido {
-        val cliente = cliente?.toModel()
-
-        val produtos = produtos?.map { it.toModel() }
-
-        return Pedido(
-            id = id,
-            dataHora = dataHora!!,
-            status = status!!,
-            tempoEsperaMinutos = tempoEsperaMinutos!!,
-            numero = numero!!,
-            cliente = cliente,
-            items = produtos!!,
-            pagamento = pagamento?.toModel()
-        )
-    }
+    fun toModel() = Pedido(
+        id = id,
+        dataHora = dataHora!!,
+        status = status!!,
+        tempoEsperaMinutos = tempoEsperaMinutos!!,
+        numero = numero!!,
+        cliente = cliente?.toModel(),
+        items = produtos?.map { it.toModel() }!!,
+        statusPagamento = statusPagamento
+    )
 
     companion object {
         fun fromModel(pedido: Pedido): PedidoEntity {
@@ -71,12 +61,11 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
+                statusPagamento = pedido.statusPagamento!!,
                 cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) }
             )
-            entity.pagamento = pedido.pagamento.let { PagamentoEntity.fromModel(it!!, entity) }
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity
         }
     }
 }
-

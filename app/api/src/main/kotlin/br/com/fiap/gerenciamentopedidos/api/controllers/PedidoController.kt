@@ -23,7 +23,4 @@ class PedidoController(private val pedidoAdapter: PedidoAdapter) {
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
         pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest)
-
-    @GetMapping("/{id}/pagamento/status")
-    fun consultarStatusPagamento(@PathVariable id: Long) = pedidoAdapter.consultarStatusPagamento(id)
 }

@@ -11,6 +11,4 @@ interface PedidoAdapter {
     fun cadastrarPedido(request: CadastrarPedidoRequest): PedidoResponse
 
     fun alterarStatusPedido(request: AlterarStatusPedidoRequest)
-
-    fun consultarStatusPagamento(id: Long) : PagamentoStatusResponse
 }

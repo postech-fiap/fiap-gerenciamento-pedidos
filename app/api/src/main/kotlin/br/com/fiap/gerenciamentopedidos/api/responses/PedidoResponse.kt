@@ -10,5 +10,5 @@ class PedidoResponse(pedido: Pedido) {
     val numero = pedido.numero
     val cliente = pedido.cliente?.let { ClienteResponse(it) }
     val produtos = pedido.items.map { PedidoProdutoResponse(it) }
-    val pagamento = pedido.pagamento?.let { PagamentoResponse(it) }
+    val pagamento = pedido.statusPagamento
 }

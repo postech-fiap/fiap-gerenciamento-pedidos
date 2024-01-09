@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
@@ -12,7 +13,7 @@ data class Pedido(
     var status: PedidoStatus = PedidoStatus.PENDENTE,
     var cliente: Cliente? = null,
     var items: List<Item> = listOf(),
-    var pagamento: Pagamento? = null,
+    var statusPagamento: PagamentoStatus? = null,
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null
 ) : Model {
@@ -45,8 +46,8 @@ data class Pedido(
         valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
-    fun gerarQrCodePagamento(pagamento: Pagamento) {
-        this.pagamento = pagamento
+    fun alterarPagamentoStatus(pagamento: PagamentoStatus) {
+        this.statusPagamento = pagamento
     }
 
     fun alterarStatus(status: PedidoStatus) {

@@ -8,7 +8,6 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "cliente")
 data class ClienteEntity(
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

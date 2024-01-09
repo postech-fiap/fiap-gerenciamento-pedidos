@@ -15,7 +15,6 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
             "JOIN FETCH pedido.produtos pedido_produto " +
             "JOIN FETCH pedido_produto.produto produto " +
             "JOIN FETCH produto.imagem produto_imagem " +
-            "JOIN FETCH pedido.pagamento pagamento " +
             "WHERE pedido.status <> 'FINALIZADO' " +
             "ORDER BY FIELD (pedido.status, 'PRONTO', 'EM_PREPARACAO', 'RECEBIDO')")
     fun buscarPedidos(): List<PedidoEntity>

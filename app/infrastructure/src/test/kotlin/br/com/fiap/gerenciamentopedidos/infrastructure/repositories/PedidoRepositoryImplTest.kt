@@ -3,7 +3,6 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
-import br.com.fiap.gerenciamentopedidos.domain.models.Pagamento
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.PedidoEntity
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
-import java.time.OffsetDateTime
 import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
@@ -37,10 +35,7 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = Random.nextLong().toBigDecimal()
-            ),
+            statusPagamento = PagamentoStatus.APROVADO,
             items = listOf(
                 Item(
                     produto = Produto(
@@ -109,10 +104,7 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
-            ),
+            statusPagamento = PagamentoStatus.APROVADO,
             items = listOf(
                 Item(
                     produto = Produto(
@@ -152,10 +144,7 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
-            ),
+            statusPagamento = PagamentoStatus.APROVADO,
             items = listOf(
                 Item(
                     produto = Produto(
@@ -215,10 +204,7 @@ class PedidoRepositoryImplTest {
         val pedido = Pedido(
             id = 1,
             numero = "1",
-            pagamento = Pagamento(
-                1, OffsetDateTime.now(), PagamentoStatus.APROVADO,
-                qrCode = Random.nextLong().toString(), valorTotal = BigDecimal.valueOf(1.0)
-            ),
+            statusPagamento = PagamentoStatus.APROVADO,
             items = listOf(
                 Item(
                     produto = Produto(
