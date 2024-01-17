@@ -3,9 +3,10 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.models.*
-import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
-import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
-import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
 class BuscarPedidosUseCaseImplTest {
@@ -61,9 +61,8 @@ class BuscarPedidosUseCaseImplTest {
     }
 
     private fun criarPedido(): Pedido {
-        val pedido = Pedido("1")
+        val pedido = Pedido(numero = "1", clienteId = 1)
         pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
-        pedido.atribuirCliente(Cliente(1, Cpf("73139333552"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido
     }

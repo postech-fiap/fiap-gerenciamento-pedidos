@@ -1,31 +1,21 @@
 package br.com.fiap.gerenciamentopedidos.api.config
 
-import br.com.fiap.gerenciamentopedidos.api.adapters.ClienteAdapterImpl
 import br.com.fiap.gerenciamentopedidos.api.adapters.PedidoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.api.adapters.ProdutoAdapterImpl
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.ClienteRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorCpfUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.CadastrarClienteUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorCpfUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.BuscarClientePorIdUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.cliente.CadastrarClienteUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ClienteRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
-import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ClienteJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -65,20 +55,7 @@ class AppBeansConfig(
     fun obterProdutoPorIdUseCase(repository: ProdutoRepository) = ObterProdutoPorIdUseCaseImpl(repository)
 
     @Bean
-    fun clienteRepository(clienteJpaRepository: ClienteJpaRepository) = ClienteRepositoryImpl(clienteJpaRepository)
-
-    @Bean
-    fun cadastrarClienteUseCase(repository: ClienteRepository) = CadastrarClienteUseCaseImpl(repository)
-
-    @Bean
-    fun buscarClientePorCpfUseCase(repository: ClienteRepository) = BuscarClientePorCpfUseCaseImpl(repository)
-
-    @Bean
-    fun buscarClientePorIdUseCase(repository: ClienteRepository) = BuscarClientePorIdUseCaseImpl(repository)
-
-    @Bean
     fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
-
 
     @Bean
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
@@ -95,23 +72,12 @@ class AppBeansConfig(
     @Bean
     fun cadastrarPedidoUseCase(
         pedidoRepository: PedidoRepository,
-        buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
         gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
     ) = CadastrarPedidoUseCaseImpl(
         pedidoRepository,
-        buscarClientePorIdUseCase,
         gerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase
-    )
-
-    @Bean
-    fun clienteFacade(
-        cadastrarClienteUseCase: CadastrarClienteUseCase,
-        buscarClientePorCpfUseCase: BuscarClientePorCpfUseCase
-    ) = ClienteAdapterImpl(
-        cadastrarClienteUseCase,
-        buscarClientePorCpfUseCase
     )
 
     @Bean
@@ -119,11 +85,7 @@ class AppBeansConfig(
         buscarPedidosUseCase: BuscarPedidosUseCase,
         cadastrarPedidoUseCase: CadastrarPedidoUseCase,
         alterarStatusPedidoUseCase: AlterarStatusPedidoUseCase
-    ) = PedidoAdapterImpl(
-        buscarPedidosUseCase,
-        cadastrarPedidoUseCase,
-        alterarStatusPedidoUseCase
-    )
+    ) = PedidoAdapterImpl(buscarPedidosUseCase, cadastrarPedidoUseCase, alterarStatusPedidoUseCase)
 
     @Bean
     fun produtoFacade(

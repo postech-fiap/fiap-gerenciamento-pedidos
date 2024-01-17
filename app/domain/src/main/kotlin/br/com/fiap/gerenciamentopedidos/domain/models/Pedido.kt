@@ -11,7 +11,7 @@ data class Pedido(
     val id: Long? = null,
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     var status: PedidoStatus = PedidoStatus.PENDENTE,
-    var cliente: Cliente? = null,
+    var clienteId: Long? = null,
     var items: List<Item> = listOf(),
     var statusPagamento: PagamentoStatus? = null,
     var tempoEsperaMinutos: Long? = 0,
@@ -19,10 +19,6 @@ data class Pedido(
 ) : Model {
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
-    }
-
-    fun atribuirCliente(cliente: Cliente) {
-        this.cliente = cliente
     }
 
     fun adicionarItem(item: Item) {

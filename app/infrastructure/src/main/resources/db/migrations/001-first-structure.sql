@@ -1,15 +1,6 @@
 create database if not exists gerenciamento_pedidos_db;
 use gerenciamento_pedidos_db;
 
-create table if not exists cliente (
-    id bigint auto_increment,
-    cpf char(11) not null,
-    email varchar(100) not null,
-    nome varchar(100) not null,
-    constraint pk_cliente primary key (id),
-    constraint uc_cliente_cpf unique (cpf)
-);
-
 create table if not exists produto (
     id bigint auto_increment,
     valor decimal(10,2) not null,
@@ -33,12 +24,11 @@ create table if not exists imagem (
 create table if not exists pedido (
     id bigint auto_increment,
     data_hora timestamp not null default now(),
-    status enum('RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO') not null,
+    status enum('PENDENTE', 'APROVADO') not null,
     cliente_id bigint,
     tempo_espera_minutos int not null,
     numero char(4) not null,
-    constraint pk_pedido primary key (id),
-    constraint fk_pedido_cliente foreign key (cliente_id) references cliente (id) on delete restrict on update restrict
+    constraint pk_pedido primary key (id)
 );
 
 create table if not exists pedido_produto (
@@ -51,15 +41,4 @@ create table if not exists pedido_produto (
     constraint pk_pedido_produto primary key (id),
     constraint fk_pedido_produto_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict,
     constraint fk_pedido_produto_produto foreign key (produto_id) references produto (id) on delete restrict on update restrict
-);
-
-create table if not exists pagamento (
-    id bigint auto_increment,
-    data_hora timestamp not null default now(),
-    status enum('APROVADO', 'REPROVADO') not null,
-    qr_code varchar(255) not null,
-    valor_total decimal(10,2) not null,
-    pedido_id bigint not null,
-    constraint pk_pagamento primary key (id),
-    constraint fk_pagamento_pedido foreign key (pedido_id) references pedido (id) on delete restrict on update restrict
 );

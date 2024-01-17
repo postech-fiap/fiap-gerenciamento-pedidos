@@ -26,9 +26,12 @@ data class PedidoEntity(
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = true)
-    var cliente: ClienteEntity? = null,
+    @Column(name = "cliente_id")
+    val clienteId: Long? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento", nullable = false)
+    val statusPagamento: PagamentoStatus,
 
     @OneToMany(
         mappedBy = "pedido",
@@ -37,20 +40,17 @@ data class PedidoEntity(
         orphanRemoval = true
     )
     var produtos: List<PedidoProdutoEntity>? = null,
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_pagamento", nullable = false)
-    var statusPagamento: PagamentoStatus
 ) {
+
     fun toModel() = Pedido(
         id = id,
         dataHora = dataHora!!,
         status = status!!,
         tempoEsperaMinutos = tempoEsperaMinutos!!,
         numero = numero!!,
-        cliente = cliente?.toModel(),
-        items = produtos?.map { it.toModel() }!!,
-        statusPagamento = statusPagamento
+        clienteId = clienteId,
+        statusPagamento = statusPagamento,
+        items = produtos?.map { it.toModel() }!!
     )
 
     companion object {
@@ -62,7 +62,7 @@ data class PedidoEntity(
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
                 statusPagamento = pedido.statusPagamento!!,
-                cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) }
+                clienteId = pedido.clienteId
             )
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity

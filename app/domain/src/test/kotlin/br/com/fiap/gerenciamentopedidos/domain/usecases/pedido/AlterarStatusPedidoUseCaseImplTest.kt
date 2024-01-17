@@ -5,9 +5,10 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.models.*
-import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Cpf
-import br.com.fiap.gerenciamentopedidos.domain.valueobjects.Email
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -30,18 +31,18 @@ class AlterarStatusPedidoUseCaseImplTest {
     lateinit var pedidoPort: PedidoRepository
 
     @Test
-    fun `deve alterar o status do pedido para EM_PREPARACAO com Sucesso`() {
+    fun `deve alterar o status do pedido para APROVADO com Sucesso`() {
         //given
         val pedidoId = 1L
         val pedido = criarPedido()
         val copyPedido = pedido.copy()
-        copyPedido.alterarStatus(PedidoStatus.EM_PREPARACAO)
+        copyPedido.alterarStatus(PedidoStatus.APROVADO)
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
 
         //when
-        useCase.executar(pedidoId, PedidoStatus.EM_PREPARACAO)
+        useCase.executar(pedidoId, PedidoStatus.APROVADO)
 
         //then
         verify(exactly = 1) { pedidoPort.buscarPedidoPorId(pedidoId) }
@@ -74,9 +75,8 @@ class AlterarStatusPedidoUseCaseImplTest {
     }
 
     private fun criarPedido(): Pedido {
-        val pedido = Pedido("1")
+        val pedido = Pedido(numero = "1", clienteId = 1)
         pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
-        pedido.atribuirCliente(Cliente(1, Cpf("73139333552"), "Derick Silva", Email("dsilva@gmail.com")))
         pedido.adicionarItem(criarItem())
         return pedido
     }

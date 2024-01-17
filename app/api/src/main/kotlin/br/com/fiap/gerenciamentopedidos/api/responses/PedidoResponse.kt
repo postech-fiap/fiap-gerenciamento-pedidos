@@ -8,7 +8,7 @@ class PedidoResponse(pedido: Pedido) {
     val status = pedido.status
     val tempoEsperaMinutos = pedido.tempoEsperaMinutos
     val numero = pedido.numero
-    val cliente = pedido.cliente?.let { ClienteResponse(it) }
+    val clienteId = pedido.clienteId
     val produtos = pedido.items.map { PedidoProdutoResponse(it) }
     val pagamento = pedido.statusPagamento
 }
