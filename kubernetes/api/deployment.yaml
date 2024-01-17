@@ -40,26 +40,6 @@ spec:
                 secretKeyRef:
                   name: db
                   key: password
-            - name: MERCADO_PAGO_USER_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mp
-                  key: user-id
-            - name: MERCADO_PAGO_EXTERNAL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mp
-                  key: external-id
-            - name: MERCADO_PAGO_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: mp
-                  key: token
-            - name: MERCADO_PAGO_WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: mp
-                  key: webhook-url
           readinessProbe:
             httpGet:
               path: /ping

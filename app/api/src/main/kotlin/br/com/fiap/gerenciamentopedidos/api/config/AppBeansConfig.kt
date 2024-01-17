@@ -22,15 +22,11 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.web.client.RestTemplate
-
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
-class AppBeansConfig(
-    val restTemplate: RestTemplate
-) {
+class AppBeansConfig {
     @Bean
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoRepositoryImpl(repository)
 

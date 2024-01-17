@@ -2,7 +2,6 @@ package br.com.fiap.gerenciamentopedidos.api.adapters.interfaces
 
 import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
-import br.com.fiap.gerenciamentopedidos.api.responses.PagamentoStatusResponse
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 
 interface PedidoAdapter {
