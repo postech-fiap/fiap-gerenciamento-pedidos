@@ -65,11 +65,11 @@ subprojects {
                 fileTree(it) {
                     exclude(
                         "**/models/**",
-                        "**/dtos/**",
-                        "**/valueobjects/**",
                         "**/enums/**",
                         "**/entities/**",
-                        "**/exceptions/**"
+                        "**/exceptions/**",
+                        "**/requests/**",
+                        "**/responses/**"
                     )
                 }
             })

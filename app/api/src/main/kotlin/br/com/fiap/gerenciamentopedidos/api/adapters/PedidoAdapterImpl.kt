@@ -8,7 +8,6 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.Altera
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 
-
 class PedidoAdapterImpl(
     private val buscarPedidosUseCase: BuscarPedidosUseCase,
     private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
