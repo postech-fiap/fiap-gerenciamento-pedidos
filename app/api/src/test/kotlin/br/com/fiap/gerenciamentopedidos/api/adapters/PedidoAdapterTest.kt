@@ -69,7 +69,7 @@ class PedidoAdapterTest {
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }
-    
+
     private fun criarPedido(): Pedido {
         val pedido = Pedido(numero = "1", clienteId = 1)
         pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)

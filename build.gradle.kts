@@ -69,7 +69,8 @@ subprojects {
                         "**/entities/**",
                         "**/exceptions/**",
                         "**/requests/**",
-                        "**/responses/**"
+                        "**/responses/**",
+                        "**/Application.*",
                     )
                 }
             })

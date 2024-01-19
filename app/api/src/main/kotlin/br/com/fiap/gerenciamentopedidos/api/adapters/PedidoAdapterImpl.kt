@@ -16,7 +16,7 @@ class PedidoAdapterImpl(
     override fun buscarPedidos() = buscarPedidosUseCase.executar().map { PedidoResponse(it) }
 
     override fun cadastrarPedido(request: CadastrarPedidoRequest) =
-        PedidoResponse(cadastrarPedidoUseCase.executar(request.clienteId, request.produtos?.map { it.toModel() }!!))
+        PedidoResponse(cadastrarPedidoUseCase.executar(request.clienteId, request.produtos!!.map { it.toModel() }))
 
     override fun alterarStatusPedido(request: AlterarStatusPedidoRequest) =
         alterarStatusPedidoUseCase.executar(request.pedidoId, request.status)
