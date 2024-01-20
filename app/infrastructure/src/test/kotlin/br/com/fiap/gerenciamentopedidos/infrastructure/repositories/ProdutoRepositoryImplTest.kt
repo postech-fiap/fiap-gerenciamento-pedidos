@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
 import br.com.fiap.gerenciamentopedidos.infrastructure.entities.ProdutoEntity
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
@@ -56,6 +57,55 @@ class ProdutoRepositoryImplTest {
     }
 
     @Test
+    fun `deve propagar erro ao buscar produto por id`() {
+        val errorMessage = "Erro ao obter produto por id. Detalhes: Error"
+        val id = 1L
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(id) } throws RuntimeException("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.get(id) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { produtoJpaRepository.findByIdAndExcluidoFalse(id) }
+    }
+
+    @Test
+    fun `deve listar produtos por ids com sucesso`() {
+        val id = 1L
+        val produto = Produto(
+            id = id,
+            nome = "Nome",
+            descricao = null,
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false,
+            imagem = null
+        )
+
+        every {
+            produtoJpaRepository.findByIdInAndExcluidoFalseAndDisponivelTrue(any())
+        } returns listOf(ProdutoEntity.fromModel(produto))
+
+        val result = produtoRepository.get(listOf(id))
+
+        Assertions.assertEquals(produto.id, result[0].id)
+        verify(exactly = 1) { produtoJpaRepository.findByIdInAndExcluidoFalseAndDisponivelTrue(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao listar produtos por ids`() {
+        val errorMessage = "Erro ao obter produto por id. Detalhes: Error"
+        val ids = listOf(1L)
+        every { produtoJpaRepository.findByIdInAndExcluidoFalseAndDisponivelTrue(ids) } throws RuntimeException("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.get(ids) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { produtoJpaRepository.findByIdInAndExcluidoFalseAndDisponivelTrue(ids) }
+    }
+
+    @Test
     fun `deve buscar um produtos por categoria com sucesso`() {
         //given
         val categoria = Categoria.BEBIDA
@@ -81,6 +131,26 @@ class ProdutoRepositoryImplTest {
         //then
         Assertions.assertEquals(produto, result.first())
         verify(exactly = 1) { produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(any(), any(), any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao buscar um produtos por categoria`() {
+        val errorMessage = "Erro ao listar produtos por categoria. Detalhes: Error"
+        val categoria = Categoria.BEBIDA
+        every {
+            produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(categoria, excluido = false, disponivel = true)
+        } throws RuntimeException("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.get(categoria) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) {
+            produtoJpaRepository.findByCategoriaAndExcluidoAndDisponivel(
+                categoria,
+                excluido = false,
+                disponivel = true
+            )
+        }
     }
 
     @Test
@@ -110,8 +180,8 @@ class ProdutoRepositoryImplTest {
     }
 
     @Test
-    fun `deve atualizar um produto com sucesso`() {
-        //given
+    fun `deve propagar erro ao salvar um produto`() {
+        val errorMessage = "Erro ao salvar produto. Detalhes: Error"
         val produto = Produto(
             id = 1L,
             nome = "Nome",
@@ -122,6 +192,26 @@ class ProdutoRepositoryImplTest {
             disponivel = true,
             excluido = false,
             imagem = null
+        )
+        every { produtoJpaRepository.save(any()) } throws RuntimeException("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.create(produto) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { produtoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve atualizar um produto com sucesso`() {
+        //given
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false
         )
         val entity = ProdutoEntity.fromModel(produto)
 
@@ -134,6 +224,160 @@ class ProdutoRepositoryImplTest {
         //then
         Assertions.assertEquals(produto, result)
         verify(exactly = 1) { produtoJpaRepository.save(entity) }
+    }
+
+    @Test
+    fun `deve atualizar um produto com sucesso - imagem nula na base`() {
+        //given
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false,
+            imagem = Imagem(1, "url")
+        )
+        val entity = ProdutoEntity.fromModel(
+            Produto(
+                id = 1L,
+                nome = "Nome",
+                categoria = Categoria.BEBIDA,
+                valor = BigDecimal.valueOf(1.0),
+                tempoPreparo = 1,
+                disponivel = true,
+                excluido = false,
+            )
+        )
+
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } returns ProdutoEntity.fromModel(produto)
+
+        //when
+        val result = produtoRepository.update(produto)
+
+        //then
+        Assertions.assertEquals(produto, result)
+        verify(exactly = 1) { produtoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve atualizar um produto com sucesso - remover imagem`() {
+        //given
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false
+        )
+        val entity = ProdutoEntity.fromModel(
+            Produto(
+                id = 1L,
+                nome = "Nome",
+                categoria = Categoria.BEBIDA,
+                valor = BigDecimal.valueOf(1.0),
+                tempoPreparo = 1,
+                disponivel = true,
+                excluido = false,
+                imagem = Imagem(1, "url")
+            )
+        )
+
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } returns ProdutoEntity.fromModel(produto)
+
+        //when
+        val result = produtoRepository.update(produto)
+
+        //then
+        Assertions.assertEquals(produto, result)
+        verify(exactly = 1) { produtoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve atualizar um produto com sucesso - atualizar imagem`() {
+        //given
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false,
+            imagem = Imagem(1, "url1")
+        )
+        val entity = ProdutoEntity.fromModel(
+            Produto(
+                id = 1L,
+                nome = "Nome",
+                categoria = Categoria.BEBIDA,
+                valor = BigDecimal.valueOf(1.0),
+                tempoPreparo = 1,
+                disponivel = true,
+                excluido = false,
+                imagem = Imagem(1, "url2")
+            )
+        )
+
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } returns ProdutoEntity.fromModel(produto)
+
+        //when
+        val result = produtoRepository.update(produto)
+
+        //then
+        Assertions.assertEquals(produto, result)
+        verify(exactly = 1) { produtoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao atualizar um produto`() {
+        val errorMessage = "Erro ao atualizar produto. Detalhes: Error"
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false
+        )
+        val entity = ProdutoEntity.fromModel(produto)
+
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.of(entity)
+        every { produtoJpaRepository.save(any()) } throws RuntimeException("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.update(produto) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { produtoJpaRepository.findByIdAndExcluidoFalse(any()) }
+        verify(exactly = 1) { produtoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao atualizar um produto - produto nao encontrado`() {
+        val errorMessage = "Erro ao atualizar produto. Detalhes: Produto não encontrado"
+        val produto = Produto(
+            id = 1L,
+            nome = "Nome",
+            categoria = Categoria.BEBIDA,
+            valor = BigDecimal.valueOf(1.0),
+            tempoPreparo = 1,
+            disponivel = true,
+            excluido = false
+        )
+        every { produtoJpaRepository.findByIdAndExcluidoFalse(any()) } returns Optional.empty()
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { produtoRepository.update(produto) }
+
+        Assertions.assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { produtoJpaRepository.findByIdAndExcluidoFalse(any()) }
+        verify(exactly = 0) { produtoJpaRepository.save(any()) }
     }
 
     @Test

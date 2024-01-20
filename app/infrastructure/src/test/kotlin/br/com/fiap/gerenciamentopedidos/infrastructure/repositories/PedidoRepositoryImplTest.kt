@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
@@ -18,16 +19,61 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
+import java.util.*
 import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
 class PedidoRepositoryImplTest {
-
     @MockK
     lateinit var pedidoJpaRepository: PedidoJpaRepository
 
     @InjectMockKs
     lateinit var pedidoRepository: PedidoRepositoryImpl
+
+    @Test
+    fun `deve buscar pedido por id com sucesso`() {
+        val pedido = Pedido(
+            id = 1,
+            numero = "1",
+            statusPagamento = PagamentoStatus.APROVADO,
+            items = listOf(
+                Item(
+                    produto = Produto(
+                        id = 1L,
+                        nome = "Nome",
+                        descricao = null,
+                        categoria = Categoria.BEBIDA,
+                        valor = BigDecimal.valueOf(1.0),
+                        tempoPreparo = 1,
+                        disponivel = true,
+                        excluido = false,
+                        imagem = null
+                    ),
+                    quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
+                ),
+            ),
+        )
+
+        every { pedidoJpaRepository.findById(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
+
+        val result = pedidoRepository.buscarPedidoPorId(1L)
+
+        assertEquals(pedido.id, result.get().id)
+
+        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao buscar pedido por id`() {
+        val errorMessage = "Erro ao obter pedido por Id. Detalhes: Error"
+        every { pedidoJpaRepository.findById(any()) } throws Exception("Error")
+
+        val exception = Assertions.assertThrows(RuntimeException::class.java) { pedidoRepository.buscarPedidoPorId(1) }
+
+        assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
+    }
 
     @Test
     fun `deve buscar pedidos com sucesso`() {
@@ -239,4 +285,16 @@ class PedidoRepositoryImplTest {
         }
     }
 
+    @Test
+    fun `deve propagar erro ao alterar status do pedido`() {
+        val errorMessage = "Erro ao realizar a atualização do status do pedido. Detalhes: Error"
+
+        every { pedidoJpaRepository.updateStatusById(any(), any()) } throws Exception("Error")
+
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
+            pedidoRepository.alterarStatusPedido(PedidoStatus.APROVADO, 1L)
+        }
+
+        assertEquals(errorMessage, exception.message)
+    }
 }
