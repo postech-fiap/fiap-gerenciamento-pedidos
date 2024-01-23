@@ -60,6 +60,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Run jacoco coverage
+        run: gradle jacocoTestReport
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
