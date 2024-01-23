@@ -28,6 +28,14 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.sonarqube")
 
+    sonar {
+        properties {
+            property("sonar.projectKey", "postech-fiap_pagamento-api")
+            property("sonar.organization", "postech-fiap")
+            property("sonar.host.url", "https://sonarcloud.io")
+        }
+    }
+
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
         runtimeOnly("com.mysql:mysql-connector-j")
