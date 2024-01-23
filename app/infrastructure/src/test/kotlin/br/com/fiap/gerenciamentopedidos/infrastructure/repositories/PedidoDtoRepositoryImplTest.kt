@@ -23,7 +23,7 @@ import java.util.*
 import kotlin.random.Random
 
 @ExtendWith(MockKExtension::class)
-class PedidoRepositoryImplTest {
+class PedidoDtoRepositoryImplTest {
     @MockK
     lateinit var pedidoJpaRepository: PedidoJpaRepository
 
@@ -78,10 +78,12 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve buscar pedidos com sucesso`() {
         // given
+        val referencia = UUID.randomUUID()
         val pedido = Pedido(
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
+            referencia = referencia,
             items = listOf(
                 Item(
                     produto = Produto(
@@ -147,10 +149,12 @@ class PedidoRepositoryImplTest {
     @Test
     fun `deve salvar um pedido com sucesso`() {
         //given
+        val referencia = UUID.randomUUID()
         val pedido = Pedido(
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
+            referencia = referencia,
             items = listOf(
                 Item(
                     produto = Produto(

@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
 
 data class Pedido(
     val numero: String?,
@@ -15,7 +16,9 @@ data class Pedido(
     var items: List<Item> = listOf(),
     var statusPagamento: PagamentoStatus? = null,
     var tempoEsperaMinutos: Long? = 0,
-    var valorTotal: BigDecimal? = null
+    var valorTotal: BigDecimal? = null,
+    var pagamentoId: String? = null,
+    val referencia: UUID? = null
 ) : Model {
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
@@ -48,6 +51,11 @@ data class Pedido(
 
     fun alterarStatus(status: PedidoStatus) {
         this.status = status
+    }
+
+    fun addPagamento(pagamentoId: String) {
+        this.pagamentoId = pagamentoId
+        this.statusPagamento = PagamentoStatus.PENDENTE
     }
 
     override fun valid(): Pedido {

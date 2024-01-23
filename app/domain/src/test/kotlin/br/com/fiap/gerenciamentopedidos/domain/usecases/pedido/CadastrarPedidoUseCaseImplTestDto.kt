@@ -1,9 +1,11 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
@@ -15,13 +17,14 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 
 @ExtendWith(MockKExtension::class)
-class CadastrarPedidoUseCaseImplTest {
+class CadastrarPedidoUseCaseImplTestDto {
 
     @InjectMockKs
     lateinit var cadastrarUseCaseImpl: CadastrarPedidoUseCaseImpl
@@ -35,6 +38,9 @@ class CadastrarPedidoUseCaseImplTest {
     @MockK
     lateinit var obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
 
+    @MockK
+    lateinit var pagamentoGateway: PagamentoGateway
+
     @Test
     fun `deve cadastrar um pedido com sucesso`() {
         // Arrange
@@ -45,6 +51,7 @@ class CadastrarPedidoUseCaseImplTest {
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
         every { gerarNumeroPedidoUseCase.executar() } returns "1"
         every { pedidoRepository.salvar(any()) } returns pedido
+        every { pagamentoGateway.criar(any()) } returns PagamentoDto("1")
 
         // Act
         val result = cadastrarUseCaseImpl.executar(clienteId, itens)
@@ -62,6 +69,46 @@ class CadastrarPedidoUseCaseImplTest {
         assertEquals(1, result.clienteId)
 
         verify(exactly = 1) { pedidoRepository.salvar(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao cadastrar um pedido - produto nao existente`() {
+        // Arrange
+        val errorMessage = "Produto 1 não encontrado ou indisponível"
+        val pedido = criarPedido()
+        val clienteId = 10L
+        val itens = listOf(criarItem())
+
+        every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns emptyList()
+        every { gerarNumeroPedidoUseCase.executar() } returns "1"
+        every { pedidoRepository.salvar(any()) } returns pedido
+
+        // Act
+        val exception =
+            Assertions.assertThrows(Exception::class.java) { cadastrarUseCaseImpl.executar(clienteId, itens) }
+
+        // Assert
+        assertEquals(errorMessage, exception.message)
+    }
+
+    @Test
+    fun `deve propagar erro ao cadastrar um pedido - produto indisponivel`() {
+        // Arrange
+        val errorMessage = "Produto 1 não encontrado ou indisponível"
+        val pedido = criarPedido()
+        val clienteId = 10L
+        val itens = listOf(criarItem())
+
+        every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns listOf(criarProdutoIndisponivel(1))
+        every { gerarNumeroPedidoUseCase.executar() } returns "1"
+        every { pedidoRepository.salvar(any()) } returns pedido
+
+        // Act
+        val exception =
+            Assertions.assertThrows(Exception::class.java) { cadastrarUseCaseImpl.executar(clienteId, itens) }
+
+        // Assert
+        assertEquals(errorMessage, exception.message)
     }
 
     private fun criarPedido(): Pedido {
@@ -87,6 +134,18 @@ class CadastrarPedidoUseCaseImplTest {
         valor = BigDecimal(10),
         tempoPreparo = 10,
         disponivel = true,
+        excluido = false,
+        imagem = Imagem(1, "/caminho.jpg")
+    )
+
+    private fun criarProdutoIndisponivel(id: Long) = Produto(
+        id = id,
+        nome = "Produto 1",
+        descricao = "descricao",
+        categoria = Categoria.BEBIDA,
+        valor = BigDecimal(10),
+        tempoPreparo = 10,
+        disponivel = false,
         excluido = false,
         imagem = Imagem(1, "/caminho.jpg")
     )

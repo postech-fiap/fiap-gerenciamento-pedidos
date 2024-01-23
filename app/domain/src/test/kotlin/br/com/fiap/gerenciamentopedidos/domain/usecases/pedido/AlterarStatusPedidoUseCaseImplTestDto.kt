@@ -1,10 +1,12 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
@@ -22,13 +24,16 @@ import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class AlterarStatusPedidoUseCaseImplTest {
+class AlterarStatusPedidoUseCaseImplTestDto {
 
     @InjectMockKs
     lateinit var useCase: AlterarStatusPedidoUseCaseImpl
 
     @MockK
     lateinit var pedidoPort: PedidoRepository
+
+    @MockK
+    lateinit var producaoGateway: ProducaoGateway
 
     @Test
     fun `deve alterar o status do pedido para APROVADO com Sucesso`() {
@@ -40,6 +45,7 @@ class AlterarStatusPedidoUseCaseImplTest {
 
         every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
         every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
+        every { producaoGateway.enviar(any()) } returns PedidoDto(pedidoId, pedido.numero, pedido.dataHora, listOf())
 
         //when
         useCase.executar(pedidoId, PedidoStatus.APROVADO)
@@ -48,7 +54,6 @@ class AlterarStatusPedidoUseCaseImplTest {
         verify(exactly = 1) { pedidoPort.buscarPedidoPorId(pedidoId) }
         verify(exactly = 1) { pedidoPort.alterarStatusPedido(copyPedido.status, any()) }
     }
-
 
     @Test
     fun `nao deve alterar o status do pedido para RECEBIDO porque o ja possui esse status`() {

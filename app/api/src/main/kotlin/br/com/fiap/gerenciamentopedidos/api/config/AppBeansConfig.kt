@@ -4,6 +4,8 @@ import br.com.fiap.gerenciamentopedidos.api.adapters.PedidoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.api.adapters.ProdutoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
@@ -14,19 +16,25 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseC
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.PagamentoGatewayImpl
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.ProducaoGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.web.client.RestTemplate
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
-class AppBeansConfig {
+class AppBeansConfig(
+    val restTemplate: RestTemplate
+) {
     @Bean
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoRepositoryImpl(repository)
 
@@ -57,7 +65,8 @@ class AppBeansConfig {
     fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
 
     @Bean
-    fun alterarStatusPedidoUseCase(repository: PedidoRepository) = AlterarStatusPedidoUseCaseImpl(repository)
+    fun alterarStatusPedidoUseCase(repository: PedidoRepository, producaoGateway: ProducaoGateway) =
+        AlterarStatusPedidoUseCaseImpl(repository, producaoGateway)
 
     @Bean
     fun gerarNumeroPedidoUseCase(repository: PedidoRepository) = GerarNumeroPedidoUseCaseImpl(repository)
@@ -69,11 +78,13 @@ class AppBeansConfig {
     fun cadastrarPedidoUseCase(
         pedidoRepository: PedidoRepository,
         gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
-        obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
+        obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
+        pagamentoGateway: PagamentoGateway
     ) = CadastrarPedidoUseCaseImpl(
         pedidoRepository,
         gerarNumeroPedidoUseCase,
-        obterProdutosPorIdsUseCase
+        obterProdutosPorIdsUseCase,
+        pagamentoGateway
     )
 
     @Bean
@@ -99,4 +110,10 @@ class AppBeansConfig {
         removerProdutoPorIdUseCase,
         alterarDisponibilidadeProdutoUseCase
     )
+
+    @Bean
+    fun producaoGateway(@Value("\${producao.url}") url: String) = ProducaoGatewayImpl(url, restTemplate)
+
+    @Bean
+    fun pagametoGateway(@Value("\${pagamento.url}") url: String) = PagamentoGatewayImpl(url, restTemplate)
 }

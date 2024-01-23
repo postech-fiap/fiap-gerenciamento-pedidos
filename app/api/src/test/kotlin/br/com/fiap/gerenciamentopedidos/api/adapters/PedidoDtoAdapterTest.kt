@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 
 @ExtendWith(MockKExtension::class)
-class PedidoAdapterTest {
+class PedidoDtoAdapterTest {
 
     @MockK
     lateinit var buscarPedidosUseCase: BuscarPedidosUseCase

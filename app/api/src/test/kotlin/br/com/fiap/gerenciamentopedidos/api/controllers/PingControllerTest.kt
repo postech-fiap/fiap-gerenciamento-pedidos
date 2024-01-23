@@ -20,7 +20,7 @@ class PingControllerTest {
     lateinit var testRestTemplate: TestRestTemplate
 
     @Test
-    fun `deve retornar "pong" com sucesso`() {
+    fun `deve retornar 'pong' com sucesso`() {
         val responseEntity = testRestTemplate.exchange("/ping", HttpMethod.GET, null, String::class.java)
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.statusCode)
