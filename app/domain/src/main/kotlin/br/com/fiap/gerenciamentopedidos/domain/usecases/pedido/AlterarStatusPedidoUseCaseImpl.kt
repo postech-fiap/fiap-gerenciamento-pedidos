@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemPedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
@@ -31,6 +31,6 @@ class AlterarStatusPedidoUseCaseImpl(
         pedido.id,
         pedido.numero,
         pedido.dataHora,
-        pedido.items.map { ItemDto(it.produto!!.nome, it.quantidade, it.comentario) }
+        pedido.items.map { ItemPedidoDto(it.produto!!.nome, it.quantidade, it.comentario) }
     )
 }

@@ -1,6 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.gateways
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemPedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -48,7 +48,7 @@ class ProducaoGatewayImplTest {
             1,
             "1",
             OffsetDateTime.now(),
-            listOf(ItemDto("name", 1, "comentário"))
+            listOf(ItemPedidoDto("name", 1, "comentário"))
         )
     }
 

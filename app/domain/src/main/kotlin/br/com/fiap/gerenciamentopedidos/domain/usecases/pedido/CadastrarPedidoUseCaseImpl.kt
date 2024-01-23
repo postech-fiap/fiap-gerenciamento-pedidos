@@ -1,6 +1,8 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemPagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoPagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
@@ -33,10 +35,30 @@ class CadastrarPedidoUseCaseImpl(
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        val pagamento = pagamentoGateway.criar(PagamentoDto(referenciaExterna = pedido.referencia.toString()))
+        val pagamento = criarPagamento(pedido)
 
         pedido.addPagamento(pagamento.id!!)
 
         return pedidoRepository.salvar(pedido.valid())
     }
+
+    private fun criarPagamento(pedido: Pedido) = pagamentoGateway.criar(PagamentoDto(
+        referenciaPedido = pedido.referencia.toString(),
+        numeroPedido = pedido.numero,
+        dataHora = pedido.dataHora,
+        valorTotal = pedido.valorTotal,
+        items = pedido.items.map {
+            ItemPagamentoDto(
+                quantidade = it.quantidade,
+                valorPago = it.valorPago,
+                produto = ProdutoPagamentoDto(
+                    id = it.produto!!.id,
+                    nome = it.produto.nome,
+                    descricao = it.produto.descricao,
+                    categoria = it.produto.categoria.toString(),
+                    valor = it.produto.valor,
+                )
+            )
+        }
+    ))
 }
