@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("org.springframework.boot") version "3.1.0" apply false
@@ -16,6 +18,8 @@ allprojects {
     group = "br.com.fiap"
     version = "0.0.1-SNAPSHOT"
 
+    apply(plugin = "kotlin")
+    apply(plugin = "project-report")
     apply(plugin = "org.sonarqube")
 
     repositories {
@@ -47,16 +51,42 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "17"
+    tasks {
+        withType<KotlinCompile> {
+            kotlinOptions {
+                freeCompilerArgs = listOf("-Xjsr305=strict")
+                jvmTarget = "17"
+            }
+        }
+
+        withType<Test> {
+            useJUnitPlatform()
+            testLogging {
+                events("PASSED", "SKIPPED", "FAILED")
+            }
+        }
+
+        withType<Copy> {
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
+}
 
-    tasks.withType<Test> {
-        useJUnitPlatform()
+tasks.withType<BootJar> {
+    group = "build"
+    dependsOn(":app:api:bootJar")
+    doLast {
+        ant.withGroovyBuilder {
+            val jarPath = "${rootProject.buildDir}/../app/api/build/libs/app.jar"
+            val jarDestination = "${rootProject.buildDir}/libs"
+            "move"("file" to jarPath, "todir" to jarDestination)
+        }
     }
+}
+
+tasks.withType<BootRun> {
+    group = "application"
+    dependsOn(":app:api:bootRun")
 }
 
 sonar {
