@@ -16,6 +16,8 @@ allprojects {
     group = "br.com.fiap"
     version = "0.0.1-SNAPSHOT"
 
+    apply(plugin = "org.sonarqube")
+
     repositories {
         mavenCentral()
     }
