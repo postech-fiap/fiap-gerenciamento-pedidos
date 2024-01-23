@@ -69,6 +69,10 @@ jobs:
           args: >
             -Dsonar.organization=postech-fiap
             -Dsonar.projectKey=postech-fiap_fiap-gerenciamento-pedidos
+            -Dsonar.sonar.host.url=https://sonarcloud.io
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
+            -Dsonar.sources=app/domain/src/main/kotlin,app/infrastructure/src/main/kotlin,app/api/src/main/kotlin
 
   docker-app-image:
     runs-on: ubuntu-latest
