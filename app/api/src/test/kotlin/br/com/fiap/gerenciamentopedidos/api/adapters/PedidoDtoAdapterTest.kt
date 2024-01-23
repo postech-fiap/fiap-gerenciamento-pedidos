@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class PedidoDtoAdapterTest {
@@ -65,7 +66,7 @@ class PedidoDtoAdapterTest {
     fun `deve alterar status do pedido com sucesso`() {
         every { alterarStatusPedidoUseCase.executar(any(), any()) } returns Unit
 
-        val request = AlterarStatusPedidoRequest(1, PedidoStatus.APROVADO)
+        val request = AlterarStatusPedidoRequest(UUID.randomUUID(),1, PagamentoStatus.APROVADO)
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }

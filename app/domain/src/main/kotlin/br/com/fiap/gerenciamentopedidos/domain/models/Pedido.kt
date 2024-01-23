@@ -55,7 +55,6 @@ data class Pedido(
 
     fun addPagamento(pagamentoId: String) {
         this.pagamentoId = pagamentoId
-        this.statusPagamento = PagamentoStatus.PENDENTE
     }
 
     override fun valid(): Pedido {
