@@ -6,7 +6,7 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.IntegracaoAPIE
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.RestTemplate
 
-private const val ERROR_MESSAGE_QRCODE = "Erro de integração para enviar pedido para produção. Detalhes: %s"
+private const val ERROR_MESSAGE = "Erro de integração para enviar pedido para produção. Detalhes: %s"
 
 class ProducaoGatewayImpl(
     private val url: String,
@@ -21,7 +21,7 @@ class ProducaoGatewayImpl(
 
             return response.body!!
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, "${ex.message} - ${ex.cause}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message} - ${ex.cause}"))
         }
     }
 }

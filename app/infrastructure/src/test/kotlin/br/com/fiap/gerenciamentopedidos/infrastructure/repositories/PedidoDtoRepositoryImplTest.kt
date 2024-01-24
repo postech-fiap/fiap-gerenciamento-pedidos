@@ -36,6 +36,7 @@ class PedidoDtoRepositoryImplTest {
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
+            referencia = UUID.randomUUID(),
             items = listOf(
                 Item(
                     produto = Produto(

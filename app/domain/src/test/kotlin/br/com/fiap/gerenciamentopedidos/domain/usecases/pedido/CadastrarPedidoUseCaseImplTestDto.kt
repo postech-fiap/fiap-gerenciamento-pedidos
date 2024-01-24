@@ -159,6 +159,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         numeroPedido = "1",
         dataHora = OffsetDateTime.now(),
         valorTotal = BigDecimal(1),
+        status = PagamentoStatus.PENDENTE,
         items = listOf(
             ItemPagamentoDto(
                 quantidade = 1,
