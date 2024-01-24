@@ -34,7 +34,7 @@ class ProducaoGatewayImplTest {
         val param = criarPedidoDto()
 
         every {
-            restTemplate.postForEntity(eq(PRODUCAO_URL), any(), eq(PedidoDto::class.java))
+            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(PedidoDto::class.java))
         } returns ResponseEntity(param, HttpStatus.CREATED)
 
 
