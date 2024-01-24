@@ -40,6 +40,10 @@ spec:
                 secretKeyRef:
                   name: db
                   key: password
+            - name: PRODUCAO_API_URL
+              value: http://production-api-load-balancer:8080
+            - name: PAGAMENTO_API_URL
+              value: http://pagamento-api-lb:8080
           readinessProbe:
             httpGet:
               path: /ping
