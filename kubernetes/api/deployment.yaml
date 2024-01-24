@@ -41,9 +41,9 @@ spec:
                   name: db
                   key: password
             - name: PRODUCAO_API_URL
-              value: http://production-api-load-balancer:8080
+              value: http://production-api-service:8090
             - name: PAGAMENTO_API_URL
-              value: http://pagamento-api-lb:8080
+              value: http://pagamento-api-service:8100
           readinessProbe:
             httpGet:
               path: /ping

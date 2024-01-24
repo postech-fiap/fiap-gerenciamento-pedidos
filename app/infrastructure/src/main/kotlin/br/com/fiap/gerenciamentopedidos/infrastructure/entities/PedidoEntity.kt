@@ -31,7 +31,7 @@ data class PedidoEntity(
     val clienteId: Long? = null,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_pagamento", nullable = false)
+    @Column(name = "status_pagamento")
     val statusPagamento: PagamentoStatus,
 
     @OneToMany(
@@ -44,6 +44,9 @@ data class PedidoEntity(
 
     @Column(name = "referencia", nullable = false, length = 36)
     val referencia: UUID? = null,
+
+    @Column(name = "pagamento_id", nullable = false, length = 36)
+    var pagamentoId: String? = null,
 ) {
 
     fun toModel() = Pedido(
@@ -55,7 +58,8 @@ data class PedidoEntity(
         clienteId = clienteId,
         statusPagamento = statusPagamento,
         items = produtos?.map { it.toModel() }!!,
-        referencia = referencia
+        referencia = referencia,
+        pagamentoId = pagamentoId
     )
 
     companion object {
@@ -68,7 +72,8 @@ data class PedidoEntity(
                 numero = pedido.numero,
                 statusPagamento = pedido.statusPagamento!!,
                 clienteId = pedido.clienteId,
-                referencia = pedido.referencia
+                referencia = pedido.referencia,
+                pagamentoId = pedido.pagamentoId
             )
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity
