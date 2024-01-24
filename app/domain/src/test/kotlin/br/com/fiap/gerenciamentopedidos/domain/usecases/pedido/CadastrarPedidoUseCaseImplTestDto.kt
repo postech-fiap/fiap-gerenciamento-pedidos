@@ -157,7 +157,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         id = "1",
         referenciaPedido = "1",
         numeroPedido = "1",
-        dataHora = OffsetDateTime.now().toLocalDateTime(),
+        dataHora = OffsetDateTime.now(),
         valorTotal = BigDecimal(1),
         items = listOf(
             ItemPagamentoDto(

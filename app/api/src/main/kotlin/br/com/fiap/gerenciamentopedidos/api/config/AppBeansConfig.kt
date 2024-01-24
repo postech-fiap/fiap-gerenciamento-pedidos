@@ -22,6 +22,7 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoReposi
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
@@ -115,5 +116,6 @@ class AppBeansConfig(
     fun producaoGateway(@Value("\${producao.url}") url: String) = ProducaoGatewayImpl(url, restTemplate)
 
     @Bean
-    fun pagametoGateway(@Value("\${pagamento.url}") url: String) = PagamentoGatewayImpl(url, restTemplate)
+    fun pagametoGateway(@Value("\${pagamento.url}") url: String, objectMapper: ObjectMapper) =
+        PagamentoGatewayImpl(url, restTemplate, objectMapper)
 }

@@ -1,14 +1,13 @@
 package br.com.fiap.gerenciamentopedidos.domain.dtos
 
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 data class PagamentoDto(
     val id: String? = null,
     val referenciaPedido: String?,
     val numeroPedido: String?,
-    val dataHora: LocalDateTime?,
+    val dataHora: OffsetDateTime?,
     val valorTotal: BigDecimal?,
     val items: List<ItemPagamentoDto>?,
 )
