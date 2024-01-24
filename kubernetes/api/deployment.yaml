@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: melissa2019/api-0.0.1-snapshot:latest
+          image: evertonalmeida91/api-0.0.1-snapshot:latest
           ports:
             - containerPort: 80
           env:
