@@ -37,7 +37,7 @@ class CadastrarPedidoUseCaseImpl(
 
         val pagamento = criarPagamento(pedido)
 
-        pedido.addPagamento(pagamento.id!!)
+        pedido.addPagamento(pagamento.id!!, pagamento.status!!)
 
         return pedidoRepository.salvar(pedido.valid())
     }

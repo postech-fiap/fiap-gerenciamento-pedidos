@@ -1,5 +1,6 @@
 package br.com.fiap.gerenciamentopedidos.domain.dtos
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -10,6 +11,7 @@ data class PagamentoDto(
     val dataHora: OffsetDateTime?,
     val valorTotal: BigDecimal?,
     val items: List<ItemPagamentoDto>?,
+    val status: PagamentoStatus? = null
 )
 
 data class ItemPagamentoDto(

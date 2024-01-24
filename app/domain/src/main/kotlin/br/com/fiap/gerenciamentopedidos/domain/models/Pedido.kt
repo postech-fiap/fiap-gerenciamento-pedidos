@@ -53,8 +53,9 @@ data class Pedido(
         this.status = status
     }
 
-    fun addPagamento(pagamentoId: String) {
+    fun addPagamento(pagamentoId: String, statusPagamento: PagamentoStatus) {
         this.pagamentoId = pagamentoId
+        this.statusPagamento = statusPagamento
     }
 
     override fun valid(): Pedido {
