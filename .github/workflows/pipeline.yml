@@ -98,7 +98,7 @@ jobs:
         run: docker build -t ${{env.docker_username}}/api-0.0.1-snapshot .
 
       - name: Push image docker
-        run: docker push ${{env.docker_username}}/api-0.0.1-snapshot
+        run: docker push ${{env.docker_username}}/apPRODUCAO_URLi-0.0.1-snapshot
 
   deploy-to-aws-eks:
     needs: docker-app-image

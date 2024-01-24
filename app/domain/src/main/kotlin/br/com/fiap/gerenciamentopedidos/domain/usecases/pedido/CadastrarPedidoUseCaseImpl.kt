@@ -45,7 +45,7 @@ class CadastrarPedidoUseCaseImpl(
     private fun criarPagamento(pedido: Pedido) = pagamentoGateway.criar(PagamentoDto(
         referenciaPedido = pedido.referencia.toString(),
         numeroPedido = pedido.numero,
-        dataHora = pedido.dataHora,
+        dataHora = pedido.dataHora.toLocalDateTime(),
         valorTotal = pedido.valorTotal,
         items = pedido.items.map {
             ItemPagamentoDto(
