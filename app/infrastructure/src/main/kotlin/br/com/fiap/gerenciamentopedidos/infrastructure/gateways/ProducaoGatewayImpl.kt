@@ -14,7 +14,7 @@ class ProducaoGatewayImpl(
 ) : ProducaoGateway {
     override fun enviar(pedido: PedidoDto): PedidoDto {
         try {
-            val response = restTemplate.postForEntity(url, pedido, PedidoDto::class.java)
+            val response = restTemplate.postForEntity("${url}/order", pedido, PedidoDto::class.java)
 
             if (response.statusCode != HttpStatus.CREATED)
                 throw RuntimeException("[status_code: ${response.statusCode}")

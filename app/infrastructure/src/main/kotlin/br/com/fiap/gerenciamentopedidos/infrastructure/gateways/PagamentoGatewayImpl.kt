@@ -14,7 +14,7 @@ class PagamentoGatewayImpl(
 ) : PagamentoGateway {
     override fun criar(pagamento: PagamentoDto): PagamentoDto {
         try {
-            val response = restTemplate.postForEntity(url, pagamento, PagamentoDto::class.java)
+            val response = restTemplate.postForEntity("${url}/v1/pagamentos/criar", pagamento, PagamentoDto::class.java)
 
             if (response.statusCode != HttpStatus.CREATED)
                 throw RuntimeException("[status_code: ${response.statusCode}")
