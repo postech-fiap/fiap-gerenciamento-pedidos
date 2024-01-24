@@ -25,7 +25,7 @@ create table if not exists pedido (
     id bigint auto_increment,
     data_hora timestamp not null default now(),
     status enum('PENDENTE', 'APROVADO', 'REPROVADO') not null,
-    status_pagamento enum('APROVADO', 'REPROVADO') not null,
+    status_pagamento enum('PENDENTE', 'APROVADO', 'REPROVADO') not null,
     cliente_id bigint,
     tempo_espera_minutos int not null,
     numero char(4) not null,

@@ -32,7 +32,7 @@ data class PedidoEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_pagamento")
-    val statusPagamento: PagamentoStatus,
+    val statusPagamento: PagamentoStatus? = null,
 
     @OneToMany(
         mappedBy = "pedido",
@@ -43,7 +43,7 @@ data class PedidoEntity(
     var produtos: List<PedidoProdutoEntity>? = null,
 
     @Column(name = "referencia", nullable = false, length = 36)
-    val referencia: UUID? = null,
+    val referencia: String? = null,
 
     @Column(name = "pagamento_id", nullable = false, length = 36)
     var pagamentoId: String? = null,
@@ -58,7 +58,7 @@ data class PedidoEntity(
         clienteId = clienteId,
         statusPagamento = statusPagamento,
         items = produtos?.map { it.toModel() }!!,
-        referencia = referencia,
+        referencia = referencia.let { UUID.fromString(it) },
         pagamentoId = pagamentoId
     )
 
@@ -70,9 +70,9 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                statusPagamento = pedido.statusPagamento!!,
+                statusPagamento = pedido.statusPagamento,
                 clienteId = pedido.clienteId,
-                referencia = pedido.referencia,
+                referencia = pedido.referencia.toString(),
                 pagamentoId = pedido.pagamentoId
             )
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
