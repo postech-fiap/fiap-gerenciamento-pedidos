@@ -5,9 +5,7 @@ import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoProdutoReque
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
@@ -18,7 +16,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,27 +26,13 @@ import java.util.*
 class PedidoDtoAdapterTest {
 
     @MockK
-    lateinit var buscarPedidosUseCase: BuscarPedidosUseCase
-
-    @MockK
     lateinit var cadastrarPedidoUseCase: CadastrarPedidoUseCase
 
     @MockK
     lateinit var alterarStatusPedidoUseCase: AlterarStatusPedidoUseCase
 
-
     @InjectMockKs
     lateinit var adapter: PedidoAdapterImpl
-
-    @Test
-    fun `deve buscar pedidos com sucesso`() {
-        every { buscarPedidosUseCase.executar() } returns listOf(criarPedido())
-
-        val response = adapter.buscarPedidos()
-
-        assertNotNull(response)
-        assertFalse(response.isEmpty())
-    }
 
     @Test
     fun `deve cadastrar pedido com sucesso`() {
@@ -66,7 +49,7 @@ class PedidoDtoAdapterTest {
     fun `deve alterar status do pedido com sucesso`() {
         every { alterarStatusPedidoUseCase.executar(any(), any()) } returns Unit
 
-        val request = AlterarStatusPedidoRequest(UUID.randomUUID(),1, PagamentoStatus.APROVADO)
+        val request = AlterarStatusPedidoRequest(UUID.randomUUID(), 1, PagamentoStatus.APROVADO)
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }

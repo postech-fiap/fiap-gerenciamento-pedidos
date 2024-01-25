@@ -47,6 +47,11 @@ data class Pedido(
 
     fun alterarPagamentoStatus(pagamento: PagamentoStatus) {
         this.statusPagamento = pagamento
+        when (pagamento) {
+            PagamentoStatus.APROVADO -> this.status = PedidoStatus.APROVADO
+            PagamentoStatus.REPROVADO -> this.status = PedidoStatus.REPROVADO
+            else -> this.status = PedidoStatus.PENDENTE
+        }
     }
 
     fun alterarStatus(status: PedidoStatus) {

@@ -2,7 +2,6 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.repositories
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import br.com.fiap.gerenciamentopedidos.domain.models.Produto
@@ -31,7 +30,7 @@ class PedidoDtoRepositoryImplTest {
     lateinit var pedidoRepository: PedidoRepositoryImpl
 
     @Test
-    fun `deve buscar pedido por id com sucesso`() {
+    fun `deve buscar pedido por referencia com sucesso`() {
         val pedido = Pedido(
             id = 1,
             numero = "1",
@@ -56,95 +55,25 @@ class PedidoDtoRepositoryImplTest {
             ),
         )
 
-        every { pedidoJpaRepository.findById(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
+        every { pedidoJpaRepository.findByReferencia(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
 
-        val result = pedidoRepository.buscarPedidoPorId(1L)
+        val result = pedidoRepository.buscarPedidoPorReferencia(UUID.randomUUID())
 
         assertEquals(pedido.id, result.get().id)
 
-        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
+        verify(exactly = 1) { pedidoJpaRepository.findByReferencia(any()) }
     }
 
     @Test
-    fun `deve propagar erro ao buscar pedido por id`() {
-        val errorMessage = "Erro ao obter pedido por Id. Detalhes: Error"
-        every { pedidoJpaRepository.findById(any()) } throws Exception("Error")
+    fun `deve propagar erro ao buscar pedido por referencia`() {
+        val errorMessage = "Erro ao obter pedido por referência. Detalhes: Error"
+        every { pedidoJpaRepository.findByReferencia(any()) } throws Exception("Error")
 
-        val exception = Assertions.assertThrows(RuntimeException::class.java) { pedidoRepository.buscarPedidoPorId(1) }
+        val exception =
+            Assertions.assertThrows(RuntimeException::class.java) { pedidoRepository.buscarPedidoPorReferencia(UUID.randomUUID()) }
 
         assertEquals(errorMessage, exception.message)
-        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
-    }
-
-    @Test
-    fun `deve buscar pedidos com sucesso`() {
-        // given
-        val referencia = UUID.randomUUID()
-        val pedido = Pedido(
-            id = 1,
-            numero = "1",
-            statusPagamento = PagamentoStatus.APROVADO,
-            referencia = referencia,
-            items = listOf(
-                Item(
-                    produto = Produto(
-                        id = 1L,
-                        nome = "Nome",
-                        descricao = null,
-                        categoria = Categoria.BEBIDA,
-                        valor = BigDecimal.valueOf(1.0),
-                        tempoPreparo = 1,
-                        disponivel = true,
-                        excluido = false,
-                        imagem = null
-                    ),
-                    quantidade = 1,
-                    valorPago = Random.nextLong().toBigDecimal()
-                ),
-            ),
-        )
-
-        pedido.valorTotal = null
-        val pedidoList = listOf(pedido)
-
-        val pedidoEntity = PedidoEntity.fromModel(pedido)
-        val pedidoEntityList = listOf(pedidoEntity)
-
-        every {
-            pedidoJpaRepository.buscarPedidos()
-        } returns pedidoEntityList
-
-        // when
-        val result = pedidoRepository.buscarPedidos()
-
-        // then
-        assertEquals(pedidoList, result)
-
-        verify(exactly = 1) {
-            pedidoJpaRepository.buscarPedidos()
-        }
-    }
-
-    @Test
-    fun `deve propagar erro ao buscar pedidos`() {
-        // given
-        val errorMessage = "Erro ao listar pedidos por categoria. Detalhes: Error"
-
-        every {
-            pedidoJpaRepository.buscarPedidos()
-        } throws Exception("Error")
-
-        // when-then
-        val exception = Assertions.assertThrows(RuntimeException::class.java) {
-            pedidoRepository.buscarPedidos()
-        }
-
-        // then
-        assertEquals(errorMessage, exception.message)
-
-        verify(exactly = 1) {
-            pedidoJpaRepository.buscarPedidos()
-        }
+        verify(exactly = 1) { pedidoJpaRepository.findByReferencia(any()) }
     }
 
     @Test
@@ -250,8 +179,46 @@ class PedidoDtoRepositoryImplTest {
 
     @Test
     fun `deve atualizar o status do pedido com sucesso`() {
-
         // given
+        val pedido = Pedido(
+            id = 1,
+            numero = "1",
+            statusPagamento = PagamentoStatus.APROVADO,
+            referencia = UUID.randomUUID(),
+            items = listOf(
+                Item(
+                    produto = Produto(
+                        id = 1L,
+                        nome = "Nome",
+                        descricao = null,
+                        categoria = Categoria.BEBIDA,
+                        valor = BigDecimal.valueOf(1.0),
+                        tempoPreparo = 1,
+                        disponivel = true,
+                        excluido = false,
+                        imagem = null
+                    ),
+                    quantidade = 1,
+                    valorPago = Random.nextLong().toBigDecimal()
+                )
+            ),
+        )
+        pedido.valorTotal = null
+        val entity = PedidoEntity.fromModel(pedido)
+
+        every { pedidoJpaRepository.findById(any()) } returns Optional.of(entity)
+        every { pedidoJpaRepository.save(any()) } returns entity
+
+        // when
+        pedidoRepository.update(pedido)
+
+        // then
+        verify(exactly = 1) { pedidoJpaRepository.save(any()) }
+    }
+
+    @Test
+    fun `deve propagar erro ao alterar status do pedido`() {
+        val errorMessage = "Erro ao atualizar Pedido. Detalhes: Error"
         val pedido = Pedido(
             id = 1,
             numero = "1",
@@ -275,30 +242,10 @@ class PedidoDtoRepositoryImplTest {
             ),
         )
 
-        pedido.valorTotal = null
+        every { pedidoJpaRepository.findById(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
+        every { pedidoJpaRepository.save(any()) } throws Exception("Error")
 
-        every {
-            pedidoJpaRepository.updateStatusById(pedido.status, pedido.id!!)
-        } returns Unit
-
-        // when
-        pedidoRepository.alterarStatusPedido(pedido.status, pedido.id!!)
-
-        // then
-        verify(exactly = 1) {
-            pedidoJpaRepository.updateStatusById(pedido.status, pedido.id!!)
-        }
-    }
-
-    @Test
-    fun `deve propagar erro ao alterar status do pedido`() {
-        val errorMessage = "Erro ao realizar a atualização do status do pedido. Detalhes: Error"
-
-        every { pedidoJpaRepository.updateStatusById(any(), any()) } throws Exception("Error")
-
-        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) {
-            pedidoRepository.alterarStatusPedido(PedidoStatus.APROVADO, 1L)
-        }
+        val exception = Assertions.assertThrows(BaseDeDadosException::class.java) { pedidoRepository.update(pedido) }
 
         assertEquals(errorMessage, exception.message)
     }

@@ -11,9 +11,6 @@ import java.net.URI
 @RestController
 @RequestMapping("/pedidos")
 class PedidoController(private val pedidoAdapter: PedidoAdapter) {
-    @GetMapping
-    fun buscarPedidos() = ResponseEntity.ok().body(pedidoAdapter.buscarPedidos())
-
     @PostMapping
     fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
         val pedido = pedidoAdapter.cadastrarPedido(request)

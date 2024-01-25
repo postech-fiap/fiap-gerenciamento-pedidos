@@ -11,13 +11,10 @@ private const val ERROR_MESSAGE_QRCODE = "Erro de integração para gerar o paga
 
 class PagamentoGatewayImpl(
     private val url: String,
-    private val restTemplate: RestTemplate,
-    private val objectMapper: ObjectMapper
+    private val restTemplate: RestTemplate
 ) : PagamentoGateway {
     override fun criar(pagamento: PagamentoDto): PagamentoDto {
         try {
-            val aaaaa = objectMapper.writeValueAsString(pagamento)
-
             val response = restTemplate.postForEntity("${url}/v1/pagamentos/criar", pagamento, PagamentoDto::class.java)
 
             if (response.statusCode != HttpStatus.CREATED)
@@ -25,7 +22,7 @@ class PagamentoGatewayImpl(
 
             return response.body!!
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, "${ex.message} - ${ex.cause}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, "${ex.message}"))
         }
     }
 }

@@ -3,8 +3,7 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemPedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
@@ -18,18 +17,14 @@ class AlterarStatusPedidoUseCaseImpl(
     private val producaoGateway: ProducaoGateway
 ) : AlterarStatusPedidoUseCase {
     override fun executar(referencia: UUID, status: PagamentoStatus) {
-        val pedidoId = 1L // TODO: buscar pedido pelo referencia
-        val status = PedidoStatus.APROVADO
+        val pedido = pedidoRepository
+            .buscarPedidoPorReferencia(referencia)
+            .orElseThrow { RecursoNaoEncontradoException("Pedido não encontrado") }
 
-        val pedidoResult = pedidoRepository.buscarPedidoPorId(pedidoId)
+        pedido.alterarPagamentoStatus(status)
 
-        when (pedidoResult.get().status) {
-            status -> throw BusinessException("O status do pedido ja está igual à $status")
-            else -> {
-                producaoGateway.enviar(criarPedidoDto(pedidoResult.get()))
-                return pedidoRepository.alterarStatusPedido(status, pedidoId)
-            }
-        }
+        pedidoRepository.update(pedido)
+        //producaoGateway.enviar(criarPedidoDto(pedido))
     }
 
     private fun criarPedidoDto(pedido: Pedido) = PedidoDto(

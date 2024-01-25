@@ -7,12 +7,10 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.BuscarPedidosUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedidoUseCaseImpl
-import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.BuscarPedidosUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
@@ -22,7 +20,6 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoReposi
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
@@ -63,9 +60,6 @@ class AppBeansConfig(
     fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
-    fun buscarPedidosUseCase(repository: PedidoRepository) = BuscarPedidosUseCaseImpl(repository)
-
-    @Bean
     fun alterarStatusPedidoUseCase(repository: PedidoRepository, producaoGateway: ProducaoGateway) =
         AlterarStatusPedidoUseCaseImpl(repository, producaoGateway)
 
@@ -90,10 +84,9 @@ class AppBeansConfig(
 
     @Bean
     fun pedidoFacade(
-        buscarPedidosUseCase: BuscarPedidosUseCase,
         cadastrarPedidoUseCase: CadastrarPedidoUseCase,
         alterarStatusPedidoUseCase: AlterarStatusPedidoUseCase
-    ) = PedidoAdapterImpl(buscarPedidosUseCase, cadastrarPedidoUseCase, alterarStatusPedidoUseCase)
+    ) = PedidoAdapterImpl(cadastrarPedidoUseCase, alterarStatusPedidoUseCase)
 
     @Bean
     fun produtoFacade(
@@ -116,6 +109,5 @@ class AppBeansConfig(
     fun producaoGateway(@Value("\${producao.url}") url: String) = ProducaoGatewayImpl(url, restTemplate)
 
     @Bean
-    fun pagametoGateway(@Value("\${pagamento.url}") url: String, objectMapper: ObjectMapper) =
-        PagamentoGatewayImpl(url, restTemplate, objectMapper)
+    fun pagametoGateway(@Value("\${pagamento.url}") url: String) = PagamentoGatewayImpl(url, restTemplate)
 }

@@ -116,7 +116,7 @@ class CadastrarPedidoUseCaseImplTestDto {
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido(numero = "1", clienteId = 1)
-        pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
+        pedido.alterarPagamentoStatus(PagamentoStatus.PENDENTE)
         pedido.adicionarItem(criarItem())
         return pedido
     }

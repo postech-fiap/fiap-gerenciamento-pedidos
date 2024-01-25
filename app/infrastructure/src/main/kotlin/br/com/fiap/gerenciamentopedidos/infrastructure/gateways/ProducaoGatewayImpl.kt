@@ -21,7 +21,7 @@ class ProducaoGatewayImpl(
 
             return response.body!!
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message} - ${ex.cause}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message}"))
         }
     }
 }
