@@ -11,7 +11,8 @@ data class PagamentoDto(
     val dataHora: OffsetDateTime?,
     val valorTotal: BigDecimal?,
     val items: List<ItemPagamentoDto>?,
-    val status: PagamentoStatus? = null
+    val status: PagamentoStatus? = null,
+    val qrCode: String? = null
 )
 
 data class ItemPagamentoDto(

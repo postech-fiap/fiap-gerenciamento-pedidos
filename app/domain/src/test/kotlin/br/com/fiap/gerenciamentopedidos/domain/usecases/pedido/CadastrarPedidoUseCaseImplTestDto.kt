@@ -116,7 +116,6 @@ class CadastrarPedidoUseCaseImplTestDto {
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido(numero = "1", clienteId = 1)
-        pedido.alterarPagamentoStatus(PagamentoStatus.PENDENTE)
         pedido.adicionarItem(criarItem())
         return pedido
     }
@@ -160,6 +159,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         dataHora = OffsetDateTime.now(),
         valorTotal = BigDecimal(1),
         status = PagamentoStatus.PENDENTE,
+        qrCode = "qrCode",
         items = listOf(
             ItemPagamentoDto(
                 quantidade = 1,

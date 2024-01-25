@@ -56,7 +56,6 @@ class PedidoDtoAdapterTest {
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido(numero = "1", clienteId = 1)
-        pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
         pedido.adicionarItem(criarItem())
         return pedido
     }

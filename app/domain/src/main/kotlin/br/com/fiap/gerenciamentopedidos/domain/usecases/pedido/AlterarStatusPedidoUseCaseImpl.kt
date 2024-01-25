@@ -24,7 +24,9 @@ class AlterarStatusPedidoUseCaseImpl(
         pedido.alterarPagamentoStatus(status)
 
         pedidoRepository.update(pedido)
-        producaoGateway.enviar(criarPedidoDto(pedido))
+
+        if (pedido.isAprovado())
+            producaoGateway.enviar(criarPedidoDto(pedido))
     }
 
     private fun criarPedidoDto(pedido: Pedido) = PedidoDto(

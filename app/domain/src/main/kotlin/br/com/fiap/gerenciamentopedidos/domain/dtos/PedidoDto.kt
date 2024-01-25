@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 data class PedidoDto(
     val id: Long?,
     val number: String?,
-    val createDate: OffsetDateTime,
+    val createdDate: OffsetDateTime,
     var items: List<ItemPedidoDto>
 )
 

@@ -8,18 +8,13 @@ import org.springframework.web.client.RestTemplate
 
 private const val ERROR_MESSAGE = "Erro de integração para enviar pedido para produção. Detalhes: %s"
 
-class ProducaoGatewayImpl(
-    private val url: String,
-    private val restTemplate: RestTemplate,
-) : ProducaoGateway {
-    override fun enviar(pedido: PedidoDto): PedidoDto {
+class ProducaoGatewayImpl(private val url: String, private val restTemplate: RestTemplate) : ProducaoGateway {
+    override fun enviar(pedido: PedidoDto) {
         try {
-            val response = restTemplate.postForEntity("${url}/order", pedido, PedidoDto::class.java)
+            val response = restTemplate.postForEntity("${url}/order", pedido, Void::class.java)
 
             if (response.statusCode != HttpStatus.CREATED)
                 throw RuntimeException("[status_code: ${response.statusCode}")
-
-            return response.body!!
         } catch (ex: Exception) {
             throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message}"))
         }

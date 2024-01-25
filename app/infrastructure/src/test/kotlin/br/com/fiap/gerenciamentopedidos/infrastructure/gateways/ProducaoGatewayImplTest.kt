@@ -36,8 +36,8 @@ class ProducaoGatewayImplTest {
         val param = criarPedidoDto()
 
         every {
-            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(PedidoDto::class.java))
-        } returns ResponseEntity(param, HttpStatus.CREATED)
+            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(Void::class.java))
+        } returns ResponseEntity(HttpStatus.CREATED)
 
         val result = producaoGateway.enviar(param)
 
@@ -51,8 +51,8 @@ class ProducaoGatewayImplTest {
         val param = criarPedidoDto()
 
         every {
-            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(PedidoDto::class.java))
-        } returns ResponseEntity(param, HttpStatus.BAD_REQUEST)
+            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(Void::class.java))
+        } returns ResponseEntity(HttpStatus.BAD_REQUEST)
 
         val exception = Assertions.assertThrows(IntegracaoAPIException::class.java) { producaoGateway.enviar(param) }
 
@@ -66,7 +66,7 @@ class ProducaoGatewayImplTest {
         val param = criarPedidoDto()
 
         every {
-            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(PedidoDto::class.java))
+            restTemplate.postForEntity(eq("${PRODUCAO_URL}/order"), any(), eq(Void::class.java))
         } throws Exception(Exception("Error"))
 
         val exception = Assertions.assertThrows(IntegracaoAPIException::class.java) { producaoGateway.enviar(param) }

@@ -18,7 +18,8 @@ data class Pedido(
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null,
     var pagamentoId: String? = null,
-    val referencia: UUID? = null
+    val referencia: UUID? = null,
+    var infoPagamento: String? = null
 ) : Model {
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
@@ -48,13 +49,14 @@ data class Pedido(
     fun alterarPagamentoStatus(pagamento: PagamentoStatus) {
         this.statusPagamento = pagamento
         when (pagamento) {
-            PagamentoStatus.APROVADO -> this.status = PedidoStatus.APROVADO
-            PagamentoStatus.REPROVADO -> this.status = PedidoStatus.REPROVADO
-            else -> this.status = PedidoStatus.PENDENTE
+            PagamentoStatus.APROVADO, PagamentoStatus.REPROVADO -> alterarStatus(status)
+            else -> alterarStatus(PedidoStatus.PENDENTE)
         }
     }
 
-    fun alterarStatus(status: PedidoStatus) {
+    private fun alterarStatus(status: PedidoStatus) {
+        if (this.status == status)
+            throw RuntimeException("O pedido já possui o status ${status.name}")
         this.status = status
     }
 
@@ -68,4 +70,6 @@ data class Pedido(
         require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
         return this
     }
+
+    fun isAprovado() = PedidoStatus.APROVADO == status
 }
