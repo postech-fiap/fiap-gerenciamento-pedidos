@@ -3,11 +3,10 @@ package br.com.fiap.gerenciamentopedidos.infrastructure.gateways
 import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.IntegracaoAPIException
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.RestTemplate
 
-private const val ERROR_MESSAGE_QRCODE = "Erro de integração para gerar o pagamento. Detalhes: %s"
+private const val ERROR_MESSAGE = "Erro de integração para gerar o pagamento. Detalhes: %s"
 
 class PagamentoGatewayImpl(
     private val url: String,
@@ -22,7 +21,7 @@ class PagamentoGatewayImpl(
 
             return response.body!!
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE_QRCODE, "${ex.message}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message}"))
         }
     }
 }
