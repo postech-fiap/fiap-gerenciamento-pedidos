@@ -115,7 +115,6 @@ val includeCoverage = listOf(
 val excludeCoverage = listOf(
     "**/models/**",
     "**/dtos/**",
-    "**/valueobjects/**",
     "**/enums/**",
     "**/entities/**",
     "**/exceptions/**",

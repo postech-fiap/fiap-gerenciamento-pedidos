@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [Application::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PedidoControllerTest {
@@ -22,18 +23,5 @@ class PedidoControllerTest {
 
     @Test
     fun `deve alterar status do pedido com sucesso`() {
-//        val request = JSONObject()
-//            .put("referencia", UUID.randomUUID())
-//            .put("pagamento_id", 1L)
-//            .put("status", PagamentoStatus.APROVADO)
-//
-//        val responseEntity = testRestTemplate.exchange(
-//            "/pedidos/status",
-//            HttpMethod.PATCH,
-//            HttpEntity(request.toString(), null),
-//            Any::class.java
-//        )
-//
-//        Assertions.assertEquals(HttpStatus.OK, responseEntity.statusCode)
     }
 }

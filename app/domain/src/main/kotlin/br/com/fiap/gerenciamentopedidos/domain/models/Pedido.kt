@@ -2,6 +2,7 @@ package br.com.fiap.gerenciamentopedidos.domain.models
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
@@ -49,14 +50,15 @@ data class Pedido(
     fun alterarPagamentoStatus(pagamento: PagamentoStatus) {
         this.statusPagamento = pagamento
         when (pagamento) {
-            PagamentoStatus.APROVADO, PagamentoStatus.REPROVADO -> alterarStatus(status)
-            else -> alterarStatus(PedidoStatus.PENDENTE)
+            PagamentoStatus.APROVADO -> alterarStatus(PedidoStatus.APROVADO)
+            PagamentoStatus.REPROVADO -> alterarStatus(PedidoStatus.REPROVADO)
+            else -> throw BusinessException("O status do pagamento deve ser APROVADO ou REPROVADO")
         }
     }
 
     private fun alterarStatus(status: PedidoStatus) {
         if (this.status == status)
-            throw RuntimeException("O pedido já possui o status ${status.name}")
+            throw BusinessException("O pedido já possui o status ${status.name}")
         this.status = status
     }
 

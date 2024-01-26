@@ -1,9 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.PedidoDto
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
@@ -35,53 +33,74 @@ class AlterarStatusPedidoUseCaseImplTestDto {
     @MockK
     lateinit var producaoGateway: ProducaoGateway
 
-//    @Test
-//    fun `deve alterar o status do pedido para APROVADO com Sucesso`() {
-//        //given
-//        val pedidoId = 1L
-//        val pedido = criarPedido()
-//        val copyPedido = pedido.copy()
-//        copyPedido.alterarStatus(PedidoStatus.APROVADO)
-//
-//        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
-//        every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
-//        every { producaoGateway.enviar(any()) } returns PedidoDto(pedidoId, pedido.numero, pedido.dataHora, listOf())
-//
-//        //when
-//        useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
-//
-//        //then
-//        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(pedidoId) }
-//        verify(exactly = 1) { pedidoPort.alterarStatusPedido(copyPedido.status, any()) }
-//    }
+    @Test
+    fun `deve alterar o status do pedido para APROVADO com Sucesso`() {
+        val pedido = criarPedido()
 
-//    @Test
-//    fun `nao deve alterar o status do pedido para RECEBIDO porque o ja possui esse status`() {
-//        //given
-//        val pedidoId = 1L
-//        val errorMessage = "O status do pedido ja está igual à PENDENTE"
-//        val pedido = criarPedido()
-//        val copyPedido = pedido.copy()
-//        copyPedido.alterarStatus(PedidoStatus.PENDENTE)
-//
-//        every { pedidoPort.buscarPedidoPorId(pedidoId) } returns Optional.of(pedido)
-//        every { pedidoPort.alterarStatusPedido(copyPedido.status, any()) } returns Unit
-//
-//        //when
-//        val exception = assertThrows(BusinessException::class.java) {
-//            useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
-//        }
-//
-//        //then
-//        assertEquals(exception.message, errorMessage)
-//
-//        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(pedidoId) }
-//        verify(exactly = 0) { pedidoPort.alterarStatusPedido(copyPedido.status, any()) }
-//    }
+        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.update(any()) } returns pedido
+        every { producaoGateway.enviar(any()) } returns Unit
+
+        useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
+
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.update(any()) }
+    }
+
+    @Test
+    fun `deve alterar o status do pedido para REPROVADO com Sucesso`() {
+        val pedido = criarPedido()
+
+        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.update(any()) } returns pedido
+        every { producaoGateway.enviar(any()) } returns Unit
+
+        useCase.executar(UUID.randomUUID(), PagamentoStatus.REPROVADO)
+
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.update(any()) }
+    }
+
+    @Test
+    fun `nao deve alterar o status do pedido para APROVADO porque o ja possui esse status`() {
+        val pedido = criarPedido()
+        val errorMessage = "O pedido já possui o status APROVADO"
+
+        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.update(any()) } returns pedido
+        every { producaoGateway.enviar(any()) } returns Unit
+
+        pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
+
+        val exception = assertThrows(BusinessException::class.java) {
+            useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
+        }
+
+        assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 0) { pedidoPort.update(any()) }
+    }
+
+    @Test
+    fun `deve lancar erro ao alterar status do pedido para PENDENTE`() {
+        val pedido = criarPedido()
+        val errorMessage = "O status do pagamento deve ser APROVADO ou REPROVADO"
+
+        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.update(any()) } returns pedido
+        every { producaoGateway.enviar(any()) } returns Unit
+
+        val exception = assertThrows(BusinessException::class.java) {
+            useCase.executar(UUID.randomUUID(), PagamentoStatus.PENDENTE)
+        }
+
+        assertEquals(errorMessage, exception.message)
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 0) { pedidoPort.update(any()) }
+    }
 
     private fun criarPedido(): Pedido {
         val pedido = Pedido(numero = "1", clienteId = 1)
-        pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
         pedido.adicionarItem(criarItem())
         return pedido
     }
