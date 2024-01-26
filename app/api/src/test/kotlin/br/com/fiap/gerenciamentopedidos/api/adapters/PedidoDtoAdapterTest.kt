@@ -49,7 +49,7 @@ class PedidoDtoAdapterTest {
     fun `deve alterar status do pedido com sucesso`() {
         every { alterarStatusPedidoUseCase.executar(any(), any()) } returns Unit
 
-        val request = AlterarStatusPedidoRequest(UUID.randomUUID().toString(), 1, PagamentoStatus.APROVADO.name)
+        val request = AlterarStatusPedidoRequest(UUID.randomUUID().toString(), "sdasdsad", PagamentoStatus.APROVADO.name)
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }
