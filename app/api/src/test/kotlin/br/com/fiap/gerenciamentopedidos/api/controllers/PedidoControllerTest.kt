@@ -28,9 +28,9 @@ class PedidoControllerTest {
     @Test
     fun `deve alterar status do pedido com sucesso`() {
         val request = JSONObject()
-            .put("referencia", UUID.randomUUID())
-            .put("pagamento_id", 1L)
-            .put("status", PagamentoStatus.APROVADO)
+            .put("referencia_pedido", UUID.randomUUID())
+            .put("id_pagamento", 1L)
+            .put("status_pagamento", PagamentoStatus.APROVADO)
 
         val reqHeaders = HttpHeaders()
         reqHeaders.contentType = MediaType.APPLICATION_JSON

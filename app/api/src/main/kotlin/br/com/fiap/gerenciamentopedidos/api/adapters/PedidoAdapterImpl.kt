@@ -15,5 +15,5 @@ class PedidoAdapterImpl(
         PedidoResponse(cadastrarPedidoUseCase.executar(request.clienteId, request.produtos!!.map { it.toModel() }))
 
     override fun alterarStatusPedido(request: AlterarStatusPedidoRequest) =
-        alterarStatusPedidoUseCase.executar(request.referencia, request.status)
+        alterarStatusPedidoUseCase.executar(request.referenciaPedido, request.statusPagamento)
 }

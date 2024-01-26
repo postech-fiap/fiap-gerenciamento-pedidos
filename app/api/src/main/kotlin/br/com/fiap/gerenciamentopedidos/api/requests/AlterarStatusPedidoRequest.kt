@@ -4,7 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import java.util.*
 
 data class AlterarStatusPedidoRequest(
-    val referencia: UUID,
-    val pagamentoId: Long,
-    val status: PagamentoStatus,
+    val referenciaPedido: UUID,
+    val idPagamento: Long,
+    val statusPagamento: PagamentoStatus,
 )
