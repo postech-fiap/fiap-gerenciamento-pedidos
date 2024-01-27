@@ -19,5 +19,6 @@ class PedidoController(private val pedidoAdapter: PedidoAdapter) {
 
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
-        pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest)
+        ResponseEntity.accepted().body(pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest))
+
 }

@@ -27,8 +27,8 @@ data class PedidoEntity(
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,
 
-    @Column(name = "cliente_id")
-    val clienteId: Long? = null,
+    @Column(name = "cliente_id", length = 36)
+    val clienteId: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_pagamento")

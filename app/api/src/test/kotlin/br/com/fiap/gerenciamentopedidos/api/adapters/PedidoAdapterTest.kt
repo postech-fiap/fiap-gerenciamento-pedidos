@@ -23,7 +23,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class PedidoDtoAdapterTest {
+class PedidoAdapterTest {
 
     @MockK
     lateinit var cadastrarPedidoUseCase: CadastrarPedidoUseCase
@@ -38,7 +38,7 @@ class PedidoDtoAdapterTest {
     fun `deve cadastrar pedido com sucesso`() {
         every { cadastrarPedidoUseCase.executar(any(), any()) } returns criarPedido()
 
-        val request = CadastrarPedidoRequest(1, listOf(CadastrarPedidoProdutoRequest(1, 1, "Sem mostarda")))
+        val request = CadastrarPedidoRequest("1", listOf(CadastrarPedidoProdutoRequest(1, 1, "Sem mostarda")))
 
         val response = adapter.cadastrarPedido(request)
 
@@ -55,7 +55,7 @@ class PedidoDtoAdapterTest {
     }
 
     private fun criarPedido(): Pedido {
-        val pedido = Pedido(numero = "1", clienteId = 1)
+        val pedido = Pedido(numero = "1", clienteId = "1")
         pedido.adicionarItem(criarItem())
         return pedido
     }

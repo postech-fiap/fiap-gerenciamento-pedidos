@@ -19,7 +19,7 @@ class CadastrarPedidoUseCaseImpl(
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
     private val pagamentoGateway: PagamentoGateway
 ) : CadastrarPedidoUseCase {
-    override fun executar(clienteId: Long?, itens: List<Item>): Pedido {
+    override fun executar(clienteId: String?, itens: List<Item>): Pedido {
         val pedido = Pedido(
             numero = gerarNumeroPedidoUseCase.executar(),
             clienteId = clienteId,

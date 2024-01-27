@@ -6,4 +6,5 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
 }

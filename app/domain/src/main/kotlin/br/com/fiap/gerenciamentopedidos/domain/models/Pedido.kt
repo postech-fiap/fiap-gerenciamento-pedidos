@@ -13,7 +13,7 @@ data class Pedido(
     val id: Long? = null,
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     var status: PedidoStatus = PedidoStatus.PENDENTE,
-    var clienteId: Long? = null,
+    var clienteId: String? = null,
     var items: List<Item> = listOf(),
     var statusPagamento: PagamentoStatus? = null,
     var tempoEsperaMinutos: Long? = 0,

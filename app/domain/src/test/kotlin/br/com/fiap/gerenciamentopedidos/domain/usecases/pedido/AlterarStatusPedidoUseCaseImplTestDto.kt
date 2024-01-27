@@ -100,7 +100,7 @@ class AlterarStatusPedidoUseCaseImplTestDto {
     }
 
     private fun criarPedido(): Pedido {
-        val pedido = Pedido(numero = "1", clienteId = 1)
+        val pedido = Pedido(numero = "1", clienteId = "1")
         pedido.adicionarItem(criarItem())
         return pedido
     }

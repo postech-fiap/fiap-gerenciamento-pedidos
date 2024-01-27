@@ -1,48 +1,86 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
-import br.com.fiap.gerenciamentopedidos.api.Application
+import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.PedidoAdapter
+import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoProdutoRequest
+import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
+import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
+import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
-import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
+import br.com.fiap.gerenciamentopedidos.domain.models.Item
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import br.com.fiap.gerenciamentopedidos.domain.models.Produto
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.*
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.util.*
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import java.math.BigDecimal
 
 
-@ExtendWith(SpringExtension::class)
-@SpringBootTest(classes = [Application::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PedidoControllerTest {
+class PedidoControllerTest : IntegrationTest() {
 
-    @Autowired
-    lateinit var testRestTemplate: TestRestTemplate
+    @MockkBean
+    lateinit var adapter: PedidoAdapter
 
     @Test
     fun `deve cadastrar pedido com sucesso`() {
+        val request = CadastrarPedidoRequest("1", listOf(CadastrarPedidoProdutoRequest(1, 1, "Sem mostarda")))
+        val json = objectMapper.writeValueAsString(request)
+        val pedido = criarPedido()
+        every { adapter.cadastrarPedido(any()) } returns PedidoResponse(pedido)
+
+        mockMvc.post("/pedidos") {
+            contentType = MediaType.APPLICATION_JSON
+            accept = MediaType.APPLICATION_JSON
+            content = json
+        }
+            .andExpect {
+                status { isCreated() }
+                jsonPath("$.id").value(pedido.id)
+                jsonPath("$.status").value(PedidoStatus.PENDENTE)
+            }
     }
 
     @Test
     fun `deve alterar status do pedido com sucesso`() {
-        val request = JSONObject()
-            .put("referencia_pedido", UUID.randomUUID())
-            .put("id_pagamento", 1L)
-            .put("status_pagamento", PagamentoStatus.APROVADO)
+        val request = AlterarStatusPedidoRequest("1", "1", PagamentoStatus.APROVADO.name)
+        val json = objectMapper.writeValueAsString(request)
+        every { adapter.alterarStatusPedido(any()) } returns Unit
 
-        val reqHeaders = HttpHeaders()
-        reqHeaders.contentType = MediaType.APPLICATION_JSON
-        reqHeaders.accept = listOf(MediaType.APPLICATION_JSON)
-
-        val responseEntity = testRestTemplate.exchange(
-            "/pedidos/status",
-            HttpMethod.PATCH,
-            HttpEntity(request.toString(), reqHeaders),
-            Any::class.java
-        )
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
+        mockMvc.patch("/pedidos/status") {
+            contentType = MediaType.APPLICATION_JSON
+            accept = MediaType.APPLICATION_JSON
+            content = json
+        }
+            .andExpect {
+                status { isAccepted() }
+            }
     }
+
+    private fun criarPedido() = Pedido(
+        numero = "1", clienteId = "1", items = listOf(
+            Item(
+                id = 1,
+                quantidade = 1,
+                comentario = "Sem mostarda",
+                valorPago = BigDecimal(10),
+                produto = Produto(
+                    id = 1,
+                    nome = "Produto 1",
+                    descricao = "descricao",
+                    categoria = Categoria.BEBIDA,
+                    valor = BigDecimal(10),
+                    tempoPreparo = 10,
+                    disponivel = true,
+                    excluido = false,
+                    imagem = Imagem(1, "/caminho.jpg")
+                )
+            )
+        )
+    )
 }

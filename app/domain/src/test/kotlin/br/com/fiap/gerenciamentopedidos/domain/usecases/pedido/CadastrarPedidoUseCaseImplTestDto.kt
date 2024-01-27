@@ -48,7 +48,7 @@ class CadastrarPedidoUseCaseImplTestDto {
     fun `deve cadastrar um pedido com sucesso`() {
         // Arrange
         val pedido = criarPedido()
-        val clienteId = 10L
+        val clienteId = "10"
         val itens = listOf(criarItem())
 
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
@@ -69,7 +69,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         assertEquals(BigDecimal(10), produtosResult[0].valorPago)
         assertEquals(10L, result.tempoEsperaMinutos)
         assertEquals(PedidoStatus.PENDENTE, result.status)
-        assertEquals(1, result.clienteId)
+        assertEquals("1", result.clienteId)
 
         verify(exactly = 1) { pedidoRepository.salvar(any()) }
     }
@@ -79,7 +79,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         // Arrange
         val errorMessage = "Produto 1 não encontrado ou indisponível"
         val pedido = criarPedido()
-        val clienteId = 10L
+        val clienteId = "10"
         val itens = listOf(criarItem())
 
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns emptyList()
@@ -99,7 +99,7 @@ class CadastrarPedidoUseCaseImplTestDto {
         // Arrange
         val errorMessage = "Produto 1 não encontrado ou indisponível"
         val pedido = criarPedido()
-        val clienteId = 10L
+        val clienteId = "10"
         val itens = listOf(criarItem())
 
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns listOf(criarProdutoIndisponivel(1))
@@ -115,7 +115,7 @@ class CadastrarPedidoUseCaseImplTestDto {
     }
 
     private fun criarPedido(): Pedido {
-        val pedido = Pedido(numero = "1", clienteId = 1)
+        val pedido = Pedido(numero = "1", clienteId = "1")
         pedido.adicionarItem(criarItem())
         return pedido
     }
