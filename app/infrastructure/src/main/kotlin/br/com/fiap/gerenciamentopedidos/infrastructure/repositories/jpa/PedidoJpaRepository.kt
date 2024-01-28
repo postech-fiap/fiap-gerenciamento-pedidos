@@ -9,7 +9,7 @@ interface PedidoJpaRepository : JpaRepository<PedidoEntity, Long> {
     fun findByReferencia(referencia: String): Optional<PedidoEntity>
 
     @Query(
-        "SELECT IFNULL(MAX(CAST(p.numero AS UNSIGNED)),0) FROM pedido p WHERE DATE(p.data_hora) = CURDATE()",
+        "SELECT IFNULL(MAX(p.numero),0) FROM pedido p WHERE DATE(p.data_hora) = CURDATE()",
         nativeQuery = true
     )
     fun obterUltimoNumeroPedidoDoDia(): String

@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.api.bdd.funcionalidades
+package br.com.fiap.gerenciamentopedidos.api.bdd
 
 import io.cucumber.java.pt.Entao
 import io.cucumber.java.pt.Quando
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus
 
 private const val ENDPOINT = "http://localhost:8080/produtos"
 
-class CriacaoProduto : FuncionalidadeBase(), Pt {
+class CriacaoProduto : CucumberTest(), Pt {
     lateinit var response: Response
 
     @Quando("for solicitado a criação de um produto")
@@ -39,5 +39,32 @@ class CriacaoProduto : FuncionalidadeBase(), Pt {
             .statusCode(HttpStatus.CREATED.value())
             .body("disponivel", CoreMatchers.equalTo(true))
             .body("excluido", CoreMatchers.equalTo(false))
+    }
+
+    @Quando("for solicitado a criação de um produto sem atributos")
+    fun CriarUmProdutoSemDados() {
+        response = RestAssured.given()
+            .contentType("application/json")
+            .body(
+                """
+                    {
+                        "nome": null,
+                        "descricao": "Hamburger de cupim",
+                        "categoria": "LANCHE",
+                        "valor": 42.99,
+                        "tempo_preparo": 20,
+                        "imagem": "/hamburger.png"
+                    }
+                """.trimIndent()
+            )
+            .`when`()
+            .post(ENDPOINT)
+    }
+
+    @Entao("deve retorar erro de validação")
+    fun ValidarPayloadDeCriacaoDeProdutos() {
+        response.then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("detail", CoreMatchers.equalTo("Nome do produto não informado"))
     }
 }

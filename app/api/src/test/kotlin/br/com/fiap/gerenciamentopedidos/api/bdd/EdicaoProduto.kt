@@ -1,4 +1,4 @@
-package br.com.fiap.gerenciamentopedidos.api.bdd.funcionalidades
+package br.com.fiap.gerenciamentopedidos.api.bdd
 
 import io.cucumber.java.pt.Entao
 import io.cucumber.java.pt.Quando
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus
 
 private const val ENDPOINT = "http://localhost:8080/produtos"
 
-class EdicaoProduto : FuncionalidadeBase(), Pt {
+class EdicaoProduto : CucumberTest(), Pt {
     lateinit var response: Response
 
     @Quando("for solicitado a edição de um produto")
