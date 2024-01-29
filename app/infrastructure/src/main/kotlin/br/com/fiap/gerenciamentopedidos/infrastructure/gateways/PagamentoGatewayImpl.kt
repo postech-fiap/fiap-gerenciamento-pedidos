@@ -21,7 +21,7 @@ class PagamentoGatewayImpl(
 
             return response.body!!
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, ex.message))
         }
     }
 }

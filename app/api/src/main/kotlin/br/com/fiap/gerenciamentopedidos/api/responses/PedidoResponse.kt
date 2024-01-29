@@ -4,6 +4,7 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import java.time.OffsetDateTime
+import java.util.*
 
 class PedidoResponse {
     val id: Long?
@@ -14,7 +15,9 @@ class PedidoResponse {
     val clienteId: String?
     val statusPagamento: PagamentoStatus?
     val infoPagamento: String?
+    val referencia: UUID?
     val produtos: List<PedidoProdutoResponse>?
+
     constructor(pedido: Pedido) {
         id = pedido.id
         dataHora = pedido.dataHora
@@ -25,5 +28,6 @@ class PedidoResponse {
         produtos = pedido.items.map { PedidoProdutoResponse(it) }
         statusPagamento = pedido.statusPagamento
         infoPagamento = pedido.infoPagamento
+        referencia = pedido.referencia
     }
 }

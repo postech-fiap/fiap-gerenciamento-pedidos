@@ -16,7 +16,7 @@ class ProducaoGatewayImpl(private val url: String, private val restTemplate: Res
             if (response.statusCode != HttpStatus.CREATED)
                 throw RuntimeException("[status_code: ${response.statusCode}")
         } catch (ex: Exception) {
-            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, "${ex.message}"))
+            throw IntegracaoAPIException(String.format(ERROR_MESSAGE, ex.message))
         }
     }
 }

@@ -14,7 +14,7 @@ class CriacaoProduto : CucumberTest(), Pt {
     lateinit var response: Response
 
     @Quando("for solicitado a criação de um produto")
-    fun CriarUmProduto() {
+    fun criarUmProduto() {
         response = RestAssured.given()
             .contentType("application/json")
             .body(
@@ -34,7 +34,7 @@ class CriacaoProduto : CucumberTest(), Pt {
     }
 
     @Entao("deve retornar o produto disponível e não excluído")
-    fun ValidarProdutoCriado() {
+    fun validarProdutoCriado() {
         response.then()
             .statusCode(HttpStatus.CREATED.value())
             .body("disponivel", CoreMatchers.equalTo(true))
@@ -42,7 +42,7 @@ class CriacaoProduto : CucumberTest(), Pt {
     }
 
     @Quando("for solicitado a criação de um produto sem atributos")
-    fun CriarUmProdutoSemDados() {
+    fun criarUmProdutoSemDados() {
         response = RestAssured.given()
             .contentType("application/json")
             .body(
@@ -62,7 +62,7 @@ class CriacaoProduto : CucumberTest(), Pt {
     }
 
     @Entao("deve retorar erro de validação")
-    fun ValidarPayloadDeCriacaoDeProdutos() {
+    fun validarPayloadDeCriacaoDeProdutos() {
         response.then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("detail", CoreMatchers.equalTo("Nome do produto não informado"))
