@@ -9,7 +9,7 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosExc
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
 import java.util.*
 
-private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao listar produtos por id. Detalhes: %s"
+private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao obter produto por id. Detalhes: %s"
 private const val ERROR_MESSAGE_GET_BY_CATEGORIA = "Erro ao listar produtos por categoria. Detalhes: %s"
 private const val ERROR_MESSAGE_CREATE = "Erro ao salvar produto. Detalhes: %s"
 private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar produto. Detalhes: %s"
@@ -75,10 +75,10 @@ class ProdutoRepositoryImpl(private val repository: ProdutoJpaRepository) : Prod
 
             when {
                 entity.imagem == null && produto.imagem != null ->
-                    entity.imagem = ImagemEntity(caminho = produto.imagem?.caminho, produto = entity)
+                    entity.imagem = ImagemEntity(caminho = produto.imagem!!.caminho, produto = entity)
 
-                entity.imagem?.caminho != produto.imagem?.caminho ->
-                    entity.imagem?.caminho = produto.imagem?.caminho
+                entity.imagem != null && produto.imagem != null && entity.imagem?.caminho != produto.imagem?.caminho ->
+                    entity.imagem!!.caminho = produto.imagem!!.caminho
 
                 entity.imagem != null && produto.imagem == null ->
                     entity.imagem = null

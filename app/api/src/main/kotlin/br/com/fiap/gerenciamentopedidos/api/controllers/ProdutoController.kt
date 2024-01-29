@@ -12,7 +12,6 @@ import java.net.URI
 @RestController
 @RequestMapping("/produtos")
 class ProdutoController(private val produtoAdapter: ProdutoAdapter) {
-
     @PostMapping
     fun post(@RequestBody request: CadastrarProdutoRequest): ResponseEntity<ProdutoResponse> {
         val produto = produtoAdapter.cadastrarProduto(request)

@@ -1,14 +1,33 @@
 package br.com.fiap.gerenciamentopedidos.api.responses
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import java.time.OffsetDateTime
+import java.util.*
 
-class PedidoResponse(pedido: Pedido) {
-    val id = pedido.id
-    val dataHora = pedido.dataHora
-    val status = pedido.status
-    val tempoEsperaMinutos = pedido.tempoEsperaMinutos
-    val numero = pedido.numero
-    val cliente = pedido.cliente?.let { ClienteResponse(it) }
-    val produtos = pedido.items.map { PedidoProdutoResponse(it) }
-    val pagamento = pedido.pagamento?.let { PagamentoResponse(it) }
+class PedidoResponse {
+    val id: Long?
+    val dataHora: OffsetDateTime?
+    val status: PedidoStatus?
+    val tempoEsperaMinutos: Long?
+    val numero: String?
+    val clienteId: String?
+    val statusPagamento: PagamentoStatus?
+    val infoPagamento: String?
+    val referencia: UUID?
+    val produtos: List<PedidoProdutoResponse>?
+
+    constructor(pedido: Pedido) {
+        id = pedido.id
+        dataHora = pedido.dataHora
+        status = pedido.status
+        tempoEsperaMinutos = pedido.tempoEsperaMinutos
+        numero = pedido.numero
+        clienteId = pedido.clienteId
+        produtos = pedido.items.map { PedidoProdutoResponse(it) }
+        statusPagamento = pedido.statusPagamento
+        infoPagamento = pedido.infoPagamento
+        referencia = pedido.referencia
+    }
 }
