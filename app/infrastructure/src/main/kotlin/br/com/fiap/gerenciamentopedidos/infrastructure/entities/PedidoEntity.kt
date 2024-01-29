@@ -1,14 +1,15 @@
 package br.com.fiap.gerenciamentopedidos.infrastructure.entities
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import jakarta.persistence.*
 import java.time.OffsetDateTime
+import java.util.*
 
 @Entity
 @Table(name = "pedido")
 data class PedidoEntity(
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -26,9 +27,12 @@ data class PedidoEntity(
     @Column(name = "numero", nullable = false, length = 4)
     val numero: String? = null,
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = true)
-    var cliente: ClienteEntity? = null,
+    @Column(name = "cliente_id", length = 36)
+    val clienteId: String? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_pagamento")
+    val statusPagamento: PagamentoStatus? = null,
 
     @OneToMany(
         mappedBy = "pedido",
@@ -38,30 +42,25 @@ data class PedidoEntity(
     )
     var produtos: List<PedidoProdutoEntity>? = null,
 
-    @OneToOne(
-        mappedBy = "pedido",
-        fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true
-    )
-    var pagamento: PagamentoEntity? = null
+    @Column(name = "referencia", nullable = false, length = 36)
+    val referencia: String? = null,
+
+    @Column(name = "pagamento_id", nullable = false, length = 36)
+    var pagamentoId: String? = null,
 ) {
-    fun toModel(): Pedido {
-        val cliente = cliente?.toModel()
 
-        val produtos = produtos?.map { it.toModel() }
-
-        return Pedido(
-            id = id,
-            dataHora = dataHora!!,
-            status = status!!,
-            tempoEsperaMinutos = tempoEsperaMinutos!!,
-            numero = numero!!,
-            cliente = cliente,
-            items = produtos!!,
-            pagamento = pagamento?.toModel()
-        )
-    }
+    fun toModel() = Pedido(
+        id = id,
+        dataHora = dataHora!!,
+        status = status!!,
+        tempoEsperaMinutos = tempoEsperaMinutos!!,
+        numero = numero!!,
+        clienteId = clienteId,
+        statusPagamento = statusPagamento,
+        items = produtos?.map { it.toModel() }!!,
+        referencia = referencia.let { UUID.fromString(it) },
+        pagamentoId = pagamentoId
+    )
 
     companion object {
         fun fromModel(pedido: Pedido): PedidoEntity {
@@ -71,12 +70,13 @@ data class PedidoEntity(
                 status = pedido.status,
                 tempoEsperaMinutos = pedido.tempoEsperaMinutos,
                 numero = pedido.numero,
-                cliente = pedido.cliente?.let { ClienteEntity.fromModel(it) }
+                statusPagamento = pedido.statusPagamento,
+                clienteId = pedido.clienteId,
+                referencia = pedido.referencia.toString(),
+                pagamentoId = pedido.pagamentoId
             )
-            entity.pagamento = pedido.pagamento.let { PagamentoEntity.fromModel(it!!, entity) }
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }
             return entity
         }
     }
 }
-

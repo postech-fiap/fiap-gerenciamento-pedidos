@@ -1,6 +1,7 @@
 package br.com.fiap.gerenciamentopedidos.api.config.interceptors
 
-import br.com.fiap.gerenciamentopedidos.domain.exceptions.*
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.infrastructure.exceptions.BaseDeDadosException
 import org.springframework.beans.BeanInstantiationException
 import org.springframework.http.*
@@ -32,13 +33,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.message)
         problemDetail.title = HttpStatus.NOT_FOUND.reasonPhrase
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail)
-    }
-
-    @ExceptionHandler(RecursoJaExisteException::class)
-    private fun handleRecursoJaExisteException(ex: RecursoJaExisteException): ResponseEntity<ProblemDetail> {
-        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.message)
-        problemDetail.title = HttpStatus.CONFLICT.reasonPhrase
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail)
     }
 
     @ExceptionHandler(BusinessException::class)

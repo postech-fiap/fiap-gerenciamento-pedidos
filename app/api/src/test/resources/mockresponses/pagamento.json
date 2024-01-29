@@ -1,0 +1,22 @@
+{
+  "id": "123",
+  "referencia_pedido": "121122",
+  "numero_pedido": "1",
+  "data_hora": "2024-01-26T04:41:55.37091241Z",
+  "status": "APROVADO",
+  "qr_code": "sdsadsadsdada",
+  "valor_total": 19.99,
+  "items": [
+    {
+      "quantidade": 1,
+      "produto": {
+        "id": 123,
+        "nome": "produto",
+        "descricao": "descricao",
+        "categoria": "LANCHE",
+        "valor": 19.99
+      },
+      "valor_pago": 19.99
+    }
+  ]
+}

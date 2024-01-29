@@ -11,9 +11,6 @@ import java.net.URI
 @RestController
 @RequestMapping("/pedidos")
 class PedidoController(private val pedidoAdapter: PedidoAdapter) {
-    @GetMapping
-    fun buscarPedidos() = ResponseEntity.ok().body(pedidoAdapter.buscarPedidos())
-
     @PostMapping
     fun post(@RequestBody request: CadastrarPedidoRequest): ResponseEntity<PedidoResponse> {
         val pedido = pedidoAdapter.cadastrarPedido(request)
@@ -22,8 +19,6 @@ class PedidoController(private val pedidoAdapter: PedidoAdapter) {
 
     @PatchMapping("/status")
     fun alterarStatusPedido(@RequestBody alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =
-        pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest)
+        ResponseEntity.accepted().body(pedidoAdapter.alterarStatusPedido(alterarStatusPedidoRequest))
 
-    @GetMapping("/{id}/pagamento/status")
-    fun consultarStatusPagamento(@PathVariable id: Long) = pedidoAdapter.consultarStatusPagamento(id)
 }

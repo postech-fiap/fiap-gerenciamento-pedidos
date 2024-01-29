@@ -10,9 +10,6 @@ services:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DB: gerenciamento_pedidos_db
       MYSQL_HOST: "${MYSQL_HOST}"
-      MERCADO_PAGO_USER_ID: "${MERCADO_PAGO_USER_ID}"
-      MERCADO_PAGO_EXTERNAL_ID: "${MERCADO_PAGO_EXTERNAL_ID}"
-      MERCADO_PAGO_TOKEN: "${MERCADO_PAGO_TOKEN}"
     ports:
       - "8080:8080"
     depends_on:
