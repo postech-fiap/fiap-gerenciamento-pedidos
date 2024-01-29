@@ -1,27 +1,29 @@
 package br.com.fiap.gerenciamentopedidos.domain.models
 
+import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
+import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
+import java.util.*
 
 data class Pedido(
     val numero: String?,
     val id: Long? = null,
     val dataHora: OffsetDateTime = OffsetDateTime.now(),
     var status: PedidoStatus = PedidoStatus.PENDENTE,
-    var cliente: Cliente? = null,
+    var clienteId: String? = null,
     var items: List<Item> = listOf(),
-    var pagamento: Pagamento? = null,
+    var statusPagamento: PagamentoStatus? = null,
     var tempoEsperaMinutos: Long? = 0,
-    var valorTotal: BigDecimal? = null
+    var valorTotal: BigDecimal? = null,
+    var pagamentoId: String? = null,
+    val referencia: UUID? = null,
+    var infoPagamento: String? = null
 ) : Model {
     private fun calcularTempoEspera() {
         tempoEsperaMinutos = items.map { it.produto?.tempoPreparo }.maxBy { it!! }
-    }
-
-    fun atribuirCliente(cliente: Cliente) {
-        this.cliente = cliente
     }
 
     fun adicionarItem(item: Item) {
@@ -45,12 +47,24 @@ data class Pedido(
         valorTotal = items.map { it.valorPago }.fold(BigDecimal.ZERO, BigDecimal::add)
     }
 
-    fun gerarQrCodePagamento(pagamento: Pagamento) {
-        this.pagamento = pagamento
+    fun alterarPagamentoStatus(pagamento: PagamentoStatus) {
+        this.statusPagamento = pagamento
+        when (pagamento) {
+            PagamentoStatus.APROVADO -> alterarStatus(PedidoStatus.APROVADO)
+            PagamentoStatus.REPROVADO -> alterarStatus(PedidoStatus.REPROVADO)
+            else -> throw BusinessException("O status do pagamento deve ser APROVADO ou REPROVADO")
+        }
     }
 
-    fun alterarStatus(status: PedidoStatus) {
+    private fun alterarStatus(status: PedidoStatus) {
+        if (this.status == status)
+            throw BusinessException("O pedido já possui o status ${status.name}")
         this.status = status
+    }
+
+    fun addPagamento(pagamentoId: String, statusPagamento: PagamentoStatus) {
+        this.pagamentoId = pagamentoId
+        this.statusPagamento = statusPagamento
     }
 
     override fun valid(): Pedido {
@@ -58,4 +72,6 @@ data class Pedido(
         require(dataHora.isBefore(OffsetDateTime.now())) { "A data e hora do pedido deve ser menor ou igual que a data e hora atual" }
         return this
     }
+
+    fun isAprovado() = PedidoStatus.APROVADO == status
 }

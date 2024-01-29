@@ -1,29 +1,32 @@
 package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ItemPagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.PagamentoDto
+import br.com.fiap.gerenciamentopedidos.domain.dtos.ProdutoPagamentoDto
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.RecursoNaoEncontradoException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.cliente.BuscarClientePorIdUseCase
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pagamento.GerarQrCodePagamentoUseCase
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import java.util.*
 
 class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
-    private val buscarClientePorIdUseCase: BuscarClientePorIdUseCase,
     private val gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
-    private val gerarQrCodePagamento: GerarQrCodePagamentoUseCase
+    private val pagamentoGateway: PagamentoGateway
 ) : CadastrarPedidoUseCase {
-    override fun executar(clienteId: Long?, itens: List<Item>): Pedido {
-        val pedido = Pedido(gerarNumeroPedidoUseCase.executar())
-        val produtos = obterProdutosPorIdsUseCase.executar(itens.map { it.id!! })
+    override fun executar(clienteId: String?, itens: List<Item>): Pedido {
+        val pedido = Pedido(
+            numero = gerarNumeroPedidoUseCase.executar(),
+            clienteId = clienteId,
+            referencia = UUID.randomUUID()
+        )
 
-        clienteId?.let {
-            pedido.atribuirCliente(buscarClientePorIdUseCase.executar(it))
-        }
+        val produtos = obterProdutosPorIdsUseCase.executar(itens.map { it.id!! })
 
         itens.map {
             val produto = produtos.firstOrNull { p -> p.id == it.id!! && p.disponivel }
@@ -32,8 +35,30 @@ class CadastrarPedidoUseCaseImpl(
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        pedido.gerarQrCodePagamento(gerarQrCodePagamento.executar(pedido))
+        val pagamento = criarPagamento(pedido)
 
-        return pedidoRepository.salvar(pedido.valid())
+        pedido.addPagamento(pagamento.id!!, pagamento.status!!)
+
+        return pedidoRepository.salvar(pedido.valid()).copy(infoPagamento = pagamento.qrCode)
     }
+
+    private fun criarPagamento(pedido: Pedido) = pagamentoGateway.criar(PagamentoDto(
+        referenciaPedido = pedido.referencia.toString(),
+        numeroPedido = pedido.numero,
+        dataHora = pedido.dataHora,
+        valorTotal = pedido.valorTotal,
+        items = pedido.items.map {
+            ItemPagamentoDto(
+                quantidade = it.quantidade,
+                valorPago = it.valorPago,
+                produto = ProdutoPagamentoDto(
+                    id = it.produto!!.id,
+                    nome = it.produto.nome,
+                    descricao = it.produto.descricao,
+                    categoria = it.produto.categoria.toString(),
+                    valor = it.produto.valor,
+                )
+            )
+        }
+    ))
 }

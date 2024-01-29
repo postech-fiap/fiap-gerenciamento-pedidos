@@ -9,7 +9,6 @@ Com o `kubectl` instalado, execute os seguintes comandos:
 ```bash
 # Criar Secrets
 kubectl create secret generic db --from-literal=username=root --from-literal=password=<YOUR_PASSWORD>
-kubectl create secret generic mp --from-literal=user-id=<MERCADO_PAGO_USER_ID> --from-literal=external-id=<MERCADO_PAGO_EXTERNAL_ID> --from-literal=token=<MERCADO_PAGO_TOKEN> --from-literal=webhook-url=<MERCADO_PAGO_WEBHOOK_URL>
 
 # Criar Load Balancer
 kubectl apply -f kubernetes/api/load-balancer-service.yaml
@@ -49,5 +48,3 @@ curl --location 'http://localhost:30000/swagger-ui/index.html'
 ```sh
 curl --location 'http://localhost:8080/swagger-ui/index.html'
 ```
-
-## [Integração com Mercado Pago Api](README-MERCADOPAGO.md)
