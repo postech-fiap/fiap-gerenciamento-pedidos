@@ -35,11 +35,9 @@ class CadastrarPedidoUseCaseImpl(
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        val pagamento = criarPagamento(pedido)
+        criarPagamento(pedido)
 
-        pedido.addPagamento(pagamento.id!!, pagamento.status!!)
-
-        return pedidoRepository.salvar(pedido.valid()).copy(infoPagamento = pagamento.qrCode)
+        return pedidoRepository.salvar(pedido.valid())
     }
 
     private fun criarPagamento(pedido: Pedido) = pagamentoGateway.criar(PagamentoDto(

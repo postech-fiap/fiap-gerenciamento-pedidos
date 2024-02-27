@@ -20,19 +20,18 @@ import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoReposi
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.ProdutoJpaRepository
+import org.springframework.amqp.core.Queue
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.web.client.RestTemplate
 
 @Configuration
 @EnableJpaRepositories(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
 @EntityScan(basePackages = ["br.com.fiap.gerenciamentopedidos.infrastructure"])
-class AppBeansConfig(
-    val restTemplate: RestTemplate
-) {
+class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
     @Bean
     fun produtoMySqlAdapter(repository: ProdutoJpaRepository) = ProdutoRepositoryImpl(repository)
 
@@ -106,8 +105,23 @@ class AppBeansConfig(
     )
 
     @Bean
-    fun producaoGateway(@Value("\${producao.url}") url: String) = ProducaoGatewayImpl(url, restTemplate)
+    fun producaoGateway(pedidoRecebidoQueue: Queue) = ProducaoGatewayImpl(pedidoRecebidoQueue, amqpTemplate)
 
     @Bean
-    fun pagametoGateway(@Value("\${pagamento.url}") url: String) = PagamentoGatewayImpl(url, restTemplate)
+    fun pagametoGateway(pedidoCriadoQueue: Queue) = PagamentoGatewayImpl(pedidoCriadoQueue, amqpTemplate)
+
+    @Bean
+    fun pedidoCriadoQueue(@Value("\${queue.pedido-criado.name}") name: String) = Queue(name, false)
+
+    @Bean
+    fun pedidoRecebidoQueue(@Value("\${queue.pedido-recebido.name}") name: String) = Queue(name, false)
+
+    @Bean
+    fun pedidoFinalizadoQueue(@Value("\${queue.pedido-finalizado.name}") name: String) = Queue(name, false)
+
+    @Bean
+    fun pedidoStatusQueue(@Value("\${queue.pedido-status.name}") name: String) = Queue(name, false)
+
+    @Bean
+    fun clienteStatusQueue(@Value("\${queue.cliente-status.name}") name: String) = Queue(name, false)
 }
