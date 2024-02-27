@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
-class GerarNumeroPedidoUseCaseImplTestDto {
+class GerarNumeroPedidoUseCaseImplTest {
 
     @MockK
     lateinit var pedidoRepository: PedidoRepository

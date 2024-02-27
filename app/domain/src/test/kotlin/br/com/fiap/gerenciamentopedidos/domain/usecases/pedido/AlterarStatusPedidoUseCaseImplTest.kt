@@ -22,7 +22,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class AlterarStatusPedidoUseCaseImplTestDto {
+class AlterarStatusPedidoUseCaseImplTest {
 
     @InjectMockKs
     lateinit var useCase: AlterarStatusPedidoUseCaseImpl
