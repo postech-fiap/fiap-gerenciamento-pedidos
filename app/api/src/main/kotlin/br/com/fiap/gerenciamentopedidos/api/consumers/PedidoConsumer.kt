@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 class PedidoConsumer(private val pedidoAdapter: PedidoAdapter) {
     @RabbitListener(
         queues = [
-            "\${queue.pedido-notificacao-status.name}",
-            "\${queue.pagamento-finalizado.name}"
+            "\${queue.pedido-status.name}",
+            "\${queue.pedido-finalizado.name}"
         ]
     )
     fun alterarStatusPedido(alterarStatusPedidoRequest: AlterarStatusPedidoRequest) =

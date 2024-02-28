@@ -19,6 +19,6 @@ class PedidoAdapterImpl(
     override fun alterarStatusPedido(request: AlterarStatusPedidoRequest) =
         alterarStatusPedidoUseCase.executar(
             UUID.fromString(request.referenciaPedido),
-            PagamentoStatus.valueOf(request.statusPagamento)
+            PagamentoStatus.valueOf(request.statusPagamento!!)
         )
 }

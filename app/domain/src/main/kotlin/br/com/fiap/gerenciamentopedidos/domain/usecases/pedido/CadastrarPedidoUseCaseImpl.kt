@@ -11,14 +11,18 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarN
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-class CadastrarPedidoUseCaseImpl(
+open class CadastrarPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
     private val gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
     private val pagamentoGateway: PagamentoGateway
 ) : CadastrarPedidoUseCase {
+
+    //TODO: Remover acoplamento com spring
+    @Transactional
     override fun executar(clienteId: String?, itens: List<Item>): Pedido {
         val pedido = Pedido(
             numero = gerarNumeroPedidoUseCase.executar(),
@@ -31,13 +35,14 @@ class CadastrarPedidoUseCaseImpl(
         itens.map {
             val produto = produtos.firstOrNull { p -> p.id == it.id!! && p.disponivel }
                 ?: throw RecursoNaoEncontradoException("Produto ${it.produto?.id!!} não encontrado ou indisponível")
-
             pedido.adicionarItem(produto, it.quantidade, it.comentario)
         }
 
-        criarPagamento(pedido)
+        val pedidoCriado = pedidoRepository.salvar(pedido.valid())
 
-        return pedidoRepository.salvar(pedido.valid())
+        criarPagamento(pedidoCriado)
+
+        return pedidoCriado
     }
 
     private fun criarPagamento(pedido: Pedido) = pagamentoGateway.criar(PagamentoDto(
