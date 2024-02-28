@@ -45,7 +45,7 @@ data class PedidoEntity(
     @Column(name = "referencia", nullable = false, length = 36)
     val referencia: String? = null,
 
-    @Column(name = "pagamento_id", nullable = false, length = 36)
+    @Column(name = "pagamento_id", length = 36)
     var pagamentoId: String? = null,
 ) {
 
