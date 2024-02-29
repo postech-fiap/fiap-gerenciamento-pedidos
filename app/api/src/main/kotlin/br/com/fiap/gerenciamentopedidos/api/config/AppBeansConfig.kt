@@ -4,6 +4,7 @@ import br.com.fiap.gerenciamentopedidos.api.adapters.PedidoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.api.adapters.ProdutoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.NotificacaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
@@ -14,6 +15,7 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.AlterarStatusPedi
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
+import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.NotificacaoGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.PagamentoGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.ProducaoGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
@@ -59,8 +61,11 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
     fun pedidoRepository(pedidoJpaRepository: PedidoJpaRepository) = PedidoRepositoryImpl(pedidoJpaRepository)
 
     @Bean
-    fun alterarStatusPedidoUseCase(repository: PedidoRepository, producaoGateway: ProducaoGateway) =
-        AlterarStatusPedidoUseCaseImpl(repository, producaoGateway)
+    fun alterarStatusPedidoUseCase(
+        repository: PedidoRepository,
+        producaoGateway: ProducaoGateway,
+        notificacaoGateway: NotificacaoGateway
+    ) = AlterarStatusPedidoUseCaseImpl(repository, producaoGateway, notificacaoGateway)
 
     @Bean
     fun gerarNumeroPedidoUseCase(repository: PedidoRepository) = GerarNumeroPedidoUseCaseImpl(repository)
@@ -109,6 +114,9 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
 
     @Bean
     fun pagametoGateway(pedidoCriadoQueue: Queue) = PagamentoGatewayImpl(pedidoCriadoQueue, amqpTemplate)
+
+    @Bean
+    fun notificacaoGateway(clienteStatusQueue: Queue) = NotificacaoGatewayImpl(clienteStatusQueue, amqpTemplate)
 
     @Bean
     fun pedidoCriadoQueue(@Value("\${queue.pedido-criado.name}") name: String) = Queue(name, false)
