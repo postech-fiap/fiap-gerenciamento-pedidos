@@ -6,6 +6,6 @@ import java.util.*
 interface PedidoRepository {
     fun obterUltimoNumeroPedidoDoDia(): String
     fun salvar(pedido: Pedido): Pedido
-    fun buscarPedidoPorReferencia(referencia: UUID): Optional<Pedido>
+    fun buscarPedidoPorId(id: Long): Optional<Pedido>
     fun update(pedido: Pedido): Pedido
 }

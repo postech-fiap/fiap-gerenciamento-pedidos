@@ -5,9 +5,9 @@ import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
-import java.util.*
 
 class PedidoAdapterImpl(
     private val cadastrarPedidoUseCase: CadastrarPedidoUseCase,
@@ -18,7 +18,8 @@ class PedidoAdapterImpl(
 
     override fun alterarStatusPedido(request: AlterarStatusPedidoRequest) =
         alterarStatusPedidoUseCase.executar(
-            UUID.fromString(request.referenciaPedido),
-            PagamentoStatus.valueOf(request.statusPagamento!!)
+            request.id!!,
+            PagamentoStatus.valueOf(request.statusPagamento!!),
+            PedidoStatus.valueOf(request.status!!)
         )
 }

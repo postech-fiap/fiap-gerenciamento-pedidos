@@ -56,7 +56,7 @@ data class Pedido(
         }
     }
 
-    private fun alterarStatus(status: PedidoStatus) {
+    fun alterarStatus(status: PedidoStatus) {
         if (this.status == status)
             throw BusinessException("O pedido já possui o status ${status.name}")
         this.status = status
