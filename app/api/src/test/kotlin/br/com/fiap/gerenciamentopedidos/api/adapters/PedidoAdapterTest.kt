@@ -5,6 +5,7 @@ import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoProdutoReque
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
-import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class PedidoAdapterTest {
@@ -47,9 +47,9 @@ class PedidoAdapterTest {
 
     @Test
     fun `deve alterar status do pedido com sucesso`() {
-        every { alterarStatusPedidoUseCase.executar(any(), any()) } returns Unit
+        every { alterarStatusPedidoUseCase.executar(any(), any(), any()) } returns Unit
 
-        val request = AlterarStatusPedidoRequest(UUID.randomUUID().toString(), "sdasdsad", PagamentoStatus.APROVADO.name)
+        val request = AlterarStatusPedidoRequest(1L, PagamentoStatus.APROVADO.name, PedidoStatus.APROVADO.name)
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }

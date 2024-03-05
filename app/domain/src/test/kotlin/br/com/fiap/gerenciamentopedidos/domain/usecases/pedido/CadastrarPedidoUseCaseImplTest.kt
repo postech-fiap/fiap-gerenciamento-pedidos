@@ -3,7 +3,7 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.NotificacaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.produto.ObterProdutosPorIdsUseCase
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
@@ -37,7 +37,7 @@ class CadastrarPedidoUseCaseImplTest {
     lateinit var obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase
 
     @MockK
-    lateinit var pagamentoGateway: PagamentoGateway
+    lateinit var notificacaoGateway: NotificacaoGateway
 
     @Test
     fun `deve cadastrar um pedido com sucesso`() {
@@ -49,7 +49,7 @@ class CadastrarPedidoUseCaseImplTest {
         every { obterProdutosPorIdsUseCase.executar(any<List<Long>>()) } returns pedido.items.map { it.produto!! }
         every { gerarNumeroPedidoUseCase.executar() } returns "1"
         every { pedidoRepository.salvar(any()) } returns pedido
-        every { pagamentoGateway.criar(any()) } returns Unit
+        every { notificacaoGateway.notificarPedidoCriado(any()) } returns Unit
 
         // Act
         val result = cadastrarUseCaseImpl.executar(clienteId, itens)
