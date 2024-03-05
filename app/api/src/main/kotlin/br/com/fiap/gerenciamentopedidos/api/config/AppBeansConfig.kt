@@ -5,8 +5,6 @@ import br.com.fiap.gerenciamentopedidos.api.adapters.ProdutoAdapterImpl
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.ProdutoRepository
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.NotificacaoGateway
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.PagamentoGateway
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.CadastrarPedidoUseCase
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.GerarNumeroPedidoUseCase
@@ -16,8 +14,6 @@ import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.CadastrarPedidoUs
 import br.com.fiap.gerenciamentopedidos.domain.usecases.pedido.GerarNumeroPedidoUseCaseImpl
 import br.com.fiap.gerenciamentopedidos.domain.usecases.produto.*
 import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.NotificacaoGatewayImpl
-import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.PagamentoGatewayImpl
-import br.com.fiap.gerenciamentopedidos.infrastructure.gateways.ProducaoGatewayImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.PedidoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.ProdutoRepositoryImpl
 import br.com.fiap.gerenciamentopedidos.infrastructure.repositories.jpa.PedidoJpaRepository
@@ -63,9 +59,8 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
     @Bean
     fun alterarStatusPedidoUseCase(
         repository: PedidoRepository,
-        producaoGateway: ProducaoGateway,
         notificacaoGateway: NotificacaoGateway
-    ) = AlterarStatusPedidoUseCaseImpl(repository, producaoGateway, notificacaoGateway)
+    ) = AlterarStatusPedidoUseCaseImpl(repository, notificacaoGateway)
 
     @Bean
     fun gerarNumeroPedidoUseCase(repository: PedidoRepository) = GerarNumeroPedidoUseCaseImpl(repository)
@@ -78,12 +73,12 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
         pedidoRepository: PedidoRepository,
         gerarNumeroPedidoUseCase: GerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
-        pagamentoGateway: PagamentoGateway
+        notificacaoGateway: NotificacaoGateway
     ) = CadastrarPedidoUseCaseImpl(
         pedidoRepository,
         gerarNumeroPedidoUseCase,
         obterProdutosPorIdsUseCase,
-        pagamentoGateway
+        notificacaoGateway
     )
 
     @Bean
@@ -110,13 +105,8 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
     )
 
     @Bean
-    fun producaoGateway(pedidoRecebidoQueue: Queue) = ProducaoGatewayImpl(pedidoRecebidoQueue, amqpTemplate)
-
-    @Bean
-    fun pagametoGateway(pedidoCriadoQueue: Queue) = PagamentoGatewayImpl(pedidoCriadoQueue, amqpTemplate)
-
-    @Bean
-    fun notificacaoGateway(clienteStatusQueue: Queue) = NotificacaoGatewayImpl(clienteStatusQueue, amqpTemplate)
+    fun notificacaoGateway(pedidoCriadoQueue: Queue, pedidoRecebidoQueue: Queue, pedidoAlteradoQueue: Queue) =
+        NotificacaoGatewayImpl(pedidoCriadoQueue, pedidoRecebidoQueue, pedidoAlteradoQueue, amqpTemplate)
 
     @Bean
     fun pedidoCriadoQueue(@Value("\${queue.pedido-criado.name}") name: String) = Queue(name, false)
@@ -125,11 +115,11 @@ class AppBeansConfig(private val amqpTemplate: RabbitTemplate) {
     fun pedidoRecebidoQueue(@Value("\${queue.pedido-recebido.name}") name: String) = Queue(name, false)
 
     @Bean
-    fun pedidoFinalizadoQueue(@Value("\${queue.pedido-finalizado.name}") name: String) = Queue(name, false)
+    fun pagamentoFinalizadoQueue(@Value("\${queue.pagamento-finalizado.name}") name: String) = Queue(name, false)
 
     @Bean
-    fun pedidoStatusQueue(@Value("\${queue.pedido-status.name}") name: String) = Queue(name, false)
+    fun pedidoAlteradoQueue(@Value("\${queue.pedido-alterado.name}") name: String) = Queue(name, false)
 
     @Bean
-    fun clienteStatusQueue(@Value("\${queue.cliente-status.name}") name: String) = Queue(name, false)
+    fun statusPedidoAlteradoQueue(@Value("\${queue.status-pedido-alterado.name}") name: String) = Queue(name, false)
 }

@@ -1,7 +1,9 @@
 package br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways
 
-import br.com.fiap.gerenciamentopedidos.domain.dtos.NotificacaoDto
+import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 
-fun interface NotificacaoGateway {
-    fun enviar(notificacao: NotificacaoDto)
+interface NotificacaoGateway {
+    fun notificarPedidoAlterado(pedido: Pedido)
+    fun notificarPedidoCriado(pedido: Pedido)
+    fun notificarPedidoAprovado(pedido: Pedido)
 }

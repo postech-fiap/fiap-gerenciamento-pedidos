@@ -18,8 +18,8 @@ class PedidoAdapterImpl(
 
     override fun alterarStatusPedido(request: AlterarStatusPedidoRequest) =
         alterarStatusPedidoUseCase.executar(
-            request.id!!,
-            PagamentoStatus.valueOf(request.statusPagamento!!),
-            PedidoStatus.valueOf(request.status!!)
+            request.idPedido,
+            request.status?.let { PedidoStatus.valueOf(it) },
+            request.statusPagamento?.let { PagamentoStatus.valueOf(it) }
         )
 }

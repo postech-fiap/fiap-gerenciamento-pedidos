@@ -6,7 +6,6 @@ import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.Model
 import java.math.BigDecimal
 import java.time.OffsetDateTime
-import java.util.*
 
 data class Pedido(
     val numero: String?,
@@ -19,7 +18,6 @@ data class Pedido(
     var tempoEsperaMinutos: Long? = 0,
     var valorTotal: BigDecimal? = null,
     var pagamentoId: String? = null,
-    val referencia: UUID? = null,
     var infoPagamento: String? = null
 ) : Model {
     private fun calcularTempoEspera() {
@@ -60,11 +58,6 @@ data class Pedido(
         if (this.status == status)
             throw BusinessException("O pedido já possui o status ${status.name}")
         this.status = status
-    }
-
-    fun addPagamento(pagamentoId: String, statusPagamento: PagamentoStatus) {
-        this.pagamentoId = pagamentoId
-        this.statusPagamento = statusPagamento
     }
 
     override fun valid(): Pedido {
