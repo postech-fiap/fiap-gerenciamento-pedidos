@@ -47,9 +47,9 @@ class PedidoAdapterTest {
 
     @Test
     fun `deve alterar status do pedido com sucesso`() {
-        every { alterarStatusPedidoUseCase.executar(any(), any(), any()) } returns Unit
+        every { alterarStatusPedidoUseCase.executar(any(), any(), any(), any()) } returns Unit
 
-        val request = AlterarStatusPedidoRequest(1L, PagamentoStatus.APROVADO.name, PedidoStatus.APROVADO.name)
+        val request = AlterarStatusPedidoRequest(1L, "1", PagamentoStatus.APROVADO.name, PedidoStatus.APROVADO.name)
 
         Assertions.assertDoesNotThrow { adapter.alterarStatusPedido(request) }
     }

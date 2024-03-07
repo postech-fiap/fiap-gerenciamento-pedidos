@@ -43,7 +43,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         every { notificacaoGateway.notificarPedidoAprovado(any()) } returns Unit
         every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
-        useCase.executar(1, PedidoStatus.APROVADO, null)
+        useCase.executar(1, PedidoStatus.APROVADO, null, null)
 
         verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 1) { pedidoPort.update(any()) }
@@ -57,7 +57,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         every { pedidoPort.update(any()) } returns pedido
         every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
-        useCase.executar(1, null, PagamentoStatus.REPROVADO)
+        useCase.executar(1, null, null, PagamentoStatus.REPROVADO)
 
         verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 1) { pedidoPort.update(any()) }
@@ -75,7 +75,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
 
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(1, null, PagamentoStatus.APROVADO)
+            useCase.executar(1, null, null, PagamentoStatus.APROVADO)
         }
 
         assertEquals(errorMessage, exception.message)
@@ -93,7 +93,7 @@ class AlterarStatusPedidoUseCaseImplTest {
         every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(1, null, PagamentoStatus.PENDENTE)
+            useCase.executar(1, null, null, PagamentoStatus.PENDENTE)
         }
 
         assertEquals(errorMessage, exception.message)

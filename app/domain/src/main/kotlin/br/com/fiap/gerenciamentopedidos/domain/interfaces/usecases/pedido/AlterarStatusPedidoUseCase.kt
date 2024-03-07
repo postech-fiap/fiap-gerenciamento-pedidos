@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 
 fun interface AlterarStatusPedidoUseCase {
-    fun executar(id: Long, status: PedidoStatus?, pagamentoStatus: PagamentoStatus?)
+    fun executar(id: Long, status: PedidoStatus?, pagamentoId: String?, pagamentoStatus: PagamentoStatus?)
 }
