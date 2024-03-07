@@ -20,6 +20,7 @@ class PedidoAdapterImpl(
         alterarStatusPedidoUseCase.executar(
             request.idPedido,
             request.status?.let { PedidoStatus.valueOf(it) },
+            request.idPagamento,
             request.statusPagamento?.let { PagamentoStatus.valueOf(it) }
         )
 }

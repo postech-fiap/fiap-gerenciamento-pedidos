@@ -13,19 +13,16 @@ class AlterarStatusPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
     private val notificacaoGateway: NotificacaoGateway
 ) : AlterarStatusPedidoUseCase {
-    override fun executar(id: Long, status: PedidoStatus?, pagamentoStatus: PagamentoStatus?) {
+    override fun executar(id: Long, status: PedidoStatus?, pagamentoId: String?, pagamentoStatus: PagamentoStatus?) {
         val pedido = pedidoRepository
             .buscarPedidoPorId(id)
             .orElseThrow { RecursoNaoEncontradoException("Pedido não encontrado") }
 
         status?.let { pedido.alterarStatus(it) }
         pagamentoStatus?.let { pedido.alterarPagamentoStatus(it) }
+        pagamentoId?.let { pedido.pagamentoId = it }
 
         pedidoRepository.update(pedido)
-
-        notificacaoGateway.notificarPedidoAlterado(pedido)
-
-        if (pedido.isAprovado())
-            notificacaoGateway.notificarPedidoAprovado(pedido) //TODO: Viola o A
+        notificacaoGateway.notificarPedidoAprovado(pedido)
     }
 }
