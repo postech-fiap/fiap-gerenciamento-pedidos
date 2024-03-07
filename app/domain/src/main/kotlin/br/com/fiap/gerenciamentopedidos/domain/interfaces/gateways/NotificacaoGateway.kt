@@ -4,5 +4,5 @@ import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 
 interface NotificacaoGateway {
     fun notificarPedidoCriado(pedido: Pedido)
-    fun notificarPedidoAprovado(pedido: Pedido)
+    fun notificarPedidoAlterado(pedido: Pedido)
 }

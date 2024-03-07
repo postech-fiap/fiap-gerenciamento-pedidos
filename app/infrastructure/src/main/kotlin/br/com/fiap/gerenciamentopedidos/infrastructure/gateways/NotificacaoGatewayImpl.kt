@@ -27,7 +27,7 @@ class NotificacaoGatewayImpl(
         }
     }
 
-    override fun notificarPedidoAprovado(pedido: Pedido) {
+    override fun notificarPedidoAlterado(pedido: Pedido) {
         try {
             if (pedido.isAprovado())
                 rabbitTemplate.convertAndSend(queuePedidoRecebido.name, PedidoRecebidoMessage.fromModel(pedido))

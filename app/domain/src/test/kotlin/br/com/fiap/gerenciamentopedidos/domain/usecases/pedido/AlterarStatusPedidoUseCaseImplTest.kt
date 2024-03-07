@@ -40,7 +40,6 @@ class AlterarStatusPedidoUseCaseImplTest {
 
         every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { notificacaoGateway.notificarPedidoAprovado(any()) } returns Unit
         every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
         useCase.executar(1, PedidoStatus.APROVADO, null, null)
@@ -90,7 +89,6 @@ class AlterarStatusPedidoUseCaseImplTest {
 
         every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
         val exception = assertThrows(BusinessException::class.java) {
             useCase.executar(1, null, null, PagamentoStatus.PENDENTE)
