@@ -86,7 +86,7 @@ class NotificacaoGatewayImplTest {
         every { rabbitTemplate.convertAndSend(eq(queuePedidoRecebido.name), any<PedidoRecebidoMessage>()) } returns Unit
         every { rabbitTemplate.convertAndSend(eq(queuePedidoAlterado.name), any<PedidoAlteradoMessage>()) } returns Unit
 
-        assertDoesNotThrow { notificacaoGatewayImpl.notificarPedidoAprovado(pedido) }
+        assertDoesNotThrow { notificacaoGatewayImpl.notificarPedidoAlterado(pedido) }
     }
 
     @Test
@@ -97,7 +97,7 @@ class NotificacaoGatewayImplTest {
         every { rabbitTemplate.convertAndSend(eq(queuePedidoRecebido.name), any<PedidoRecebidoMessage>()) } returns Unit
         every { rabbitTemplate.convertAndSend(eq(queuePedidoAlterado.name), any<PedidoAlteradoMessage>()) } returns Unit
 
-        assertDoesNotThrow { notificacaoGatewayImpl.notificarPedidoAprovado(pedido) }
+        assertDoesNotThrow { notificacaoGatewayImpl.notificarPedidoAlterado(pedido) }
     }
 
     @Test
@@ -112,7 +112,7 @@ class NotificacaoGatewayImplTest {
         } throws Exception("Error")
 
         val exception = Assertions.assertThrows(IntegracaoAPIException::class.java) {
-            notificacaoGatewayImpl.notificarPedidoAprovado(pedido)
+            notificacaoGatewayImpl.notificarPedidoAlterado(pedido)
         }
 
         Assertions.assertEquals("Erro ao notificar pedido aprovado. Detalhes: Error", exception.message)

@@ -23,6 +23,6 @@ class AlterarStatusPedidoUseCaseImpl(
         pagamentoId?.let { pedido.pagamentoId = it }
 
         pedidoRepository.update(pedido)
-        notificacaoGateway.notificarPedidoAprovado(pedido)
+        notificacaoGateway.notificarPedidoAlterado(pedido)
     }
 }
