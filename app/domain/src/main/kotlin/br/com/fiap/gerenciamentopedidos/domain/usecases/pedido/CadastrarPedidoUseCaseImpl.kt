@@ -16,7 +16,8 @@ open class CadastrarPedidoUseCaseImpl(
     private val obterProdutosPorIdsUseCase: ObterProdutosPorIdsUseCase,
     private val notificacaoGateway: NotificacaoGateway
 ) : CadastrarPedidoUseCase {
-    @Transactional
+
+    @Transactional(rollbackFor = [Exception::class])
     override fun executar(clienteId: String?, itens: List<Item>): Pedido {
         val pedido = Pedido(
             numero = gerarNumeroPedidoUseCase.executar(),
@@ -32,6 +33,7 @@ open class CadastrarPedidoUseCaseImpl(
         }
 
         val pedidoCriado = pedidoRepository.salvar(pedido.valid())
+            .copy(valorTotal = pedido.valorTotal)
 
         notificacaoGateway.notificarPedidoCriado(pedidoCriado)
 
