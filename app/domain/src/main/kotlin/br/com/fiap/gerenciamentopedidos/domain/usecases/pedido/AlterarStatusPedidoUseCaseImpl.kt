@@ -8,11 +8,12 @@ import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.NotificacaoGa
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.usecases.pedido.AlterarStatusPedidoUseCase
 import org.springframework.transaction.annotation.Transactional
 
-@Transactional
-class AlterarStatusPedidoUseCaseImpl(
+open class AlterarStatusPedidoUseCaseImpl(
     private val pedidoRepository: PedidoRepository,
     private val notificacaoGateway: NotificacaoGateway
 ) : AlterarStatusPedidoUseCase {
+
+    @Transactional(rollbackFor = [Exception::class])
     override fun executar(id: Long, status: PedidoStatus?, pagamentoId: String?, pagamentoStatus: PagamentoStatus?) {
         val pedido = pedidoRepository
             .buscarPedidoPorId(id)
