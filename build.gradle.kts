@@ -36,7 +36,7 @@ subprojects {
 
     sonar {
         properties {
-            property("sonar.projectKey", "postech-fiap_pagamento-api")
+            property("sonar.projectKey", "postech-fiap_fiap-gerenciamento-pedidos")
             property("sonar.organization", "postech-fiap")
             property("sonar.host.url", "https://sonarcloud.io")
         }
