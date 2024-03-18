@@ -49,6 +49,7 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
         implementation("org.springframework.boot:spring-boot-starter-amqp:3.2.3")
+        implementation("org.springframework.boot:spring-boot-starter-security:3.2.3")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.junit.platform:junit-platform-suite-api:1.10.1")
     }

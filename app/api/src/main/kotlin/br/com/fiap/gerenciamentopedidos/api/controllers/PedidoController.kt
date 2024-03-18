@@ -5,7 +5,10 @@ import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
@@ -16,8 +19,4 @@ class PedidoController(private val pedidoAdapter: PedidoAdapter, private val rep
         val pedido = pedidoAdapter.cadastrarPedido(request)
         return ResponseEntity.created(URI.create("/pedidos/${pedido.id}")).body(pedido)
     }
-
-    //TODO: APAGAR
-    @GetMapping("/{id}")
-    fun get(@PathVariable id: Long) = ResponseEntity.ok(repo.buscarPedidoPorId(id).get())
 }
