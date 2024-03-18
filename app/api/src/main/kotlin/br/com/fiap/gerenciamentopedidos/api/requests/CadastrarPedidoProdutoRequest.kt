@@ -12,6 +12,9 @@ data class CadastrarPedidoProdutoRequest(
     init {
         require(produtoId > 0) { "O id do produto deve ser informado" }
         require(quantidade > 0) { "A quantidade deve ser maior que zero" }
+        if (comentario.isNullOrEmpty().not()) {
+            require(comentario!!.length <= 100) { "Comentário muito extenso" }
+        }
     }
 
     fun toModel() = Item(
