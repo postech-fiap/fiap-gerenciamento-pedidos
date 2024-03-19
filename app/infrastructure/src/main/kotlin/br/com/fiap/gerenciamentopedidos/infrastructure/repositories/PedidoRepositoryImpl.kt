@@ -9,15 +9,15 @@ import java.util.*
 
 private const val ERROR_MESSAGE_GET_NEXT_NUMBER = "Erro ao obter próximo número pedido. Detalhes: %s"
 private const val ERROR_MESSAGE_CREATE = "Erro ao salvar pedido. Detalhes: %s"
-private const val ERROR_MESSAGE_GET_BY_REFERENCIA = "Erro ao obter pedido por referência. Detalhes: %s"
+private const val ERROR_MESSAGE_GET_BY_ID = "Erro ao obter pedido por id. Detalhes: %s"
 private const val ERROR_MESSAGE_UPDATE = "Erro ao atualizar Pedido. Detalhes: %s"
 
 class PedidoRepositoryImpl(private val pedidoJpaRepository: PedidoJpaRepository) : PedidoRepository {
-    override fun buscarPedidoPorReferencia(referencia: UUID): Optional<Pedido> {
+    override fun buscarPedidoPorId(id: Long): Optional<Pedido> {
         try {
-            return pedidoJpaRepository.findByReferencia(referencia.toString()).map { it.toModel() }
+            return pedidoJpaRepository.findById(id).map { it.toModel() }
         } catch (ex: Exception) {
-            throw BaseDeDadosException(String.format(ERROR_MESSAGE_GET_BY_REFERENCIA, ex.message))
+            throw BaseDeDadosException(String.format(ERROR_MESSAGE_GET_BY_ID, ex.message))
         }
     }
 

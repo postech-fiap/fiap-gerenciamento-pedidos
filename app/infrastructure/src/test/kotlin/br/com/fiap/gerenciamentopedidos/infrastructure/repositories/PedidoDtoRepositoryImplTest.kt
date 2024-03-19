@@ -35,7 +35,6 @@ class PedidoDtoRepositoryImplTest {
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
-            referencia = UUID.randomUUID(),
             items = listOf(
                 Item(
                     produto = Produto(
@@ -55,36 +54,34 @@ class PedidoDtoRepositoryImplTest {
             ),
         )
 
-        every { pedidoJpaRepository.findByReferencia(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
+        every { pedidoJpaRepository.findById(any()) } returns Optional.of(PedidoEntity.fromModel(pedido))
 
-        val result = pedidoRepository.buscarPedidoPorReferencia(UUID.randomUUID())
+        val result = pedidoRepository.buscarPedidoPorId(1L)
 
         assertEquals(pedido.id, result.get().id)
 
-        verify(exactly = 1) { pedidoJpaRepository.findByReferencia(any()) }
+        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
     }
 
     @Test
     fun `deve propagar erro ao buscar pedido por referencia`() {
-        val errorMessage = "Erro ao obter pedido por referência. Detalhes: Error"
-        every { pedidoJpaRepository.findByReferencia(any()) } throws Exception("Error")
+        val errorMessage = "Erro ao obter pedido por id. Detalhes: Error"
+        every { pedidoJpaRepository.findById(any()) } throws Exception("Error")
 
         val exception =
-            Assertions.assertThrows(RuntimeException::class.java) { pedidoRepository.buscarPedidoPorReferencia(UUID.randomUUID()) }
+            Assertions.assertThrows(RuntimeException::class.java) { pedidoRepository.buscarPedidoPorId(1L) }
 
         assertEquals(errorMessage, exception.message)
-        verify(exactly = 1) { pedidoJpaRepository.findByReferencia(any()) }
+        verify(exactly = 1) { pedidoJpaRepository.findById(any()) }
     }
 
     @Test
     fun `deve salvar um pedido com sucesso`() {
         //given
-        val referencia = UUID.randomUUID()
         val pedido = Pedido(
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
-            referencia = referencia,
             items = listOf(
                 Item(
                     produto = Produto(
@@ -184,7 +181,6 @@ class PedidoDtoRepositoryImplTest {
             id = 1,
             numero = "1",
             statusPagamento = PagamentoStatus.APROVADO,
-            referencia = UUID.randomUUID(),
             items = listOf(
                 Item(
                     produto = Produto(

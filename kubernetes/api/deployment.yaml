@@ -5,7 +5,7 @@ metadata:
   labels:
     app: fiap-gerenciamento-pedidos-api-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: fiap-gerenciamento-pedidos-api
@@ -44,6 +44,20 @@ spec:
               value: http://production-api-service:8090
             - name: PAGAMENTO_API_URL
               value: http://pagamento-api-service:8100
+            - name: RABBITMQ_HOST
+              value: "production-rabbitmq-service"
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: production-rabbitmq
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: production-rabbitmq
+                  key: password
           readinessProbe:
             httpGet:
               path: /ping

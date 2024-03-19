@@ -1,12 +1,10 @@
 package br.com.fiap.gerenciamentopedidos.api.controllers
 
 import br.com.fiap.gerenciamentopedidos.api.adapters.interfaces.PedidoAdapter
-import br.com.fiap.gerenciamentopedidos.api.requests.AlterarStatusPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoProdutoRequest
 import br.com.fiap.gerenciamentopedidos.api.requests.CadastrarPedidoRequest
 import br.com.fiap.gerenciamentopedidos.api.responses.PedidoResponse
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
-import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
 import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
@@ -16,7 +14,6 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.math.BigDecimal
@@ -43,22 +40,6 @@ class PedidoControllerTest : IntegrationTest() {
                 status { isCreated() }
                 jsonPath("$.id").value(pedido.id)
                 jsonPath("$.status").value(PedidoStatus.PENDENTE)
-            }
-    }
-
-    @Test
-    fun `deve alterar status do pedido com sucesso`() {
-        val request = AlterarStatusPedidoRequest("1", "1", PagamentoStatus.APROVADO.name)
-        val json = objectMapper.writeValueAsString(request)
-        every { adapter.alterarStatusPedido(any()) } returns Unit
-
-        mockMvc.patch("/pedidos/status") {
-            contentType = MediaType.APPLICATION_JSON
-            accept = MediaType.APPLICATION_JSON
-            content = json
-        }
-            .andExpect {
-                status { isAccepted() }
             }
     }
 

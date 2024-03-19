@@ -2,9 +2,10 @@ package br.com.fiap.gerenciamentopedidos.domain.usecases.pedido
 
 import br.com.fiap.gerenciamentopedidos.domain.enums.Categoria
 import br.com.fiap.gerenciamentopedidos.domain.enums.PagamentoStatus
+import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.exceptions.BusinessException
 import br.com.fiap.gerenciamentopedidos.domain.interfaces.PedidoRepository
-import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.ProducaoGateway
+import br.com.fiap.gerenciamentopedidos.domain.interfaces.gateways.NotificacaoGateway
 import br.com.fiap.gerenciamentopedidos.domain.models.Imagem
 import br.com.fiap.gerenciamentopedidos.domain.models.Item
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
@@ -22,7 +23,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class AlterarStatusPedidoUseCaseImplTestDto {
+class AlterarStatusPedidoUseCaseImplTest {
 
     @InjectMockKs
     lateinit var useCase: AlterarStatusPedidoUseCaseImpl
@@ -31,19 +32,19 @@ class AlterarStatusPedidoUseCaseImplTestDto {
     lateinit var pedidoPort: PedidoRepository
 
     @MockK
-    lateinit var producaoGateway: ProducaoGateway
+    lateinit var notificacaoGateway: NotificacaoGateway
 
     @Test
     fun `deve alterar o status do pedido para APROVADO com Sucesso`() {
         val pedido = criarPedido()
 
-        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { producaoGateway.enviar(any()) } returns Unit
+        every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
-        useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
+        useCase.executar(1, PedidoStatus.APROVADO, null, null)
 
-        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 1) { pedidoPort.update(any()) }
     }
 
@@ -51,13 +52,13 @@ class AlterarStatusPedidoUseCaseImplTestDto {
     fun `deve alterar o status do pedido para REPROVADO com Sucesso`() {
         val pedido = criarPedido()
 
-        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { producaoGateway.enviar(any()) } returns Unit
+        every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
-        useCase.executar(UUID.randomUUID(), PagamentoStatus.REPROVADO)
+        useCase.executar(1, null, null, PagamentoStatus.REPROVADO)
 
-        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 1) { pedidoPort.update(any()) }
     }
 
@@ -66,18 +67,18 @@ class AlterarStatusPedidoUseCaseImplTestDto {
         val pedido = criarPedido()
         val errorMessage = "O pedido já possui o status APROVADO"
 
-        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { producaoGateway.enviar(any()) } returns Unit
+        every { notificacaoGateway.notificarPedidoAlterado(any()) } returns Unit
 
         pedido.alterarPagamentoStatus(PagamentoStatus.APROVADO)
 
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(UUID.randomUUID(), PagamentoStatus.APROVADO)
+            useCase.executar(1, null, null, PagamentoStatus.APROVADO)
         }
 
         assertEquals(errorMessage, exception.message)
-        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 0) { pedidoPort.update(any()) }
     }
 
@@ -86,16 +87,15 @@ class AlterarStatusPedidoUseCaseImplTestDto {
         val pedido = criarPedido()
         val errorMessage = "O status do pagamento deve ser APROVADO ou REPROVADO"
 
-        every { pedidoPort.buscarPedidoPorReferencia(any()) } returns Optional.of(pedido)
+        every { pedidoPort.buscarPedidoPorId(any()) } returns Optional.of(pedido)
         every { pedidoPort.update(any()) } returns pedido
-        every { producaoGateway.enviar(any()) } returns Unit
 
         val exception = assertThrows(BusinessException::class.java) {
-            useCase.executar(UUID.randomUUID(), PagamentoStatus.PENDENTE)
+            useCase.executar(1, null, null, PagamentoStatus.PENDENTE)
         }
 
         assertEquals(errorMessage, exception.message)
-        verify(exactly = 1) { pedidoPort.buscarPedidoPorReferencia(any()) }
+        verify(exactly = 1) { pedidoPort.buscarPedidoPorId(any()) }
         verify(exactly = 0) { pedidoPort.update(any()) }
     }
 
