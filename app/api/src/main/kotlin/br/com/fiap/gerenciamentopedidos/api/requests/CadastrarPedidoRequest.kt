@@ -6,5 +6,8 @@ data class CadastrarPedidoRequest(
 ) {
     init {
         require(produtos.isNullOrEmpty().not()) { "Deve ser informado ao menos um produto" }
+        if (clienteId.isNullOrEmpty().not()) {
+            require(clienteId!!.length <= 36) { "Identificador do cliente muito extenso" }
+        }
     }
 }

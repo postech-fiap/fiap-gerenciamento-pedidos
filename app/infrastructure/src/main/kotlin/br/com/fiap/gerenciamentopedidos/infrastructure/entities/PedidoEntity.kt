@@ -5,7 +5,6 @@ import br.com.fiap.gerenciamentopedidos.domain.enums.PedidoStatus
 import br.com.fiap.gerenciamentopedidos.domain.models.Pedido
 import jakarta.persistence.*
 import java.time.OffsetDateTime
-import java.util.*
 
 @Entity
 @Table(name = "pedido")
@@ -42,10 +41,7 @@ data class PedidoEntity(
     )
     var produtos: List<PedidoProdutoEntity>? = null,
 
-    @Column(name = "referencia", nullable = false, length = 36)
-    val referencia: String? = null,
-
-    @Column(name = "pagamento_id", nullable = false, length = 36)
+    @Column(name = "pagamento_id", length = 36)
     var pagamentoId: String? = null,
 ) {
 
@@ -58,7 +54,6 @@ data class PedidoEntity(
         clienteId = clienteId,
         statusPagamento = statusPagamento,
         items = produtos?.map { it.toModel() }!!,
-        referencia = referencia.let { UUID.fromString(it) },
         pagamentoId = pagamentoId
     )
 
@@ -72,7 +67,6 @@ data class PedidoEntity(
                 numero = pedido.numero,
                 statusPagamento = pedido.statusPagamento,
                 clienteId = pedido.clienteId,
-                referencia = pedido.referencia.toString(),
                 pagamentoId = pedido.pagamentoId
             )
             entity.produtos = pedido.items.map { PedidoProdutoEntity.fromModel(it, entity) }

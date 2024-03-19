@@ -1,12 +1,15 @@
 package br.com.fiap.gerenciamentopedidos.api.requests
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.io.Serializable
 
 data class AlterarStatusPedidoRequest(
-    @JsonProperty("referencia_pedido")
-    val referenciaPedido: String,
+    @JsonProperty("id_pedido")
+    val idPedido: Long,
     @JsonProperty("id_pagamento")
-    val idPagamento: String,
+    val idPagamento: String?,
     @JsonProperty("status_pagamento")
-    val statusPagamento: String,
-)
+    val statusPagamento: String?,
+    @JsonProperty("status_pedido")
+    val status: String?,
+) : Serializable
