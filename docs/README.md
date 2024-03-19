@@ -2,6 +2,16 @@
 
 Aplicação responsável pela automatização e gerenciamento de pedidos de uma lanchonete.
 
+## Padrão SAGA Coreografada
+A justificativa da nossa escolha está diretamente relacionada à simplicidade do nosso fluxo, pois não temos um fluxo muito complexo e o padrão coreografado foi mais simples de ser implementado e nossa decisão foi baseada na eficiência do desenvolvimento.
+Um outro fator relevante é que nossos microsserviços estão com suas respectivas responsabilidades bem divididas e a implementação de um orquestrador agregaria uma camada de complexidade muitas vezes desnecessária em nosso entendimento. E dessa forma foi mais fácil trabalharmos com o padrão coreografia, pois os microsserviços conseguiram administrar muito bem os fluxos pelos quais eles foram desenvolvidos e em termos de adaptação do código foi bastante tranquilo em substituir os adapter de requisição REST para os de mensageria.
+
+### Desenho da arquitetura
+![arquitetura.png](assets%2Farquitetura.png)
+
+## Relatórios OWASP ZAP
+Acessar o link no documento compartilhado.
+
 ## Executando com Kubernetes (recomendado)
 
 Com o `kubectl` instalado, execute os seguintes comandos:
