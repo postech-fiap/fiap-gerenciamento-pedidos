@@ -36,7 +36,7 @@ subprojects {
 
     sonar {
         properties {
-            property("sonar.projectKey", "postech-fiap_pagamento-api")
+            property("sonar.projectKey", "postech-fiap_fiap-gerenciamento-pedidos")
             property("sonar.organization", "postech-fiap")
             property("sonar.host.url", "https://sonarcloud.io")
         }
@@ -48,6 +48,8 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+        implementation("org.springframework.boot:spring-boot-starter-amqp:3.2.3")
+        implementation("org.springframework.boot:spring-boot-starter-security:3.2.3")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.junit.platform:junit-platform-suite-api:1.10.1")
     }
@@ -120,7 +122,8 @@ val excludeCoverage = listOf(
     "**/entities/**",
     "**/exceptions/**",
     "**/requests/**",
-    "**/responses/**"
+    "**/responses/**",
+    "**/messages/**"
 )
 
 tasks.test {
